@@ -5,4 +5,5 @@ package com.sirnommington.squid;
  */
 public class GcmMessageType {
     public static final String URL = "url";
+    public static final String PHONE = "phone";
 }

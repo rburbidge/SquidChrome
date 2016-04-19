@@ -21,6 +21,11 @@ public class SquidGcmListenerService extends GcmListenerService {
                 i.setData(Uri.parse(data.getString("data")));
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
+            } else if(GcmMessageType.PHONE.equals(type)) {
+                Intent i = new Intent(Intent.ACTION_DIAL);
+                i.setData(Uri.parse("tel:" + data.getString("data")));
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
             }
         } catch(Exception e) {
             Log.e(TAG, "onMessageReceived() failure. data=" + data, e);
