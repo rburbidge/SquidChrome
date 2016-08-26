@@ -1,7 +1,7 @@
 var devices = {};
 
-devices.baseUrl = 'http://sirnommington.com';
-//devices.baseUrl = 'http://localhost:3000';
+//devices.baseUrl = 'http://sirnommington.com';
+devices.baseUrl = 'http://localhost:3000';
 
 devices.getDevices = function(callback, errorCallback) {
     this.sendAuthorizedRequest(

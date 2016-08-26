@@ -3,7 +3,9 @@
 
   "name": "squid",
   "description": "Allows you to open web pages on your phone",
-  "version": "1.0",
+  "version": "1.1",  
+
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArgt61Coa3clEbtT+QfuOU9KseayMe2iXDdwePFCUQvAlkjo1WRQd3BUMYMJHPBL9m/Xycm4pagB1OBEU1xFaKrVr/yisEDKhAml7O8FYS3d1oJ0tTSDq1KLWqQBSUTzuI69HDDnNgfvzTKgTr4BMe9Piq5XmjIMtT/7HSIfnz/5QExjyeOVk0H4iLZnLKGtbLAo5aRSKsAKW5/2tT5OhBjETDwBcr35KxgoOPWWor1kW6ZiznC523MxSOSP3XBWbXPsRRxNCqb5gCBB/xx/2f+hXA3xgyOXFH10zfTLQ+e9ixf6jml25rYEE9RCWQUHyaXkgswsGQOi9Al7A52SS3wIDAQAB",
 
   "browser_action": {
     "default_icon": "icon.png",
@@ -14,6 +16,7 @@
   "permissions": [
     "activeTab",
     "identity",
+    "storage",
     "https://ajax.googleapis.com/",
     "http://localhost/",
     "http://sirnommington.com/"
@@ -21,11 +24,16 @@
 
   "oauth2": {
     "client_id": "670316986609-htl91dqi7i612v3mq46tfu503u6gfi6d.apps.googleusercontent.com",
-    "scopes": [ "https://www.googleapis.com/auth/drive"]
+    "scopes": [
+        "https://www.googleapis.com/auth/drive",
+        "https://www.googleapis.com/auth/userinfo.email"
+      ]
   },
 
   "background":
   {
     "scripts": ["devices.js", "lib/jquery-3.1.0.min.js"]
-  }
+  },
+
+  "options_page": "options.html"
 }
