@@ -50,7 +50,9 @@
             android:name=".SquidRegistrationIntentService"
             android:exported="false" />
 
-        <!--<activity android:name=".activity.SignInActivity"></activity>-->
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
