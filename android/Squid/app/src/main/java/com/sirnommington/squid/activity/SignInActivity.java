@@ -15,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
+import com.sirnommington.squid.IntentExtras;
 import com.sirnommington.squid.MainActivity;
 import com.sirnommington.squid.R;
 
@@ -33,8 +34,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                // TODO Store this token somewhere else
-                .requestIdToken("670316986609-91dmlu53eojro2pf311kg7cgdh77ireh.apps.googleusercontent.com")
+                .requestIdToken(getResources().getString(R.string.outh_client_id))
                 .build();
         this.mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
@@ -84,9 +84,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         Log.i(TAG, "Sign in success!");
 
         // Start the main activity, and close the current one
-        // TODO Store the server ID token somewhere for later use
+        // Pass the user's server token to the main activity
         GoogleSignInAccount account = result.getSignInAccount();
-        this.startActivity(new Intent(this, MainActivity.class));
+        Intent signedIn = new Intent(this, MainActivity.class);
+        signedIn.putExtra(IntentExtras.GOOGLE_ID_TOKEN, account.getIdToken());
+        this.startActivity(signedIn);
         this.finish();
     }
 }

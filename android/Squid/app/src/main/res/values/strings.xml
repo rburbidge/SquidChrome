@@ -8,4 +8,7 @@
         sending the fetched token to the server or subscribing to the PubSub topic. Please try
         running the sample again.</string>
     <string name="sign_in_description">Sign in to your Google Account!</string>
+    <string name="add_device_already_added">Welcome back!</string>
+    <string name="add_device_added">Your device '%s' has been added!</string>
+    <string name="add_device_error">A problem occurred while adding your device :(</string>
 </resources>
