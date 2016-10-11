@@ -28,11 +28,16 @@ document.addEventListener('DOMContentLoaded', function() {
     getCurrentTabUrl(function(url) {
         renderStatus('Sending... ' + url);
 
-        devices.sendUrlToDevice(
-            url,
-            function() {
-                renderStatus('Sent');
-            },
-            renderError);
+        chrome.storage.sync.get(
+            { device: null },
+            function(items) {
+                devices.sendUrlToDevice(
+                    items.device.id,
+                    url,
+                    function() {
+                        renderStatus('Sent');
+                    },
+                    renderError);
+            });
     });
 });
