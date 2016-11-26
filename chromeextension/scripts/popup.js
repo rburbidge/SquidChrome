@@ -17,7 +17,7 @@ function getCurrentTabUrl(callback) {
 }
 
 function renderStatus(statusText) {
-    document.getElementById('status').textContent = statusText;
+    $('#status').html(statusText);
 }
 
 function renderError(statusText) {
