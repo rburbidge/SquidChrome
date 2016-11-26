@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="../lib/jquery-3.1.0.min.js"></script>
+    <script src="../lib/angular-1.5.8.min.js"></script>
+    <script src="../scripts/config.js"></script>
+    <script src="../scripts/devices.js"></script>
+    <script src="../scripts/options.js"></script>
+    <link rel="stylesheet" href="../css/squid.css">
+    <link rel="stylesheet" href="../lib/css/bootstrap-3.3.7.min.css">
+    <link rel="stylesheet" href="../lib/css/bootstrap-theme-3.3.7.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  </head>
+  <body>
+    <div ng-app="options" ng-controller="optionsController">
+      <div ng-if="device" class="squid-options">
+
+        <div class="squid-current">
+          <b>Current device</b>
+          <div ng-if="device">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <div class="squid-device-item">
+                  <i class="material-icons squid-icon">phone_android</i>
+                  <div class="squid-device">{{device.name}}</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div ng-if="!device">
+            {{strings.noSelectedDevice}}
+          </div>
+        </div>
+      </div>
+
+      <div class="squid-devices">
+        <b>Other devices</b>
+        <div class="loader" ng-if="loadingDevices"></div>
+        <ul class="list-group" ng-if="!loadingDevices">
+          <div ng-if="devices">
+            <li class="list-group-item" ng-repeat="device in devices" ng-click="setDevice(device)">
+              <div class="squid-device-item">
+                <i class="material-icons squid-icon">phone_android</i>
+                <div class="squid-device">{{device.name}}</div>
+              </div>
+            </li>
+          </div>
+          <div ng-if="!devices || devices.length == 0">
+            {{strings.noOtherDevices}}
+          </div>
+        </ul>
+      </div>
+
+      <div ng-if="error" class="squid-error">
+        <div>{{error}}</div>
+      </div>
+
+    </div>
+  </body>
+</html>
+

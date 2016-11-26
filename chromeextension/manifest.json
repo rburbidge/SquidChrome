@@ -6,12 +6,6 @@
   "version": "1.1.0.1",  
 
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArgt61Coa3clEbtT+QfuOU9KseayMe2iXDdwePFCUQvAlkjo1WRQd3BUMYMJHPBL9m/Xycm4pagB1OBEU1xFaKrVr/yisEDKhAml7O8FYS3d1oJ0tTSDq1KLWqQBSUTzuI69HDDnNgfvzTKgTr4BMe9Piq5XmjIMtT/7HSIfnz/5QExjyeOVk0H4iLZnLKGtbLAo5aRSKsAKW5/2tT5OhBjETDwBcr35KxgoOPWWor1kW6ZiznC523MxSOSP3XBWbXPsRRxNCqb5gCBB/xx/2f+hXA3xgyOXFH10zfTLQ+e9ixf6jml25rYEE9RCWQUHyaXkgswsGQOi9Al7A52SS3wIDAQAB",
-
-  "browser_action": {
-    "default_icon": "icon.png",
-    "default_popup": "popup.html",
-    "default_title": "Send to phone"
-  },
   
   "permissions": [
     "activeTab",
@@ -33,8 +27,14 @@
 
   "background":
   {
-    "scripts": ["devices.js", "lib/jquery-3.1.0.min.js"]
+    "scripts": ["scripts/devices.js", "lib/jquery-3.1.0.min.js"]
   },
 
-  "options_page": "options.html"
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "view/popup.html",
+    "default_title": "Send to phone"
+  },
+
+  "options_page": "view/options.html"
 }
