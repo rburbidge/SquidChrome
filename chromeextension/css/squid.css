@@ -25,6 +25,14 @@
     color: red;
 }
 
+.squid-popup {
+    white-space: pre;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 400px;
+    min-width: 40px;
+}
+
 @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
