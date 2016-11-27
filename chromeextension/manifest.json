@@ -17,6 +17,8 @@
     "http://71.231.137.10/"
   ],
 
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+
   "oauth2": {
     "client_id": "670316986609-htl91dqi7i612v3mq46tfu503u6gfi6d.apps.googleusercontent.com",
     "scopes": [
@@ -27,7 +29,7 @@
 
   "background":
   {
-    "scripts": ["scripts/devices.js", "lib/jquery-3.1.0.min.js"]
+    "scripts": ["scripts/devices.js"]
   },
 
   "browser_action": {
@@ -36,5 +38,5 @@
     "default_title": "Send to phone"
   },
 
-  "options_page": "view/options.html"
+  "options_page": "options2.html"
 }

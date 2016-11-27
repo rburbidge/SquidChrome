@@ -18,6 +18,7 @@
     "@types/core-js": "^0.9.34",
     "angular2-in-memory-web-api": "0.0.21",
     "bootstrap": "^3.3.7",
+    "core-js": "^2.4.1",
     "es6-shim": "^0.35.0",
     "jquery": "^3.1.1",
     "reflect-metadata": "^0.1.3",
