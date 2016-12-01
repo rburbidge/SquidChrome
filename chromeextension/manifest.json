@@ -27,16 +27,11 @@
       ]
   },
 
-  "background":
-  {
-    "scripts": ["scripts/devices.js"]
-  },
-
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "view/popup.html",
-    "default_title": "Send to phone"
+    "default_title": "Send to device"
   },
 
-  "options_page": "options2.html"
+  "options_page": "view/options.html"
 }

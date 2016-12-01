@@ -2,7 +2,7 @@ SystemJS.defaultJSExtensions = true;
 System.config({
     paths: {
         // Alias used below
-        'npm:': 'node_modules/'
+        'npm:': '../node_modules/'
     },
     map: {
         // angular bundles
@@ -17,12 +17,18 @@ System.config({
         '@angular/upgrade': 'npm:@angular/upgrade/bundles/upgrade.umd.js',
 
         // other libraries
-        'rxjs':                      'npm:rxjs',
+        'jquery': 'npm:jquery/dist/jquery.min.js',
+        'rxjs': 'npm:rxjs',
         'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js'
+    },
+    meta: {
+        '../node_modules/jquery/dist/jquery.min.js': {
+            format: 'amd',
+            exports: '$'
+        }
     },
     scripts: {
         format: 'register',
         defaultExtension: 'js'
     }
 });
-System.import('/scripts/options/main').then(null, console.error.bind(console));

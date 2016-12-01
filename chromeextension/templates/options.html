@@ -1,0 +1,14 @@
+<h1>Devices</h1>
+<div class="loader" *ngIf="loadingDevices"></div>
+<ul class="list-group" *ngIf="!loadingDevices && devices">
+  <li *ngFor="let device of devices" class="list-group-item" ng-click="setDevice(device)">
+    <div class="squid-device-item">
+      <i class="material-icons squid-icon">phone_android</i>
+      <div class="squid-device">{{device.name}}</div>
+    </div>
+  </li>
+</ul>
+
+<div ng-if="error" class="squid-error">
+  <div>{{error}}</div>
+</div>
