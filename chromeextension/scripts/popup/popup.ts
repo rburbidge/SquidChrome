@@ -1,5 +1,7 @@
 import $ from 'jquery';
 
+import { ChromeStorage } from '../common/chrome-storage';
+import { Config } from '../config';
 import { Devices } from './devices';
 
 /**
@@ -30,17 +32,14 @@ function renderError(statusText) {
 getCurrentTabUrl((url) => {
     renderStatus('Sending... ' + url);
 
-    chrome.storage.sync.get(
-        { device: null },
-        (items: any) => {
-            // TODO Don't hardcode URL
-            let deviceId: string = items.device.id;
-            new Devices('http://71.231.137.10').sendUrl(deviceId, url)
+    ChromeStorage.getSelectedDevice()
+        .then((device) => {
+            new Devices(Config.squidEndpoint).sendUrl(device.id, url)
                 .then(() => {
                     renderStatus('Sent');
                 })
                 .catch((error) => {
                     renderError(error);
                 });
-        });
+        })
 });

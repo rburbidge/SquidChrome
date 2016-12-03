@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/toPromise';
 
 import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
-import { Device } from './models/device';
+import { Config } from '../../config';
+import { Device } from '../../models/device';
 
 /**
  * The device service.
  */
 @Injectable()
 export class DeviceService {
-
-    // TODO Don't hardcode this
-    private baseUrl: string = 'http://71.231.137.10';
+    private baseUrl: string = Config.squidEndpoint;
+    private static timeoutMillis: number = 3000;
 
     constructor(private http: Http) { }
 
@@ -36,7 +37,9 @@ export class DeviceService {
 
                     options.headers.append('Authorization', authHeader);
 
-                    this.http.request(this.baseUrl + relativePath, options).toPromise()
+                    this.http.request(this.baseUrl + relativePath, options)
+                        .timeout(DeviceService.timeoutMillis, new Error('timeout exceeded'))
+                        .toPromise()
                         .then(resolve)
                         .catch(reject);
                 });

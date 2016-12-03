@@ -1,5 +1,3 @@
-import { Observable } from 'rxjs/Rx';
-
 export class ChromeAuthHelper {
 
     /**

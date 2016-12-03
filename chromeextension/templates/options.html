@@ -1,14 +1,24 @@
-<h1>Devices</h1>
-<div class="loader" *ngIf="loadingDevices"></div>
-<ul class="list-group" *ngIf="!loadingDevices && devices">
-  <li *ngFor="let device of devices" class="list-group-item" ng-click="setDevice(device)">
-    <div class="squid-device-item">
-      <i class="material-icons squid-icon">phone_android</i>
-      <div class="squid-device">{{device.name}}</div>
+<div class="squid-options">
+    <div *ngIf="loadingDevices" class="loader-container">
+        <div class="loader"></div>
     </div>
-  </li>
-</ul>
 
-<div ng-if="error" class="squid-error">
-  <div>{{error}}</div>
+    <div ng-if="error" class="squid-error">
+      <div>{{error}}</div>
+    </div>
+
+    <div *ngIf="!loadingDevices && devices" class="container squid-device-list">
+        <div *ngFor="let device of devices" class="row squid-device vertical-align" [class.squid-device-selected]="isDeviceSelected(device)" (click)="setDevice(device)" href="">
+            <div class="col-xs-4">
+                <i class="material-icons squid-icon">phone_android</i>
+            </div>
+            <div class="col-xs-4 text-center">
+                <div class="squid-device-name">{{device.name}}</div>
+            </div>
+            <div class="col-xs-4">
+                <div class="pull-right">
+                X</div>
+            </div>
+        </div>
+    </div>
 </div>

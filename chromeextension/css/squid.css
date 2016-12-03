@@ -1,29 +1,42 @@
+/* Squid options page */
+
 .squid-options {
     animation: fadein 0.5s;
+    padding: 0;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 .squid-icon {
     font-size: 36px !important ;
-    float: left;
-    color: #757575;
-    display: inline-block;
+    color: #404040;
 }
 
 .squid-device {
-    height: 36px;
-    line-height: 36px;
-    vertical-align: middle;
-    display: inline-block;
+    padding: 10px;
 }
 
-.squid-device-item {
-    display: block;
-    float: none;
+.squid-device-name {
+    font-size: 18px;
+    color: #404040;
+}
+
+.squid-device-selected {
+    background-color: #ffbc41;
+}
+
+.squid-device-list {
+    padding: 0;
 }
 
 .squid-error {
     color: red;
 }
+
+/* Pop-up */
 
 .squid-popup {
     white-space: pre;
@@ -33,12 +46,10 @@
     min-width: 40px;
 }
 
-@keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
+/* Loader */
 
 .loader {
+    display: inline-block;
     border: 3px solid #3498db;
     border-top: 3px solid #f3f3f3;
     border-radius: 50%;
@@ -47,7 +58,23 @@
     animation: spin 0.7s linear infinite;
 }
 
+.loader-container {
+    text-align: center;
+    width:100%;
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
+
+.vertical-align {
+    display: flex;
+    align-items: center;
 }
