@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, Response, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/toPromise';
 
@@ -27,7 +26,7 @@ export class DeviceService {
         return this.sendAuthorizedRequest(`/api/devices/${deviceId}/commands`, { method: 'POST' } as RequestOptions)
     }
 
-    private sendAuthorizedRequest<T>(relativePath: string, options: RequestOptions): Promise<Response> {
+    private sendAuthorizedRequest(relativePath: string, options: RequestOptions): Promise<Response> {
         return new Promise<Response>((resolve, reject) => {
             return ChromeAuthHelper.createAuthHeader()
                 .then((authHeader: string) => {
