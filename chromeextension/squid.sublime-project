@@ -1,0 +1,13 @@
+{
+    "folders":
+    [
+        {
+            "path": "c:\\dev\\Squid\\chromeextension",
+            "file_exclude_patterns": [
+                "scripts/*.js"
+            ],
+            "folder_exclude_patterns": ["node_modules"],
+        }
+    ]
+
+}

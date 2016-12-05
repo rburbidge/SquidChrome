@@ -1,0 +1,1 @@
+System.import('../scripts/popup/popup').then(null, console.error.bind(console));

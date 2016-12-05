@@ -1,60 +1,20 @@
-<!doctype html>
 <html>
   <head>
-    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="../lib/angular-1.5.8.min.js"></script>
-    <script src="../scripts/config.js"></script>
-    <script src="../scripts/devices.js"></script>
-    <script src="../scripts/options.js"></script>
     <link rel="stylesheet" href="../css/squid.css">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  
+    <!-- Polyfill(s) for older browsers -->
+    <script src="../node_modules/core-js/client/shim.min.js"></script>
+    <script src="../node_modules/zone.js/dist/zone.js"></script>
+    <script src="../node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="../node_modules/systemjs/dist/system.src.js"></script>
+
+    <script src="../js/system.config.js"></script>
+    <script src="../js/options.bootstrap.js"></script>
   </head>
-  <body>
-    <div ng-app="options" ng-controller="optionsController">
-      <div ng-if="device" class="squid-options">
-
-        <div class="squid-current">
-          <b>Current device</b>
-          <div ng-if="device">
-            <ul class="list-group">
-              <li class="list-group-item">
-                <div class="squid-device-item">
-                  <i class="material-icons squid-icon">phone_android</i>
-                  <div class="squid-device">{{device.name}}</div>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div ng-if="!device">
-            {{strings.noSelectedDevice}}
-          </div>
-        </div>
-      </div>
-
-      <div class="squid-devices">
-        <b>Other devices</b>
-        <div class="loader" ng-if="loadingDevices"></div>
-        <ul class="list-group" ng-if="!loadingDevices">
-          <div ng-if="devices">
-            <li class="list-group-item" ng-repeat="device in devices" ng-click="setDevice(device)">
-              <div class="squid-device-item">
-                <i class="material-icons squid-icon">phone_android</i>
-                <div class="squid-device">{{device.name}}</div>
-              </div>
-            </li>
-          </div>
-          <div ng-if="!devices || devices.length == 0">
-            {{strings.noOtherDevices}}
-          </div>
-        </ul>
-      </div>
-
-      <div ng-if="error" class="squid-error">
-        <div>{{error}}</div>
-      </div>
-
-    </div>
+  <body class="squid-body">
+    <my-app></my-app>
   </body>
 </html>
 
