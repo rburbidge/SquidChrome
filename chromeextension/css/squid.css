@@ -1,8 +1,16 @@
+/* Squid angular page */
+
+.squid-body {
+    background-color: #252839;
+}
+
 /* Squid options page */
 
 .squid-options {
     animation: fadein 0.5s;
     padding: 0;
+    padding-top: 50px;
+    color: white;
 }
 
 @keyframes fadein {
@@ -12,32 +20,26 @@
 
 .squid-icon {
     font-size: 36px !important ;
-    color: #404040;
 }
 
 .squid-device {
     padding: 10px;
+    background-color: #b5b5b7;
 }
 
 .squid-device-name {
     font-size: 18px;
-    color: #404040;
 }
 
 .squid-device-selected {
-    background-color: #ffbc41;
+    background-color: #f2b632;
 }
 
 .squid-device-list {
     padding: 0;
 }
 
-.squid-error {
-    color: red;
-}
-
 /* Pop-up */
-
 .squid-popup {
     white-space: pre;
     text-overflow: ellipsis;
@@ -58,15 +60,12 @@
     animation: spin 0.7s linear infinite;
 }
 
-.loader-container {
-    text-align: center;
-    width:100%;
-}
-
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+/* Helpers */
 
 .vcenter {
     display: inline-block;
@@ -77,4 +76,8 @@
 .vertical-align {
     display: flex;
     align-items: center;
+}
+
+.spacer-12-top {
+    padding-top: 12px;
 }

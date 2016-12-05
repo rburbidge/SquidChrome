@@ -27,12 +27,10 @@ export class AppComponent implements OnInit {
         return this.selectedDevice && this.selectedDevice.id == device.id;
     }
 
-    private onError(error: string): void {
-        this.loadingDevices = false;
-        this.error = error;
-    }
+    public refreshDevices(): void {
+        this.loadingDevices = true;
+        delete this.error;
 
-    ngOnInit(): void {
         ChromeStorage.getSelectedDevice()
             .then((device) => this.selectedDevice = device)
             .catch((reason) => this.onError("Oops! An error occured while reading your settings. Try again later"));
@@ -43,5 +41,14 @@ export class AppComponent implements OnInit {
                 this.loadingDevices = false;
             })
             .catch((reason) => this.onError("Oops! An error occurred while retrieving your devices. Try again later."));
+    }
+
+    private onError(error: string): void {
+        this.loadingDevices = false;
+        this.error = error;
+    }
+
+    ngOnInit(): void {
+        this.refreshDevices();
     }
 }
