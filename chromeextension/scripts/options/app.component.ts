@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ChromeStorage } from '../common/chrome-storage';
 import { Device } from '../models/device';
 import { DeviceService } from './services/device.service';
+import { SquidError } from '../models/squid-error';
+import { SquidErrorCode } from '../models/squid-error-code';
 
 @Component({
     selector: 'my-app',
@@ -33,14 +35,21 @@ export class AppComponent implements OnInit {
 
         ChromeStorage.getSelectedDevice()
             .then((device) => this.selectedDevice = device)
-            .catch((reason) => this.onError("Oops! An error occured while reading your settings. Try again later"));
+            .catch((reason) => this.onError('Oops! An error occured while reading your settings. Try again later'));
 
         this.deviceService.getDevices()
             .then(devices => {
                 this.devices = devices;
                 this.loadingDevices = false;
             })
-            .catch((reason) => this.onError("Oops! An error occurred while retrieving your devices. Try again later."));
+            .catch((error: SquidError) => {
+                if(error.code == SquidErrorCode.UserNotFound) {
+                    this.loadingDevices = false;
+                    return;
+                }
+
+                this.onError('Oops! An error occurred while retrieving your devices. Try again later.');
+            });
     }
 
     private onError(error: string): void {
