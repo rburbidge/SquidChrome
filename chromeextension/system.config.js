@@ -1,10 +1,15 @@
-SystemJS.defaultJSExtensions = true;
-System.config({
+(function (global) {
+  SystemJS.defaultJSExtensions = true;
+  System.config({
     paths: {
-        // Alias used below
-        'npm:': '../node_modules/'
+        // paths serve as alias
+        'npm:': 'node_modules/'
     },
+    // map tells the System loader where to look for things
     map: {
+        // our app is within the app folder
+        app: 'scripts',
+
         // angular bundles
         '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
         '@angular/common': 'npm:@angular/common/bundles/common.umd.js',
@@ -22,13 +27,14 @@ System.config({
         'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js'
     },
     meta: {
-        '../node_modules/jquery/dist/jquery.min.js': {
-            format: 'amd',
-            exports: '$'
+        'node_modules/jquery/dist/jquery.min.js': {
+             format: 'amd',
+             exports: '$'
         }
     },
     scripts: {
         format: 'register',
         defaultExtension: 'js'
     }
-});
+  });
+})(this);
