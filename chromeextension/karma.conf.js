@@ -1,7 +1,7 @@
 // #docregion
 module.exports = function(config) {
-  var scriptsBase    = 'scripts/'; // transpiled src
-  var testBase    = 'spec/'; // transpiled test
+  var scriptsBase = 'scripts/'; // transpiled src
+  var testBase = 'test/'; // transpiled test
 
   config.set({
     basePath: '',
