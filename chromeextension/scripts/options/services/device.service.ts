@@ -19,13 +19,17 @@ export class DeviceService {
 
     constructor(private http: Http) { }
 
+    public foo(): string {
+        return "foo";
+    }
+
     public getDevices(): Promise<Device[]> {
-        return this.sendAuthorizedRequest('/api/devices', { method: 'GET'} as RequestOptions)
+        return this.sendAuthorizedRequest('/api/devices', new RequestOptions({ method: 'GET'}))
             .then(response => response.json() as Device[]);
     }
 
     public sendUrlToDevice(deviceId: string): Promise<Response> {
-        return this.sendAuthorizedRequest(`/api/devices/${deviceId}/commands`, { method: 'POST' } as RequestOptions)
+        return this.sendAuthorizedRequest(`/api/devices/${deviceId}/commands`, new RequestOptions({ method: 'POST' }));
     }
 
     private sendAuthorizedRequest(relativePath: string, options: RequestOptions): Promise<Response> {
