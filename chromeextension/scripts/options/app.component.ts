@@ -15,9 +15,9 @@ export class AppComponent implements OnInit {
     constructor(private deviceService: DeviceService) { }
 
     public loadingDevices: boolean = true;
-    public selectedDevice: Device;
-    public devices: Device[];
     public error: string;
+    public devices: Device[];
+    public selectedDevice?: Device;
 
     public setDevice(device: Device): void {
         chrome.storage.sync.set(
@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
     }
 
     public isDeviceSelected(device: Device): boolean {
-        return this.selectedDevice && this.selectedDevice.id == device.id;
+        return !!(this.selectedDevice && this.selectedDevice.id == device.id);
     }
 
     public refreshDevices(): void {

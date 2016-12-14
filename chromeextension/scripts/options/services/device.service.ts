@@ -19,10 +19,6 @@ export class DeviceService {
 
     constructor(private http: Http) { }
 
-    public foo(): string {
-        return "foo";
-    }
-
     public getDevices(): Promise<Device[]> {
         return this.sendAuthorizedRequest('/api/devices', new RequestOptions({ method: 'GET'}))
             .then(response => response.json() as Device[]);

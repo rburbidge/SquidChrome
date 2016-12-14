@@ -9,7 +9,6 @@
     "removeComments": false,
     "noImplicitAny": false,
     "noImplicitThis": true,
-    "noUnusedLocals": true,
     "typeRoots": [
       "./node_modules/@types/"
     ]
