@@ -3,12 +3,13 @@ import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
+import { ChromeStorageService } from './services/chrome-storage.service';
 import { DeviceService } from './services/device.service';
 
 @NgModule({
     imports: [BrowserModule, HttpModule],
     declarations: [AppComponent],
-    providers: [DeviceService],
+    providers: [ChromeStorageService, DeviceService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

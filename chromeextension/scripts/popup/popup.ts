@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import { ChromeStorage } from '../common/chrome-storage';
+import { ChromeStorageService } from '../options/services/chrome-storage.service';
 import { Config } from '../config';
 import { Devices } from './devices';
 
@@ -32,7 +32,7 @@ function renderError(statusText) {
 getCurrentTabUrl((url) => {
     renderStatus('Sending... ' + url);
 
-    ChromeStorage.getSelectedDevice()
+    new ChromeStorageService().getSelectedDevice()
         .then((device) => {
             new Devices(Config.squidEndpoint).sendUrl(device.id, url)
                 .then(() => {

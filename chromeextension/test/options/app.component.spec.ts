@@ -1,21 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AppComponent } from '../../scripts/options/app.component';
-import { DeviceService } from '../../scripts/options/services/device.service';
-import { MockDeviceService } from '../../test/options/services/mock.device.service';
+import { Device } from '../../scripts/models/device';
+import { MockChromeStorageService } from './services/chrome-storage.service.mock';
+import { MockDeviceService } from './services/device.service.mock';
 
 describe('AppComponent', function() {
 
     let mockService: MockDeviceService;
+    let mockChromeStorageService: MockChromeStorageService;
     let comp: AppComponent;
 
     beforeEach(() => {
         mockService = new MockDeviceService();
-        comp = new AppComponent(mockService);
+        mockChromeStorageService = new MockChromeStorageService();
+        comp = new AppComponent(mockService, mockChromeStorageService);
     });
 
     it('constructor default values', function() {
-        expect(comp.loadingDevices).toBeTruthy();
+        expect(comp.isLoading).toBeTruthy();
         expect(comp.devices).toBeUndefined();
         expect(comp.selectedDevice).toBeUndefined();
         expect(comp.error).toBeUndefined();
@@ -33,4 +36,27 @@ describe('AppComponent', function() {
         expect(comp.isDeviceSelected(device2)).toBeFalsy();
         expect(comp.isDeviceSelected(device1)).toBeTruthy();
     });
+
+    it('refreshDevices() should stop loading on success', (done) => {
+        let devices: Device[] = [
+            { id: "id1", name: "name" }
+        ];
+        mockService.getDevicesImpl = () => {
+            return Promise.resolve(devices);
+        };
+
+        comp.isLoading = false; // 1. Begin with loading = false
+        comp.refreshDevices()
+            .then(() => {
+                expect(comp.isLoading).toBeFalsy(); // 3. Expect loading = false once complete
+                expect(comp.devices).toEqual(devices);
+                expect(comp.selectedDevice).toBeUndefined();
+                done();
+            })
+            .catch(() => {
+                fail();
+                done();
+            });
+        expect(comp.isLoading).toBeTruthy(); // 2. Expect loading = true from the refresh
+    })
 });
