@@ -25,6 +25,8 @@
 .squid-device {
     padding: 10px;
     background-color: #b5b5b7;
+    cursor: pointer;
+    animation: fadein 1s;
 }
 
 .squid-device-name {

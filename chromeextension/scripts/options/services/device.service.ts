@@ -19,8 +19,23 @@ export class DeviceService {
 
     constructor(private http: Http) { }
 
+    public addDevice(name: string, gcmToken: string): Promise<Device> {
+        let headers = new Headers();
+        headers.append('Content-type', 'application/json');
+        return this.sendAuthorizedRequest('/api/devices', new RequestOptions(
+            {
+                method: 'POST',
+                body: JSON.stringify({ name: name, gcmToken: gcmToken }),
+                headers: headers
+            })).then(response => response.json() as Device);
+    }
+
+    public removeDevice(id: string): Promise<any> {
+        return this.sendAuthorizedRequest(`/api/devices/${id}`, new RequestOptions({ method: 'DELETE' }));
+    }
+
     public getDevices(): Promise<Device[]> {
-        return this.sendAuthorizedRequest('/api/devices', new RequestOptions({ method: 'GET'}))
+        return this.sendAuthorizedRequest('/api/devices', new RequestOptions({ method: 'GET' }))
             .then(response => response.json() as Device[]);
     }
 
