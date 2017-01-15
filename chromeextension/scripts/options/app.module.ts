@@ -2,14 +2,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 
-import { AppComponent } from './app.component';
+import { OptionsComponent } from './options.component';
 import { ChromeStorageService } from './services/chrome-storage.service';
 import { DeviceService } from './services/device.service';
 
 @NgModule({
     imports: [BrowserModule, HttpModule],
-    declarations: [AppComponent],
+    declarations: [OptionsComponent],
     providers: [ChromeStorageService, DeviceService],
-    bootstrap: [AppComponent]
+    bootstrap: [OptionsComponent]
 })
 export class AppModule { }

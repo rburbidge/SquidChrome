@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppComponent } from '../../scripts/options/app.component';
+import { OptionsComponent } from '../../scripts/options/options.component';
 import { Device } from '../../scripts/models/device';
 import { MockChromeStorageService } from './services/chrome-storage.service.mock';
 import { MockDeviceService } from './services/device.service.mock';
 
-describe('AppComponent', function() {
+describe('OptionsComponent', function() {
 
     let mockService: MockDeviceService;
     let mockChromeStorageService: MockChromeStorageService;
-    let comp: AppComponent;
+    let comp: OptionsComponent;
 
     beforeEach(() => {
         mockService = new MockDeviceService();
         mockChromeStorageService = new MockChromeStorageService();
-        comp = new AppComponent(mockService, mockChromeStorageService);
+        comp = new OptionsComponent(mockService, mockChromeStorageService);
     });
 
     it('constructor default values', function() {

@@ -13,7 +13,7 @@ import { SquidErrorCode } from '../models/squid-error-code';
     templateUrl: '../../templates/options.html',
     providers: [DeviceService]
 })
-export class AppComponent implements OnInit {
+export class OptionsComponent implements OnInit {
     constructor(private deviceService: DeviceService, private chromeStorageService: ChromeStorageService) { }
 
     public isDevMode: boolean = Config.isDevMode;
