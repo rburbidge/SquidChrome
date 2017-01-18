@@ -22,12 +22,15 @@ export class OptionsComponent implements OnInit {
     public devices: Device[];
     public selectedDevice?: Device;
 
-    public setDevice(device: Device): void {
+    /**
+     * Set the selected device.
+     */
+    public setDevice(device: Device): Promise<void> {
         this.selectedDevice = device;
 
         // TODO Check that storage was set correctly. Waiting on the callback before setting the selected device is
         // currently causing a bug where the data binding intermittently doesn't take effect
-        chrome.storage.sync.set({ device: device });
+        return this.chromeStorageService.setSelectedDevice(device);
     }
 
     public isDeviceSelected(device: Device): boolean {
@@ -55,6 +58,9 @@ export class OptionsComponent implements OnInit {
                 1));
     }
 
+    /**
+     * Sync both the selected device, and the other devices from the server.
+     */
     public refreshDevices(): Promise<null> {
         this.isLoading = true;
         delete this.error;
