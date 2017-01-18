@@ -44,10 +44,6 @@
 /* Pop-up */
 .squid-popup {
     white-space: pre;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    max-width: 400px;
-    min-width: 40px;
 }
 
 /* Loader */
