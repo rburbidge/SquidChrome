@@ -12,15 +12,17 @@ class Popup {
      * @param {function(string)} callback - called when the URL of the current tab
      *     is found.
      */
-    public static getCurrentTabUrl(callback): void {
-        var queryInfo = {
-            active: true,
-            currentWindow: true
-        };
+    public static getCurrentTabUrl(): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            var queryInfo = {
+                active: true,
+                currentWindow: true
+            };
 
-        chrome.tabs.query(queryInfo, function(tabs) {
-            // Can safely assume that at least one tab is open
-            callback(tabs[0].url);
+            chrome.tabs.query(queryInfo, function(tabs) {
+                // Can safely assume that at least one tab is open
+                resolve(tabs[0].url);
+            });
         });
     }
 
@@ -49,49 +51,49 @@ class Popup {
     }
 }
 
-/**
- * The main method...
- * TODO Update to use a Promise.all() on retrieving the current tab URL and selected device so that there is less method chaining
- */
-Popup.getCurrentTabUrl((url: string) => {
-    Popup.renderStatus('Sending... ' + url);
+// The main method
+Promise.all(
+    [
+        Popup.getCurrentTabUrl(),
+        new ChromeStorageService().getSelectedDevice()
+    ])
+    .then((values) => {
+        let url: string = values[0];
+        let device: any = values[1];
 
-    new ChromeStorageService().getSelectedDevice()
-        .then((device) => {
-            let isOptionsPage: boolean = Popup.isOptionsPage(url);
+        let isOptionsPage: boolean = Popup.isOptionsPage(url);
 
-            if (!device) {
-                // Render the 'no device' message
-                let message = 'You have no selected device.';
-                if (!isOptionsPage) {
-                    message += ' Opening options page...';
-                }
-                Popup.renderStatus(message);
+        if (!device) {
+            // Render the 'no device' message
+            let message = 'You have no selected device.';
+            if (!isOptionsPage) {
+                message += ' Opening options page...';
+            }
+            Popup.renderStatus(message);
 
-                // The pop-up will close when the options page is opened, so do so after a delay to give the user a chance
-                // to read it
-                if (!isOptionsPage) {
-                    const timeToShowMs = 2000;
-                    window.setTimeout(() => Popup.openOptionsPage(), timeToShowMs);
-                }
-
-                return;
+            // The pop-up will close when the options page is opened, so do so after a delay to give the user a chance
+            // to read it
+            if (!isOptionsPage) {
+                const timeToShowMs = 2000;
+                window.setTimeout(() => Popup.openOptionsPage(), timeToShowMs);
             }
 
-            // Prevent user from sending chrome extension pages, such as the options page
-            if (isOptionsPage) {
-                Popup.renderStatus('Click this while on a different tab. The options page cannot be sent.');
-                return;
-            }
+            return;
+        }
 
-            new Devices(Config.squidEndpoint).sendUrl(device.id, url)
-                .then(() => {
-                    Popup.renderStatus('Sent');
-                })
-                .catch((error) => {
-                    // TODO Show user-friendly error message when there is an error
-                    // TODO Log telemetry when there is an error
-                    Popup.renderError(JSON.stringify(error));
-                });
-        });
-});
+        // Prevent user from sending chrome extension pages, such as the options page
+        if (isOptionsPage) {
+            Popup.renderStatus('Click this while on a different tab. The options page cannot be sent.');
+            return;
+        }
+
+        new Devices(Config.squidEndpoint).sendUrl(device.id, url)
+            .then(() => {
+                Popup.renderStatus('Sent');
+            })
+            .catch((error) => {
+                // TODO Show user-friendly error message when there is an error
+                // TODO Log telemetry when there is an error
+                Popup.renderError(JSON.stringify(error));
+            });
+    });
