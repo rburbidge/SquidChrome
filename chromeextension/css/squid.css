@@ -7,10 +7,18 @@
 /* Squid options page */
 
 .squid-options {
-    animation: fadein 0.5s;
     padding: 0;
     padding-top: 50px;
     color: white;
+}
+
+.fade-in {
+    animation: fadein 0.5s;
+}
+
+.squid-options-header {
+    min-height: 50px;
+    font-size: 20px;
 }
 
 @keyframes fadein {
@@ -44,6 +52,12 @@
 /* Pop-up */
 .squid-popup {
     white-space: pre;
+}
+
+.squid-dev-options {
+    background-color: #b5b5b7;
+    margin-top: 100px;
+    padding: 10px;
 }
 
 /* Loader */

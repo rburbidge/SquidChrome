@@ -19,7 +19,7 @@ export class Devices {
     public sendUrl(deviceId: string, url: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             ChromeAuthHelper.createAuthHeader()
-                .then((authHeader) => {
+                .then((authHeader: string) => {
                     let options: any = {
                         type: 'POST',
                         url: this.baseUrl + `/api/devices/${deviceId}/commands`,
