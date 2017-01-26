@@ -52,6 +52,7 @@
 /* Pop-up */
 .squid-popup {
     white-space: pre;
+    font-size: 15px;
 }
 
 .squid-dev-options {
