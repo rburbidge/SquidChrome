@@ -45,16 +45,19 @@ export class OptionsComponent implements OnInit {
     private getMessage(): string {
         if (this.selectedDevice) {
             if (this.isSelectedDeviceUnregistered()) {
-                return `${this.selectedDevice.name} was not found`;
+                if(this.devices && this.devices.length !== 0) {
+                    return `${this.selectedDevice.name} was not found. Select a device`
+                } else {
+                    return `${this.selectedDevice.name} was not found`;
+                }
+            } else {
+                return `Pages will be sent to ${this.selectedDevice.name}`
             }
-            return `Pages will be sent to ${this.selectedDevice.name}`
-        }
-
-        if (!this.devices || this.devices.length == 0) {
+        } else if(!this.devices || this.devices.length == 0) {
             return 'No devices found';
+        } else {
+            return 'Select a device';
         }
-
-        return 'Select a device';
     }
 
     public isDeviceSelected(device: Device): boolean {
@@ -124,6 +127,7 @@ export class OptionsComponent implements OnInit {
                 .catch((error: SquidError) => {
                     if (error.code == SquidErrorCode.UserNotFound) {
                         this.isLoading = false;
+                        this.refreshMessage();
                     } else {
                         this.onError('Oops! An error occurred while retrieving your settings. Try again later.');
                     }
