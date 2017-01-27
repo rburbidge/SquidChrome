@@ -27,7 +27,7 @@
 }
 
 .squid-icon {
-    font-size: 36px !important ;
+    font-size: 36px !important;
 }
 
 .squid-device {
@@ -37,12 +37,21 @@
     animation: fadein 1s;
 }
 
-.squid-device-name {
-    font-size: 18px;
+.squid-device:hover {
+    background-color: #337ab7;
+    transition: background 0.25s linear;
 }
 
 .squid-device-selected {
     background-color: #f2b632;
+}
+
+.squid-device-selected:hover {
+    background-color: #C8B052;
+}
+
+.squid-device-name {
+    font-size: 18px;
 }
 
 .squid-device-list {
