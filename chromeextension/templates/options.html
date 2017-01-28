@@ -25,7 +25,7 @@
         </div>
 
         <!-- List of devices -->
-        <div *ngIf="devices && devices.length != 0" class="squid-device-list">
+        <div *ngIf="devices && devices.length != 0" class="squid-device-list squid-panel">
             <div *ngFor="let device of devices" class="row squid-device vertical-align" [class.squid-device-selected]="isDeviceSelected(device)" (click)="setDevice(device)">
                 <div class="col-xs-4">
                     <i class="material-icons squid-icon">phone_android</i>
@@ -45,7 +45,7 @@
 
     </div>
 
-    <div *ngIf="isDevMode && !isLoading" class="row spacer-12-top squid-dev-options">
+    <div *ngIf="isDevMode && !isLoading" class="row spacer-12-top squid-dev-options squid-panel">
         <div class="row text-center">Dev Options</div>
             <button class="btn btn-primary" (click)="addDevice()">Add Device</button>
     </div>

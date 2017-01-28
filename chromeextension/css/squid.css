@@ -30,14 +30,19 @@
     font-size: 36px !important;
 }
 
+.squid-panel {
+    color: #666;
+    background-color: #e1e1e1;
+}
+
 .squid-device {
     padding: 10px;
-    background-color: #b5b5b7;
     cursor: pointer;
     animation: fadein 1s;
 }
 
 .squid-device:hover {
+    color: white;
     background-color: #337ab7;
     transition: background 0.25s linear;
 }
@@ -65,7 +70,6 @@
 }
 
 .squid-dev-options {
-    background-color: #b5b5b7;
     margin-top: 100px;
     padding: 10px;
 }
