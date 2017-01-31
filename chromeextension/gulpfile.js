@@ -1,5 +1,7 @@
 var gulp = require('gulp'),
     del = require('del'),
+    ts = require("gulp-typescript"),
+    tsProject = ts.createProject("tsconfig.json"),
     zip = require('gulp-zip');
 
 var exec = require('child_process').exec;
@@ -20,28 +22,63 @@ gulp.task('install', function(cb) {
     });
 });
 
+gulp.task('build', function() {
+    return tsProject.src()
+        .pipe(tsProject())
+        .js.pipe(gulp.dest("build"));
+});
+
 gulp.task('cleanbuild', function() {
     return del('build/*');
 });
 
 gulp.task('copy', ['cleanbuild'], function() {
 
-    var thing = gulp.src([
+    // TODO Fix this to return the result of ALL of the copying completing, not just these files
+    // Copy top-level files
+    var complete = gulp.src([
         '*.png', 
         '*.html',
         'manifest.json',
-        'system.config.js',
-        './node_modules/bootstrap/dist/css/bootstrap.min.css'])
+        'system.config.js'])
         .pipe(gulp.dest('./build'));
 
-    var folders = ['bootstrap', 'css', 'lib', 'scripts', 'templates'];
+    // Copy entire folders
+    // TODO Do not copy entire rxjs folder over. The size is about 3MB
+    var folders = ['bootstrap', 'css', 'lib', 'node_modules/rxjs', 'scripts', 'templates'];
     for(var i = 0; i < folders.length; i++) {
         var folder = folders[i];
         gulp.src([`./${folder}/**/*`])
             .pipe(gulp.dest(`./build/${folder}`));
     }
 
-    return thing;
+    // Copy node module files
+    var nodeFiles = [
+        '@angular/compiler/bundles/compiler.umd.js',
+        '@angular/common/bundles/common.umd.js',
+        '@angular/core/bundles/core.umd.js',
+        '@angular/http/bundles/http.umd.js',
+        '@angular/platform-browser/bundles/platform-browser.umd.js',
+        '@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
+        'angular2-uuid/index.js',
+        'bootstrap/dist/css/bootstrap.min.css',
+        'core-js/client/shim.min.js',
+        'jquery/dist/jquery.min.js',
+        'reflect-metadata/Reflect.js',
+        'systemjs/dist/system.src.js',
+        'zone.js/dist/zone.js'];
+    for(var i = 0; i < nodeFiles.length; i++) {
+        var originalFile = 'node_modules/' + nodeFiles[i];
+        var endOfPath = originalFile.lastIndexOf('/');
+
+        var dir = originalFile.substr(0, endOfPath);
+        var fileName = originalFile.substr(endOfPath, originalFile.length - endOfPath);
+
+        gulp.src(originalFile)
+            .pipe(gulp.dest('./build/' + dir));
+    }
+
+    return complete;
 });
 
 gulp.task('zip', ['copy'], function() {
