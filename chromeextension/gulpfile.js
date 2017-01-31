@@ -6,33 +6,29 @@ var gulp = require('gulp'),
 
 var exec = require('child_process').exec;
 
-gulp.task('clean', function(cb) {
-    exec('git clean -fxd', function (err, stdout, stderr) {
-        console.log(stdout);
-        console.log(stderr);
-        cb(err);
-    });
-});
-
-gulp.task('install', function(cb) {
-    exec('npm install', function (err, stdout, stderr) {
-        console.log(stdout);
-        console.log(stderr);
-        cb(err);
-    });
-});
-
-gulp.task('build', function() {
-    return tsProject.src()
-        .pipe(tsProject())
-        .js.pipe(gulp.dest("build"));
-});
-
+// Clean the build folder
 gulp.task('cleanbuild', function() {
     return del('build/*');
 });
 
-gulp.task('copy', ['cleanbuild'], function() {
+// Clean everything except the build and node_modules directory
+gulp.task('clean', ['cleanbuild'], function(cb) {
+    exec('git clean -fxd -e node_modules -e build', function (err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+});
+
+// Build TypeScript
+gulp.task('transpile', ['clean', 'cleanbuild'], function() {
+    return tsProject.src()
+        .pipe(tsProject())
+        .js.pipe(gulp.dest("."));
+});
+
+// Copy to the ./build folder
+gulp.task('build', ['transpile'], function() {
 
     // TODO Fix this to return the result of ALL of the copying completing, not just these files
     // Copy top-level files
@@ -81,7 +77,7 @@ gulp.task('copy', ['cleanbuild'], function() {
     return complete;
 });
 
-gulp.task('zip', ['copy'], function() {
+gulp.task('zip', ['build'], function() {
     return gulp.src('./build/**/*')
         .pipe(zip('archive.zip'))
         .pipe(gulp.dest('./build'));
