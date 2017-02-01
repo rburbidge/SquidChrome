@@ -40,8 +40,7 @@ gulp.task('build', ['transpile'], function() {
         .pipe(gulp.dest('./build'));
 
     // Copy entire folders
-    // TODO Do not copy entire rxjs folder over. The size is about 3MB
-    var folders = ['bootstrap', 'css', 'lib', 'node_modules/rxjs', 'scripts', 'templates'];
+    var folders = ['bootstrap', 'css', 'lib', 'scripts', 'templates'];
     for(var i = 0; i < folders.length; i++) {
         var folder = folders[i];
         gulp.src([`./${folder}/**/*`])
@@ -72,6 +71,23 @@ gulp.task('build', ['transpile'], function() {
 
         gulp.src(originalFile)
             .pipe(gulp.dest('./build/' + dir));
+    }
+    
+    // Copy RxJS *.js files
+    var rxjs = [
+        '',
+        'operator/',
+        'observable/',
+        'add/operator/',
+        'add/observable/',
+        'scheduler/',
+        'symbol/',
+        'util/'
+    ];
+    for(var i = 0; i < rxjs.length; i++) {
+        var folder = 'node_modules/rxjs/' + rxjs[i];
+        gulp.src(folder + '*.js')
+            .pipe(gulp.dest('./build/' + folder));
     }
 
     return complete;
