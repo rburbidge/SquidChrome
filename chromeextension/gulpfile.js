@@ -6,13 +6,15 @@ var gulp = require('gulp'),
 
 var exec = require('child_process').exec;
 
+gulp.task('default', ['copyResources', 'copyCompiledFiles', 'copyNodeModules', 'copyRxjs', 'transpile']);
+
 // Clean the build folder
-gulp.task('cleanbuild', function() {
+gulp.task('cleanBuild', function() {
     return del('build/*');
 });
 
-// Clean everything except the build and node_modules directory
-gulp.task('clean', ['cleanbuild'], function(cb) {
+// Clean everything except the build and node_modules directories
+gulp.task('clean', ['cleanBuild'], function(cb) {
     exec('git clean -fxd -e node_modules -e build', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
@@ -21,34 +23,30 @@ gulp.task('clean', ['cleanbuild'], function(cb) {
 });
 
 // Build TypeScript
-gulp.task('transpile', ['clean', 'cleanbuild'], function() {
+gulp.task('transpile', ['clean', 'cleanBuild'], function() {
     return tsProject.src()
         .pipe(tsProject())
         .js.pipe(gulp.dest("."));
 });
 
-// Copy to the ./build folder
-gulp.task('build', ['transpile'], function() {
-
-    // TODO Fix this to return the result of ALL of the copying completing, not just these files
-    // Copy top-level files
-    var complete = gulp.src([
+// Copies any files that don't need to be built
+gulp.task('copyResources', ['cleanBuild'], function() {
+    var files = [
         '*.png', 
         '*.html',
         'manifest.json',
-        'system.config.js'])
+        'system.config.js',
+        'bootstrap/**/*',
+        'css/**/*',
+        'lib/**/*',
+        'templates/**/*'];
+    return gulp.src(files, { base: '.' })
         .pipe(gulp.dest('./build'));
+});
 
-    // Copy entire folders
-    var folders = ['bootstrap', 'css', 'lib', 'scripts', 'templates'];
-    for(var i = 0; i < folders.length; i++) {
-        var folder = folders[i];
-        gulp.src([`./${folder}/**/*`])
-            .pipe(gulp.dest(`./build/${folder}`));
-    }
-
-    // Copy node module files
-    var nodeFiles = [
+// Copies node modules
+gulp.task('copyNodeModules', ['cleanBuild'], function() {
+    var files = [
         '@angular/compiler/bundles/compiler.umd.js',
         '@angular/common/bundles/common.umd.js',
         '@angular/core/bundles/core.umd.js',
@@ -62,45 +60,42 @@ gulp.task('build', ['transpile'], function() {
         'reflect-metadata/Reflect.js',
         'systemjs/dist/system.src.js',
         'zone.js/dist/zone.js'];
-    for(var i = 0; i < nodeFiles.length; i++) {
-        var originalFile = 'node_modules/' + nodeFiles[i];
-        var endOfPath = originalFile.lastIndexOf('/');
-
-        var dir = originalFile.substr(0, endOfPath);
-        var fileName = originalFile.substr(endOfPath, originalFile.length - endOfPath);
-
-        gulp.src(originalFile)
-            .pipe(gulp.dest('./build/' + dir));
-    }
-    
-    // Copy RxJS *.js files
-    var rxjs = [
-        '',
-        'operator/',
-        'observable/',
-        'add/operator/',
-        'add/observable/',
-        'scheduler/',
-        'symbol/',
-        'util/'
-    ];
-    for(var i = 0; i < rxjs.length; i++) {
-        var folder = 'node_modules/rxjs/' + rxjs[i];
-        gulp.src(folder + '*.js')
-            .pipe(gulp.dest('./build/' + folder));
-    }
-
-    return complete;
+    return gulp.src(files, { cwd: '**/node_modules/'})
+        .pipe(gulp.dest('build'));
 });
 
-gulp.task('zip', ['build'], function() {
-    return gulp.src('./build/**/*')
-        .pipe(zip('archive.zip'))
+// Copies RxJS files.
+// Currently only copies the files that are used by the application at runtime (a subset of all JS files).
+gulp.task('copyRxjs', ['cleanBuild'], function() {
+    var files = [
+        '*.js',
+        'observable/*.js',
+        'operator/*.js',
+        'add/observable/*.js',
+        'add/operator/*.js',
+        'scheduler/*.js',
+        'symbol/*.js',
+        'util/*.js'
+    ];
+    return gulp.src(files, { cwd: '**/node_modules/rxjs/'})
+        .pipe(gulp.dest('build'));
+});
+
+// Copies the TypeScript build's JS files
+gulp.task('copyCompiledFiles', ['cleanBuild', 'transpile'], function() {
+    var folders = ['scripts/**/*.js'];
+    return gulp.src(folders, { base: '.' })
         .pipe(gulp.dest('./build'));
+});
+
+gulp.task('zip', ['default'], function() {
+    return gulp.src('build/**/*')
+        .pipe(zip('archive.zip'))
+        .pipe(gulp.dest('build'));
 });
 
 gulp.task('ziponly', function() {
     return gulp.src('./build/**/*')
         .pipe(zip('archive.zip'))
-        .pipe(gulp.dest('./build'));
+        .pipe(gulp.dest('build'));
 });
