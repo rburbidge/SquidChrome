@@ -13,8 +13,8 @@ gulp.task('cleanBuild', function() {
     return del('build/*');
 });
 
-// Clean everything except the build and node_modules directories
-gulp.task('clean', ['cleanBuild'], function(cb) {
+// Clean everything except the node_modules and build directories
+gulp.task('cleanRoot', function(cb) {
     exec('git clean -fxd -e node_modules -e build', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
@@ -22,15 +22,18 @@ gulp.task('clean', ['cleanBuild'], function(cb) {
     });
 });
 
+// Clean everything
+gulp.task('clean', ['cleanBuild', 'cleanRoot']);
+
 // Build TypeScript
-gulp.task('transpile', ['clean', 'cleanBuild'], function() {
+gulp.task('transpile', ['clean'], function() {
     return tsProject.src()
         .pipe(tsProject())
         .js.pipe(gulp.dest("."));
 });
 
 // Copies any files that don't need to be built
-gulp.task('copyResources', ['cleanBuild'], function() {
+gulp.task('copyResources', ['clean'], function() {
     var files = [
         '*.png', 
         '*.html',
@@ -45,7 +48,7 @@ gulp.task('copyResources', ['cleanBuild'], function() {
 });
 
 // Copies node modules
-gulp.task('copyNodeModules', ['cleanBuild'], function() {
+gulp.task('copyNodeModules', ['clean'], function() {
     var files = [
         '@angular/compiler/bundles/compiler.umd.js',
         '@angular/common/bundles/common.umd.js',
@@ -66,7 +69,7 @@ gulp.task('copyNodeModules', ['cleanBuild'], function() {
 
 // Copies RxJS files.
 // Currently only copies the files that are used by the application at runtime (a subset of all JS files).
-gulp.task('copyRxjs', ['cleanBuild'], function() {
+gulp.task('copyRxjs', ['clean'], function() {
     var files = [
         '*.js',
         'observable/*.js',
@@ -82,7 +85,7 @@ gulp.task('copyRxjs', ['cleanBuild'], function() {
 });
 
 // Copies the TypeScript build's JS files
-gulp.task('copyCompiledFiles', ['cleanBuild', 'transpile'], function() {
+gulp.task('copyCompiledFiles', ['clean', 'transpile'], function() {
     var folders = ['scripts/**/*.js'];
     return gulp.src(folders, { base: '.' })
         .pipe(gulp.dest('./build'));
