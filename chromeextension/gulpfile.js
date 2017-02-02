@@ -1,5 +1,4 @@
 var gulp = require('gulp'),
-    del = require('del'),
     ts = require("gulp-typescript"),
     tsProject = ts.createProject("tsconfig.json"),
     zip = require('gulp-zip');
@@ -8,22 +7,14 @@ var exec = require('child_process').exec;
 
 gulp.task('default', ['copyResources', 'copyCompiledFiles', 'copyNodeModules', 'copyRxjs', 'transpile']);
 
-// Clean the build folder
-gulp.task('cleanBuild', function() {
-    return del('build/*');
-});
-
-// Clean everything except the node_modules and build directories
-gulp.task('cleanRoot', function(cb) {
-    exec('git clean -fxd -e node_modules -e build', function (err, stdout, stderr) {
+// Clean everything except the node_modules
+gulp.task('clean', function(cb) {
+    exec('git clean -fxd -e node_modules', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         cb(err);
     });
 });
-
-// Clean everything
-gulp.task('clean', ['cleanBuild', 'cleanRoot']);
 
 // Build TypeScript
 gulp.task('transpile', ['clean'], function() {
