@@ -6,8 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
 import { Config } from '../../config';
 import { Device } from '../../models/device';
-import { SquidError, createSquidError } from '../../models/squid-error';
-import { SquidErrorCode } from '../../models/squid-error-code';
+import { ErrorCode, ErrorModel } from '../../contracts/error-model';
 
 /**
  * The device service.
@@ -54,37 +53,28 @@ export class DeviceService {
                     options.headers.append('Authorization', authHeader);
 
                     this.http.request(this.baseUrl + relativePath, options)
-                        .timeout(DeviceService.timeoutMillis, { code: SquidErrorCode.Timeout })
+                        // TODO The API changed. Put a timeout in here somehow
+                        //.timeout(DeviceService.timeoutMillis, { code: SquidErrorCode.Timeout })
                         .toPromise()
                         .then(resolve)
-                        .catch((response: any) => {
-                            let error: SquidError;
-                            if (response) {
-                                if (response.json) {
-                                    // Response JSON was returned, which might be a SquidError
-                                    error = createSquidError(response.json());
-                                } else {
-                                    // SquidError object might have been returned from a timeout
-                                    error = response as SquidError;
-                                }
+                        .catch((response: Response) => {
+                            let error: ErrorModel;
+                            if (response && response.json().codeString) {
+                                error = response.json();
                             }
 
-                            // If the error is falsy, then construct a default error for the caller
+                            // If the error is not defined, then construct a default error for the caller
                             if(!error) {
-                                let errorMsg: string = 'Response was falsy';
+                                let errorMsg: string = 'Response was contained an unknown error';
 
                                 console.error(errorMsg);
                                 error = {
-                                    code: SquidErrorCode.Unknown,
+                                    code: ErrorCode.Unknown,
+                                    codeString: ErrorCode[ErrorCode.Unknown],
                                     message: errorMsg
                                 };
                             }
 
-                            // Fill in the error code with a default if it is missing
-                            if(error.code === undefined || error.code === null) {
-                                console.error('Error code was undefined');
-                                error.code = SquidErrorCode.Unknown;
-                            }
                             reject(error);
                         });
                 });

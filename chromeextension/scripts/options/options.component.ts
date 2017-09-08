@@ -5,8 +5,7 @@ import { ChromeStorageService } from './services/chrome-storage.service';
 import { Config } from '../config';
 import { Device } from '../models/device';
 import { DeviceService } from './services/device.service';
-import { SquidError } from '../models/squid-error';
-import { SquidErrorCode } from '../models/squid-error-code';
+import { ErrorCode, ErrorModel } from '../contracts/error-model';
 
 @Component({
     selector: 'my-app',
@@ -124,8 +123,8 @@ export class OptionsComponent implements OnInit {
                     this.refreshMessage();
                     resolve();
                 })
-                .catch((error: SquidError) => {
-                    if (error.code == SquidErrorCode.UserNotFound) {
+                .catch((error: ErrorModel) => {
+                    if (error.code == ErrorCode.UserNotFound) {
                         this.isLoading = false;
                         this.refreshMessage();
                     } else {
