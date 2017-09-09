@@ -3,11 +3,11 @@ import { Response } from '@angular/http';
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/toPromise';
 
-import { Device } from '../../../scripts/models/device';
+import { DeviceModel } from '../../../scripts/contracts/device-model';
 import { DeviceService } from '../../../scripts/options/services/device.service';
 
 interface GetDevices {
-    (): Promise<Device[]>;
+    (): Promise<DeviceModel[]>;
 }
 
 @Injectable()
@@ -16,7 +16,7 @@ export class MockDeviceService extends DeviceService {
 
     public getDevicesImpl: GetDevices;
 
-    public getDevices(): Promise<Device[]> {
+    public getDevices(): Promise<DeviceModel[]> {
         return this.getDevicesImpl();
     }
 

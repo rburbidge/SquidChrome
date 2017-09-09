@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { DeviceModel } from '../../scripts/contracts/device-model';
 import { OptionsComponent } from '../../scripts/options/options.component';
-import { Device } from '../../scripts/models/device';
 import { MockChromeStorageService } from './services/chrome-storage.service.mock';
 import { MockDeviceService } from './services/device.service.mock';
 
@@ -38,7 +38,7 @@ describe('OptionsComponent', function() {
     });
 
     it('refreshDevices() should stop loading on success', (done) => {
-        let devices: Device[] = [
+        let devices: DeviceModel[] = [
             { id: "id1", name: "name" }
         ];
         mockService.getDevicesImpl = () => {

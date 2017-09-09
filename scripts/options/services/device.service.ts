@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
 import { Config } from '../../config';
-import { Device } from '../../models/device';
+import { DeviceModel } from '../../contracts/device-model';
 import { ErrorCode, ErrorModel } from '../../contracts/error-model';
 
 /**
@@ -18,7 +18,7 @@ export class DeviceService {
 
     constructor(private http: Http) { }
 
-    public addDevice(name: string, gcmToken: string): Promise<Device> {
+    public addDevice(name: string, gcmToken: string): Promise<DeviceModel> {
         let headers = new Headers();
         headers.append('Content-type', 'application/json');
         return this.sendAuthorizedRequest('/api/devices', new RequestOptions(
@@ -26,16 +26,16 @@ export class DeviceService {
                 method: 'POST',
                 body: JSON.stringify({ name: name, gcmToken: gcmToken }),
                 headers: headers
-            })).then(response => response.json() as Device);
+            })).then(response => response.json() as DeviceModel);
     }
 
     public removeDevice(id: string): Promise<any> {
         return this.sendAuthorizedRequest(`/api/devices/${id}`, new RequestOptions({ method: 'DELETE' }));
     }
 
-    public getDevices(): Promise<Device[]> {
+    public getDevices(): Promise<DeviceModel[]> {
         return this.sendAuthorizedRequest('/api/devices', new RequestOptions({ method: 'GET' }))
-            .then(response => response.json() as Device[]);
+            .then(response => response.json() as DeviceModel[]);
     }
 
     public sendUrlToDevice(deviceId: string): Promise<Response> {

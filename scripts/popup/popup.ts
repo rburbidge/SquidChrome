@@ -3,7 +3,7 @@ import $ from 'jquery';
 import { ChromeStorageService } from '../options/services/chrome-storage.service';
 import { Config } from '../config';
 import { Devices } from './devices';
-import { Device } from '../models/device';
+import { DeviceModel } from '../contracts/device-model';
 import { UrlHelper } from '../common/url-helper';
 import { UrlType } from '../common/url-type';
 
@@ -60,7 +60,7 @@ Promise.all(
     ])
     .then((values) => {
         let url: string = values[0];
-        let device: Device = values[1];
+        let device: DeviceModel = values[1];
 
         console.log('Sending URL: ' + url);
 
