@@ -1,6 +1,7 @@
 import $ from 'jquery';
 
 import { ChromeAuthHelper } from '../common/chrome-auth-helper';
+import { CommandBody } from '../contracts/squid';
 
 /**
  * Devices adapter for sending requests from the popup. This is not an angular HTTP client because the popup is not an
@@ -20,10 +21,14 @@ export class Devices {
         return new Promise<void>((resolve, reject) => {
             ChromeAuthHelper.createAuthHeader()
                 .then((authHeader: string) => {
-                    let options: any = {
+
+                    const body: CommandBody = {
+                        url: url
+                    };
+                    const options: JQuery.AjaxSettings = {
                         type: 'POST',
                         url: this.baseUrl + `/api/devices/${deviceId}/commands`,
-                        data: JSON.stringify({ url: url }),
+                        data: JSON.stringify(body),
                         headers: {
                             Authorization: authHeader,
                             'Content-Type': 'application/json'

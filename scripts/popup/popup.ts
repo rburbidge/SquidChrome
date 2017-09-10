@@ -10,8 +10,6 @@ import { UrlType } from '../common/url-type';
 class Popup {
     /**
      * Get the current URL.
-     * @param {function(string)} callback - called when the URL of the current tab
-     *     is found.
      */
     public static getCurrentTabUrl(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
