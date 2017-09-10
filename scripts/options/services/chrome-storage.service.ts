@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Device } from '../../models/device';
+import { DeviceModel } from '../../contracts/squid';
 
 @Injectable()
 export class ChromeStorageService {
     
-    public setSelectedDevice(device: Device): Promise<void> {
+    public setSelectedDevice(device: DeviceModel): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             chrome.storage.sync.set({ device: device },
                 () => {
@@ -17,8 +17,8 @@ export class ChromeStorageService {
         });
     }
 
-    public getSelectedDevice(): Promise<Device> {
-        return new Promise<Device>((resolve, reject) => {
+    public getSelectedDevice(): Promise<DeviceModel> {
+        return new Promise<DeviceModel>((resolve, reject) => {
             chrome.storage.sync.get(
                 { device: null },
                 (items: any) => {

@@ -3,9 +3,8 @@ import { UUID } from 'angular2-uuid';
 
 import { ChromeStorageService } from './services/chrome-storage.service';
 import { Config } from '../config';
-import { Device } from '../models/device';
+import { DeviceModel, ErrorCode, ErrorModel } from '../contracts/squid';
 import { DeviceService } from './services/device.service';
-import { ErrorCode, ErrorModel } from '../contracts/error-model';
 
 @Component({
     selector: 'my-app',
@@ -18,14 +17,14 @@ export class OptionsComponent implements OnInit {
     public isDevMode: boolean = Config.isDevMode;
     public isLoading: boolean = true;
     public error: string;
-    public devices: Device[] = [];
-    public selectedDevice?: Device;
+    public devices: DeviceModel[] = [];
+    public selectedDevice?: DeviceModel;
     public message: string;
 
     /**
      * Set the selected device.
      */
-    public setDevice(device: Device): Promise<void> {
+    public setDevice(device: DeviceModel): Promise<void> {
         // No-op if the device is already selected
         if (this.selectedDevice && this.selectedDevice.id == device.id) return;
 
@@ -59,14 +58,14 @@ export class OptionsComponent implements OnInit {
         }
     }
 
-    public isDeviceSelected(device: Device): boolean {
+    public isDeviceSelected(device: DeviceModel): boolean {
         return !!(this.selectedDevice && this.selectedDevice.id == device.id);
     }
 
     public isSelectedDeviceUnregistered(): boolean {
         if (!this.selectedDevice || !this.devices) return false;
 
-        return !this.devices.find((device: Device): boolean => {
+        return !this.devices.find((device: DeviceModel): boolean => {
             return this.selectedDevice.id == device.id;
         });
     }
@@ -87,7 +86,7 @@ export class OptionsComponent implements OnInit {
     /**
      * Remove the a device, and delete it from the model set of devices.
      */
-    public removeDevice(event: Event, device: Device): Promise<any> {
+    public removeDevice(event: Event, device: DeviceModel): Promise<any> {
         event.stopPropagation();
         if(this.selectedDevice && this.selectedDevice.id == device.id) {
             this.chromeStorageService.setSelectedDevice(null);
@@ -98,7 +97,7 @@ export class OptionsComponent implements OnInit {
             .then(() => {
                 this.message = `${device.name} has been deleted`;
                 this.devices.splice(
-                    this.devices.findIndex((d: Device) => d.id === device.id),
+                    this.devices.findIndex((d: DeviceModel) => d.id === device.id),
                     1)
             });
     }
@@ -111,8 +110,8 @@ export class OptionsComponent implements OnInit {
         delete this.error;
 
         return new Promise<void>((resolve, reject) => {
-            let getSelectedDevice: Promise<Device> = this.chromeStorageService.getSelectedDevice();
-            let getDevices: Promise<Device[]> = this.deviceService.getDevices();
+            let getSelectedDevice: Promise<DeviceModel> = this.chromeStorageService.getSelectedDevice();
+            let getDevices: Promise<DeviceModel[]> = this.deviceService.getDevices();
             Promise.all([getSelectedDevice, getDevices])
                 .then(values => {
                     this.selectedDevice = values[0];

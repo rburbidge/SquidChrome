@@ -5,8 +5,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
 import { Config } from '../../config';
-import { Device } from '../../models/device';
-import { ErrorCode, ErrorModel } from '../../contracts/error-model';
+import { DeviceModel, ErrorCode, ErrorModel } from '../../contracts/squid';
 
 /**
  * The device service.
@@ -18,7 +17,7 @@ export class DeviceService {
 
     constructor(private http: Http) { }
 
-    public addDevice(name: string, gcmToken: string): Promise<Device> {
+    public addDevice(name: string, gcmToken: string): Promise<DeviceModel> {
         let headers = new Headers();
         headers.append('Content-type', 'application/json');
         return this.sendAuthorizedRequest('/api/devices', new RequestOptions(
@@ -26,20 +25,16 @@ export class DeviceService {
                 method: 'POST',
                 body: JSON.stringify({ name: name, gcmToken: gcmToken }),
                 headers: headers
-            })).then(response => response.json() as Device);
+            })).then(response => response.json() as DeviceModel);
     }
 
     public removeDevice(id: string): Promise<any> {
         return this.sendAuthorizedRequest(`/api/devices/${id}`, new RequestOptions({ method: 'DELETE' }));
     }
 
-    public getDevices(): Promise<Device[]> {
+    public getDevices(): Promise<DeviceModel[]> {
         return this.sendAuthorizedRequest('/api/devices', new RequestOptions({ method: 'GET' }))
-            .then(response => response.json() as Device[]);
-    }
-
-    public sendUrlToDevice(deviceId: string): Promise<Response> {
-        return this.sendAuthorizedRequest(`/api/devices/${deviceId}/commands`, new RequestOptions({ method: 'POST' }));
+            .then(response => response.json() as DeviceModel[]);
     }
 
     private sendAuthorizedRequest(relativePath: string, options: RequestOptions): Promise<Response> {
@@ -53,8 +48,6 @@ export class DeviceService {
                     options.headers.append('Authorization', authHeader);
 
                     this.http.request(this.baseUrl + relativePath, options)
-                        // TODO The API changed. Put a timeout in here somehow
-                        //.timeout(DeviceService.timeoutMillis, { code: SquidErrorCode.Timeout })
                         .toPromise()
                         .then(resolve)
                         .catch((response: Response) => {
