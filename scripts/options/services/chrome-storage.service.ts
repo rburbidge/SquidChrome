@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DeviceModel } from '../../contracts/device-model';
+import { DeviceModel } from '../../contracts/squid';
 
 @Injectable()
 export class ChromeStorageService {

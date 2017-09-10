@@ -3,7 +3,7 @@ import { Response } from '@angular/http';
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/toPromise';
 
-import { DeviceModel } from '../../../scripts/contracts/device-model';
+import { DeviceModel } from '../../../scripts/contracts/squid';
 import { DeviceService } from '../../../scripts/options/services/device.service';
 
 interface GetDevices {

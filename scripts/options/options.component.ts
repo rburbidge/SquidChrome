@@ -3,9 +3,8 @@ import { UUID } from 'angular2-uuid';
 
 import { ChromeStorageService } from './services/chrome-storage.service';
 import { Config } from '../config';
-import { DeviceModel } from '../contracts/device-model';
+import { DeviceModel, ErrorCode, ErrorModel } from '../contracts/squid';
 import { DeviceService } from './services/device.service';
-import { ErrorCode, ErrorModel } from '../contracts/error-model';
 
 @Component({
     selector: 'my-app',

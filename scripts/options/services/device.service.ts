@@ -5,8 +5,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
 import { Config } from '../../config';
-import { DeviceModel } from '../../contracts/device-model';
-import { ErrorCode, ErrorModel } from '../../contracts/error-model';
+import { DeviceModel, ErrorCode, ErrorModel } from '../../contracts/squid';
 
 /**
  * The device service.

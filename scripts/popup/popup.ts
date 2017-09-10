@@ -3,7 +3,7 @@ import $ from 'jquery';
 import { ChromeStorageService } from '../options/services/chrome-storage.service';
 import { Config } from '../config';
 import { Devices } from './devices';
-import { DeviceModel } from '../contracts/device-model';
+import { DeviceModel } from '../contracts/squid';
 import { UrlHelper } from '../common/url-helper';
 import { UrlType } from '../common/url-type';
 
