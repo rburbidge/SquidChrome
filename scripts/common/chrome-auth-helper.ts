@@ -48,7 +48,7 @@ export class ChromeAuthHelper {
                 // From the documentation (https://developer.chrome.com/apps/identity#method-getProfileUserInfo)
                 // user.email is an empty string if either the user is not signed into Chrome or the application didn't
                 // specify the "identity.email" manifest permission
-                resolve(userInfo && userInfo.email && userInfo.email != "");
+                resolve(!!(userInfo && userInfo.email && userInfo.email != ""));
             });
         });
     }
