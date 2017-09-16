@@ -9,6 +9,9 @@ import { DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { Route } from '../../route';
 
+/**
+ * The options page. Allows the user to manage their registered devices.
+ */
 @Component({
     selector: 'options',
     templateUrl: './scripts/options/components/options/options.html',

@@ -21,10 +21,11 @@ export class ChromeAuthHelper {
     }
 
     /**
-     * Signs the user into chrome in interactive mode. Returns false if this fails.
+     * Signs the user into chrome in interactive mode.
      * 
      * Chrome sign-in is an indeterminate process. If the user successfully logs in, then this will return true. However,
-     * if the user never logs in, then the Promise will never evaluate.
+     * if the user never logs in, then the Promise will never evaluate. If the log in fails due to a config/permission
+     * issue, then it will return false.
      * @returns True iff the sign in succeeded, or was already signed in.
      */
     public static signIntoChrome(): Promise<boolean> {
