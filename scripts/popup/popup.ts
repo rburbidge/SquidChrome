@@ -1,5 +1,6 @@
 import $ from 'jquery';
 
+import { ChromeAuthHelper } from '../common/chrome-auth-helper';
 import { ChromeStorageService } from '../options/services/chrome-storage.service';
 import { Config } from '../config';
 import { Devices } from './devices';
@@ -53,12 +54,19 @@ class Popup {
 // The main method
 Promise.all(
     [
+        ChromeAuthHelper.isSignedIntoChrome(),
         Popup.getCurrentTabUrl(),
         new ChromeStorageService().getSelectedDevice()
     ])
     .then((values) => {
-        let url: string = values[0];
-        let device: DeviceModel = values[1];
+        const isSignedIn = values[0];
+        const url: string = values[1];
+        const device: DeviceModel = values[2];
+
+        // If the user is not signed in, then open the options page. It will force the user to log in
+        if(!isSignedIn) {
+            UrlHelper.openOptionsPage();
+        }
 
         console.log('Sending URL: ' + url);
 
