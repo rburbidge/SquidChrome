@@ -1,4 +1,3 @@
-// #docregion
 // /*global jasmine, __karma__, window*/
 Error.stackTraceLimit = 0; // "No stacktrace"" is usually best for app testing.
 
@@ -7,7 +6,10 @@ Error.stackTraceLimit = 0; // "No stacktrace"" is usually best for app testing.
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
 
-var builtPath = '/base/';
+// builtPaths: root paths for output ("built") files
+// get from karma.config.js, then prefix with '/src/' (default is 'app/')
+var builtPaths = (__karma__.config.builtPaths || ['/'])
+                 .map(function(p) { return '/base/'+p;});
 
 __karma__.loaded = function () { };
 
@@ -19,8 +21,12 @@ function isSpecFile(path) {
   return /\.spec\.(.*\.)?js$/.test(path);
 }
 
+// Is a "built" file if is JavaScript file in one of the "built" folders
 function isBuiltFile(path) {
-  return isJsFile(path) && (path.substr(0, builtPath.length) == builtPath);
+  return isJsFile(path) &&
+         builtPaths.reduce(function(keep, bp) {
+           return keep || (path.substr(0, bp.length) === bp);
+         }, false);
 }
 
 var allSpecFiles = Object.keys(window.__karma__.files)
@@ -29,7 +35,7 @@ var allSpecFiles = Object.keys(window.__karma__.files)
 
 System.config({
   baseURL: 'base',
-  // Extend usual application package list with test folder
+  // Extend usual application package list with testing folder
   packages: { 'testing': { main: 'index.js', defaultExtension: 'js' } },
 
   // Assume npm: is set in `paths` in systemjs.config
@@ -37,6 +43,7 @@ System.config({
   map: {
     '@angular/core/testing': 'npm:@angular/core/bundles/core-testing.umd.js',
     '@angular/common/testing': 'npm:@angular/common/bundles/common-testing.umd.js',
+    //'@angular/common/http/testing': 'npm:@angular/common/bundles/common-http-testing.umd.js',
     '@angular/compiler/testing': 'npm:@angular/compiler/bundles/compiler-testing.umd.js',
     '@angular/platform-browser/testing': 'npm:@angular/platform-browser/bundles/platform-browser-testing.umd.js',
     '@angular/platform-browser-dynamic/testing': 'npm:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic-testing.umd.js',
@@ -47,8 +54,20 @@ System.config({
 });
 
 System.import('system.config.js')
+  .then(importSystemJsExtras)
   .then(initTestBed)
   .then(initTesting);
+
+/** Optional SystemJS configuration extras. Keep going w/o it */
+function importSystemJsExtras(){
+  return System.import('systemjs.config.extras.js')
+  .catch(function(reason) {
+    console.log(
+      'Warning: System.import could not load the optional "systemjs.config.extras.js". Did you omit it by accident? Continuing without it.'
+    );
+    console.log(reason);
+  });
+}
 
 function initTestBed(){
   return Promise.all([

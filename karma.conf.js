@@ -1,4 +1,3 @@
-// #docregion
 module.exports = function(config) {
   var scriptsBase = 'scripts/'; // transpiled src
   var testBase = 'test/'; // transpiled test
@@ -9,9 +8,13 @@ module.exports = function(config) {
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
-      require('karma-jasmine-html-reporter'), // click "Debug" in browser to see it
-      require('karma-htmlfile-reporter') // crashing w/ strange socket error
+      require('karma-jasmine-html-reporter')
     ],
+
+    client: {
+      builtPaths: [scriptsBase, testBase], // add more spec base paths as needed
+      clearContext: false // leave Jasmine Spec Runner output visible in browser
+    },
 
     customLaunchers: {
       // From the CLI. Not used here but interesting
@@ -21,13 +24,13 @@ module.exports = function(config) {
         flags: ['--no-sandbox']
       }
     },
+
     files: [
       // System.js for module loading
       'node_modules/systemjs/dist/system.src.js',
 
       // Polyfills
       'node_modules/core-js/client/shim.js',
-      'node_modules/reflect-metadata/Reflect.js',
 
       // zone.js
       'node_modules/zone.js/dist/zone.js',
@@ -47,7 +50,10 @@ module.exports = function(config) {
       { pattern: 'node_modules/@angular/**/*.js', included: false, watched: false },
       { pattern: 'node_modules/@angular/**/*.js.map', included: false, watched: false },
 
+      { pattern: 'node_modules/angular2-uuid/**/*.js', included: false, watched: false },
+
       { pattern: 'system.config.js', included: false, watched: false },
+      { pattern: 'system.config.extras.js', included: false, watched: false },
       'karma-test-shim.js',
 
       { pattern: scriptsBase + '**/*.ts', included: false, watched: true },
@@ -55,23 +61,18 @@ module.exports = function(config) {
       { pattern: scriptsBase + '**/*.js.map', included: false, watched: false },
       { pattern: testBase + '**/*.ts', included: false, watched: true },
       { pattern: testBase + '**/*.js', included: false, watched: true },
-      { pattern: testBase + '**/*.js.map', included: false, watched: false }
+      { pattern: testBase + '**/*.js.map', included: false, watched: false}
     ],
+
+    // Proxied base paths for loading assets
+    proxies: {
+      // required for modules fetched by SystemJS
+      '/base/src/node_modules/': '/base/node_modules/'
+    },
 
     exclude: [],
     preprocessors: {},
-    // disabled HtmlReporter; suddenly crashing w/ strange socket error
-    reporters: ['progress', 'kjhtml'],//'html'],
-
-    // HtmlReporter configuration
-    htmlReporter: {
-      // Open this file to see results in browser
-      outputFile: '_test-output/tests.html',
-
-      // Optional
-      pageTitle: 'Unit Tests',
-      subPageTitle: __dirname
-    },
+    reporters: ['progress', 'kjhtml'],
 
     port: 9876,
     colors: true,
