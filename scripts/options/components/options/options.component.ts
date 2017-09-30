@@ -15,7 +15,8 @@ import { Route } from '../../route';
  */
 @Component({
     selector: 'options',
-    templateUrl: './options.html'
+    templateUrl: './options.html',
+    styleUrls: ['../../../../css/squid.css']
 })
 export class OptionsComponent implements OnInit {
     constructor(
@@ -165,7 +166,7 @@ export class OptionsComponent implements OnInit {
                 }
             })
             .catch(reason => {
-                console.log('ChromeService.isSignedIntoChrome() threw ' + reason);
+                console.warn('ChromeService.isSignedIntoChrome() threw ' + reason);
                 this.onError('Oops! An error occurred while retrieving your settings. Try again later.');
             });
     }

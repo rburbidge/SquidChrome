@@ -1,3 +1,4 @@
+import { ChromeService } from '../../services/chrome.service';
 import { ChromeAuthHelper } from '../../../common/chrome-auth-helper';
 import { Component } from '@angular/core';
 import { UrlHelper } from '../../../common/url-helper';
@@ -11,9 +12,11 @@ import { UrlHelper } from '../../../common/url-helper';
 })
 export class SignedOutComponent {
 
+    constructor(private readonly chromeService: ChromeService) { }
+
     /** Sign the user in. Once the user is signed in, open the options page. */
     public signIn(): Promise<void> {
-        return ChromeAuthHelper.signIntoChrome()
+        return this.chromeService.signIntoChrome()
             .then((signedIn: boolean) => {
                 UrlHelper.openOptionsPage();
             });

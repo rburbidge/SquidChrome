@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
@@ -18,6 +20,14 @@ describe('OptionsComponent', () => {
     let chromeStorageService: ChromeStorageService;
     let comp: OptionsComponent;
     let fixture: ComponentFixture<OptionsComponent>;
+
+    /** Add styles to the page so that we can see what each test would look like in production. */
+    beforeAll(() => {
+        $('body').append(
+            `<link rel="stylesheet" href="/base/scripts/css/squid.css" />
+             <link rel="stylesheet" href="/base/scripts/css/lib/material-3.0.2.css" />
+             <link rel="stylesheet" href="/base/node_modules/bootstrap/dist/css/bootstrap.min.css" />`);
+    });
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({

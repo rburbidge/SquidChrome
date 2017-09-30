@@ -39,6 +39,10 @@ module.exports = function(config) {
       'node_modules/zone.js/dist/jasmine-patch.js',
       'node_modules/zone.js/dist/async-test.js',
       'node_modules/zone.js/dist/fake-async-test.js',
+      
+      // Squid-specific files
+      'node_modules/bootstrap/dist/css/bootstrap.min.css',
+      'node_modules/jquery/dist/jquery.min.js',
 
       // RxJs
       { pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false },
@@ -56,10 +60,11 @@ module.exports = function(config) {
       { pattern: 'systemjs-angular-loader.js', included: false, watched: false },
       'karma-test-shim.js',
 
-      { pattern: scriptsBase + '**/*.ts', included: false, watched: true },
+      { pattern: scriptsBase + '**/*.ts', included: false, watched: false },
       { pattern: scriptsBase + '**/*.js', included: false, watched: true },
       { pattern: scriptsBase + '**/*.js.map', included: false, watched: false },
-      { pattern: scriptsBase + '**/*.html', included: false, watched: false }
+      { pattern: scriptsBase + '**/*.html', included: false, watched: false },
+      { pattern: scriptsBase + '**/*.css', included: false, watched: false },
     ],
 
     // Proxied base paths for loading assets
