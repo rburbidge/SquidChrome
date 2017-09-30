@@ -22,9 +22,10 @@ export class OptionsComponent implements OnInit {
         private deviceService: DeviceService,
         private router: Router,
         private chromeStorageService: ChromeStorageService,
-        chromeService: ChromeService) {
-            this.isDevMode = chromeService.isDevMode();
-        }
+        chromeService: ChromeService)
+    {
+        this.isDevMode = chromeService.isDevMode();
+    }
 
     public isDevMode: boolean;
     public isLoading: boolean = true;

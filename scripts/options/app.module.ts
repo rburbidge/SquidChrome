@@ -27,7 +27,7 @@ import { Route } from './route';
         ])
     ],
     declarations: [AppComponent, OptionsComponent, SignedOutComponent],
-    providers: [ChromeStorageService, DeviceService, ChromeService],
+    providers: [ChromeService, ChromeStorageService, DeviceService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
