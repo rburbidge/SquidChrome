@@ -16,7 +16,7 @@ describe('UrlHelper', () => {
             test("chrome-extension something something options.html", UrlType.Options);
         });
         
-        it('returns Unknown', () => {
+        it('Returns Unknown', () => {
             test("htttp://www.google.com", UrlType.Unknown);
             test("htttps", UrlType.Unknown);
             test(" chrome", UrlType.Unknown);

@@ -11,14 +11,4 @@ interface GetDevices {
 
 export class MockDeviceService extends DeviceService {
     constructor() { super(null); }
-
-    public getDevicesImpl: GetDevices;
-
-    public getDevices(): Promise<DeviceModel[]> {
-        return this.getDevicesImpl();
-    }
-
-    public sendUrlToDevice(deviceId: string): Promise<Response> {
-        return Promise.resolve(null);
-    }
 };

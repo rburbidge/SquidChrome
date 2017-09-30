@@ -139,7 +139,7 @@ export class OptionsComponent implements OnInit {
                     resolve();
                 })
                 .catch((error: ErrorModel) => {
-                    if (error.code == ErrorCode.UserNotFound) {
+                    if (error && error.code == ErrorCode.UserNotFound) {
                         this.isLoading = false;
                         this.refreshMessage();
                     } else {
