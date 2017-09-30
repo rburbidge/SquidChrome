@@ -15,8 +15,7 @@ import { Route } from '../../route';
  */
 @Component({
     selector: 'options',
-    templateUrl: './options.html',
-    styleUrls: ['../../../../css/squid.css']
+    templateUrl: './options.html'
 })
 export class OptionsComponent implements OnInit {
     constructor(

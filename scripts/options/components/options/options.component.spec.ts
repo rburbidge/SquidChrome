@@ -26,6 +26,7 @@ describe('OptionsComponent', () => {
         $('body').append(
             `<link rel="stylesheet" href="/base/scripts/css/squid.css" />
              <link rel="stylesheet" href="/base/scripts/css/lib/material-3.0.2.css" />
+             <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
              <link rel="stylesheet" href="/base/node_modules/bootstrap/dist/css/bootstrap.min.css" />`);
     });
 
@@ -106,7 +107,9 @@ describe('OptionsComponent', () => {
     describe('refreshDevices()', () => {
         it('Stop loading on success', (done) => {
             let devices: DeviceModel[] = [
-                { id: "id1", name: "name" }
+                { id: "id1", name: "Nexus 5X" },
+                { id: "id3", name: "Pixel" },
+                { id: "id2", name: "Samsung Galaxy" },
             ];
             spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices));
             spyOn(chromeStorageService, 'getSelectedDevice').and.returnValue(Promise.resolve(devices[0]));
@@ -114,6 +117,7 @@ describe('OptionsComponent', () => {
             comp.isLoading = false; // 1. Begin with loading = false
             comp.refreshDevices()
                 .then(() => {
+                    fixture.detectChanges();
                     expect(comp.isLoading).toBeFalsy(); // 3. Expect loading = false once complete
                     expect(comp.devices).toEqual(devices);
                     expect(comp.selectedDevice).toBe(devices[0]);
