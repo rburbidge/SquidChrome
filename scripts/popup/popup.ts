@@ -2,6 +2,7 @@ import $ from 'jquery';
 
 import { ChromeAuthHelper } from '../common/chrome-auth-helper';
 import { ChromeStorageService } from '../options/services/chrome-storage.service';
+import { ChromeService } from '../options/services/chrome.service';
 import { Config } from '../config';
 import { Devices } from './devices';
 import { DeviceModel } from '../contracts/squid';
@@ -54,7 +55,7 @@ class Popup {
 // The main method
 Promise.all(
     [
-        ChromeAuthHelper.isSignedIntoChrome(),
+        new ChromeService().isSignedIntoChrome(),
         Popup.getCurrentTabUrl(),
         new ChromeStorageService().getSelectedDevice()
     ])

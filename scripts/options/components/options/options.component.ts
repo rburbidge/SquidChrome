@@ -19,10 +19,10 @@ import { Route } from '../../route';
 })
 export class OptionsComponent implements OnInit {
     constructor(
-        private deviceService: DeviceService,
-        private router: Router,
-        private chromeStorageService: ChromeStorageService,
-        chromeService: ChromeService)
+        private readonly deviceService: DeviceService,
+        private readonly router: Router,
+        private readonly chromeService: ChromeService,
+        private readonly chromeStorageService: ChromeStorageService)
     {
         this.isDevMode = chromeService.isDevMode();
     }
@@ -156,7 +156,7 @@ export class OptionsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        ChromeAuthHelper.isSignedIntoChrome()
+        this.chromeService.isSignedIntoChrome()
             .then((signedIn: boolean) => {
                 if(signedIn) {
                     this.refreshDevices();
@@ -165,7 +165,7 @@ export class OptionsComponent implements OnInit {
                 }
             })
             .catch(reason => {
-                console.log('ChromeAuthHelper.isSignedIntoChrome() threw ' + reason);
+                console.log('ChromeService.isSignedIntoChrome() threw ' + reason);
                 this.onError('Oops! An error occurred while retrieving your settings. Try again later.');
             });
     }

@@ -13,23 +13,19 @@ import { MockChromeStorageService } from '../../services/testing/chrome-storage.
 import { MockDeviceService } from '../../services/testing/device.service.mock';
 
 describe('OptionsComponent', () => {
-    let mockService: MockDeviceService;
-    let mockChromeService: MockChromeService;
-    let mockChromeStorageService: MockChromeStorageService;
+    let deviceService: DeviceService;
+    let chromeService: ChromeService;
+    let chromeStorageService: ChromeStorageService;
     let comp: OptionsComponent;
     let fixture: ComponentFixture<OptionsComponent>;
 
     beforeEach(async(() => {
-        mockService = new MockDeviceService();
-        mockChromeService = new MockChromeService();
-        mockChromeStorageService = new MockChromeStorageService();
-
         TestBed.configureTestingModule({
             declarations: [ OptionsComponent ],
             providers: [
-                { provide: DeviceService, useValue: mockService },
-                { provide: ChromeService, useValue: mockChromeService },
-                { provide: ChromeStorageService, useValue: mockChromeStorageService },
+                { provide: ChromeService, useValue: new MockChromeService() },
+                { provide: ChromeStorageService, useValue: new MockChromeStorageService() },
+                { provide: DeviceService, useValue: new MockDeviceService() },
                 { provide: Router, useValue: null }
             ]
         })
@@ -39,6 +35,10 @@ describe('OptionsComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(OptionsComponent);
         comp = fixture.debugElement.componentInstance;
+
+        deviceService = TestBed.get(DeviceService);
+        chromeService = TestBed.get(ChromeService);
+        chromeStorageService = TestBed.get(ChromeStorageService);
     })
 
     describe('constructor',() => {
@@ -60,7 +60,7 @@ describe('OptionsComponent', () => {
 
         /** Tests that isDevMode is retrieved from ChromeService, and that the dev options panel is showing or hidden. */
         function testIsDevMode(expected: boolean) {
-            spyOn(mockChromeService, 'isDevMode').and.returnValue(expected);
+            spyOn(chromeService, 'isDevMode').and.returnValue(expected);
             fixture = TestBed.createComponent(OptionsComponent);
             comp = fixture.debugElement.componentInstance;
     
@@ -98,8 +98,8 @@ describe('OptionsComponent', () => {
             let devices: DeviceModel[] = [
                 { id: "id1", name: "name" }
             ];
-            spyOn(mockService, 'getDevices').and.returnValue(Promise.resolve(devices));
-            spyOn(mockChromeStorageService, 'getSelectedDevice').and.returnValue(Promise.resolve(devices[0]));
+            spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices));
+            spyOn(chromeStorageService, 'getSelectedDevice').and.returnValue(Promise.resolve(devices[0]));
     
             comp.isLoading = false; // 1. Begin with loading = false
             comp.refreshDevices()
@@ -117,7 +117,7 @@ describe('OptionsComponent', () => {
         });
     
         it('Shows error if loading fails', (done) => {
-            spyOn(mockService, 'getDevices').and.returnValue(Promise.reject('An error'))
+            spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject('An error'))
     
             comp.refreshDevices()
                 .then(() => {
