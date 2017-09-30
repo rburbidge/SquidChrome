@@ -1,5 +1,5 @@
-import { DeviceModel } from '../../../scripts/contracts/squid';
-import { ChromeStorageService } from '../../../scripts/options/services/chrome-storage.service';
+import { DeviceModel } from '../../../contracts/squid';
+import { ChromeStorageService } from '../chrome-storage.service';
 
 export class MockChromeStorageService extends ChromeStorageService {
 

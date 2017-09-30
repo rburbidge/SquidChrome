@@ -1,14 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { ChromeService } from '../../scripts/options/services/chrome.service';
-import { ChromeStorageService } from '../../scripts/options/services/chrome-storage.service';
-import { DeviceModel } from '../../scripts/contracts/squid';
-import { DeviceService } from '../../scripts/options/services/device.service';
-import { OptionsComponent } from '../../scripts/options/components/options/options.component';
-import { MockChromeService } from './services/chrome.service.mock';
-import { MockChromeStorageService } from './services/chrome-storage.service.mock';
-import { MockDeviceService } from './services/device.service.mock';
+import { ChromeService } from '../../services/chrome.service';
+import { ChromeStorageService } from '../../services/chrome-storage.service';
+import { DeviceModel } from '../../../contracts/squid';
+import { DeviceService } from '../../services/device.service';
+import { OptionsComponent } from '../../components/options/options.component';
+import { MockChromeService } from '../../services/testing/chrome.service.mock';
+import { MockChromeStorageService } from '../../services/testing/chrome-storage.service.mock';
+import { MockDeviceService } from '../../services/testing/device.service.mock';
 
 describe('OptionsComponent', () => {
     let mockService: MockDeviceService;

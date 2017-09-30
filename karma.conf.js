@@ -1,6 +1,5 @@
 module.exports = function(config) {
   var scriptsBase = 'scripts/'; // transpiled src
-  var testBase = 'test/'; // transpiled test
 
   config.set({
     basePath: '',
@@ -12,7 +11,7 @@ module.exports = function(config) {
     ],
 
     client: {
-      builtPaths: [scriptsBase, testBase], // add more spec base paths as needed
+      builtPaths: [scriptsBase], // add more spec base paths as needed
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
 
@@ -60,10 +59,7 @@ module.exports = function(config) {
       { pattern: scriptsBase + '**/*.ts', included: false, watched: true },
       { pattern: scriptsBase + '**/*.js', included: false, watched: true },
       { pattern: scriptsBase + '**/*.js.map', included: false, watched: false },
-      { pattern: scriptsBase + '**/*.html', included: false, watched: false },
-      { pattern: testBase + '**/*.ts', included: false, watched: true },
-      { pattern: testBase + '**/*.js', included: false, watched: true },
-      { pattern: testBase + '**/*.js.map', included: false, watched: false}
+      { pattern: scriptsBase + '**/*.html', included: false, watched: false }
     ],
 
     // Proxied base paths for loading assets
