@@ -53,12 +53,14 @@ module.exports = function(config) {
       { pattern: 'node_modules/angular2-uuid/**/*.js', included: false, watched: false },
 
       { pattern: 'system.config.js', included: false, watched: false },
-      { pattern: 'system.config.extras.js', included: false, watched: false },
+      //{ pattern: 'system.config.extras.js', included: false, watched: false },
+      { pattern: 'systemjs-angular-loader.js', included: false, watched: false },
       'karma-test-shim.js',
 
       { pattern: scriptsBase + '**/*.ts', included: false, watched: true },
       { pattern: scriptsBase + '**/*.js', included: false, watched: true },
       { pattern: scriptsBase + '**/*.js.map', included: false, watched: false },
+      { pattern: scriptsBase + '**/*.html', included: false, watched: false },
       { pattern: testBase + '**/*.ts', included: false, watched: true },
       { pattern: testBase + '**/*.js', included: false, watched: true },
       { pattern: testBase + '**/*.js.map', included: false, watched: false}

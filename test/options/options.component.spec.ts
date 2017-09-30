@@ -1,25 +1,47 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 
+import { ChromeService } from '../../scripts/options/services/chrome.service';
+import { ChromeStorageService } from '../../scripts/options/services/chrome-storage.service';
 import { DeviceModel } from '../../scripts/contracts/squid';
+import { DeviceService } from '../../scripts/options/services/device.service';
 import { OptionsComponent } from '../../scripts/options/components/options/options.component';
+import { MockChromeService } from './services/chrome.service.mock';
 import { MockChromeStorageService } from './services/chrome-storage.service.mock';
 import { MockDeviceService } from './services/device.service.mock';
 
-describe('OptionsComponent', function() {
-
+describe('OptionsComponent', () => {
     let mockService: MockDeviceService;
+    let mockChromeService: MockChromeService;
     let mockChromeStorageService: MockChromeStorageService;
     let comp: OptionsComponent;
+    let fixture: ComponentFixture<OptionsComponent>;
+
+    beforeEach(async(() => {
+        mockService = new MockDeviceService();
+        mockChromeService = new MockChromeService();
+        mockChromeStorageService = new MockChromeStorageService();
+
+        TestBed.configureTestingModule({
+            declarations: [ OptionsComponent ],
+            providers: [
+                { provide: DeviceService, useValue: mockService },
+                { provide: ChromeService, useValue: mockChromeService },
+                { provide: ChromeStorageService, useValue: mockChromeStorageService },
+                { provide: Router, useValue: null }
+            ]
+        })
+        .compileComponents();
+    }));
 
     beforeEach(() => {
-        mockService = new MockDeviceService();
-        mockChromeStorageService = new MockChromeStorageService();
-        comp = new OptionsComponent(mockService, mockChromeStorageService);
-    });
+        fixture = TestBed.createComponent(OptionsComponent);
+        comp = fixture.debugElement.componentInstance;
+    })
 
     it('constructor default values', function() {
         expect(comp.isLoading).toBeTruthy();
-        expect(comp.devices).toBeUndefined();
+        expect(comp.devices.length).toBe(0);
         expect(comp.selectedDevice).toBeUndefined();
         expect(comp.error).toBeUndefined();
     });

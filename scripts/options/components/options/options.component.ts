@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 
+import { ChromeService } from '../../services/chrome.service';
 import { ChromeAuthHelper } from '../../../common/chrome-auth-helper';
 import { ChromeStorageService } from '../../services/chrome-storage.service';
 import { Config } from '../../../config';
@@ -14,13 +15,18 @@ import { Route } from '../../route';
  */
 @Component({
     selector: 'options',
-    templateUrl: './scripts/options/components/options/options.html',
-    providers: [DeviceService]
+    templateUrl: './options.html'
 })
 export class OptionsComponent implements OnInit {
-    constructor(private deviceService: DeviceService, private router: Router, private chromeStorageService: ChromeStorageService) { }
+    constructor(
+        private deviceService: DeviceService,
+        private router: Router,
+        private chromeStorageService: ChromeStorageService,
+        chromeService: ChromeService) {
+            this.isDevMode = chromeService.isDevMode();
+        }
 
-    public isDevMode: boolean = Config.isDevMode;
+    public isDevMode: boolean;
     public isLoading: boolean = true;
     public error: string;
     public devices: DeviceModel[] = [];
