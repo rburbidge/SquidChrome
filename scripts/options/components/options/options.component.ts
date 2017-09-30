@@ -1,18 +1,24 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 
-import { ChromeStorageService } from './services/chrome-storage.service';
-import { Config } from '../config';
-import { DeviceModel, ErrorCode, ErrorModel } from '../contracts/squid';
-import { DeviceService } from './services/device.service';
+import { ChromeAuthHelper } from '../../../common/chrome-auth-helper';
+import { ChromeStorageService } from '../../services/chrome-storage.service';
+import { Config } from '../../../config';
+import { DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
+import { DeviceService } from '../../services/device.service';
+import { Route } from '../../route';
 
+/**
+ * The options page. Allows the user to manage their registered devices.
+ */
 @Component({
-    selector: 'my-app',
-    templateUrl: '../../templates/options.html',
+    selector: 'options',
+    templateUrl: './scripts/options/components/options/options.html',
     providers: [DeviceService]
 })
 export class OptionsComponent implements OnInit {
-    constructor(private deviceService: DeviceService, private chromeStorageService: ChromeStorageService) { }
+    constructor(private deviceService: DeviceService, private router: Router, private chromeStorageService: ChromeStorageService) { }
 
     public isDevMode: boolean = Config.isDevMode;
     public isLoading: boolean = true;
@@ -99,6 +105,9 @@ export class OptionsComponent implements OnInit {
                 this.devices.splice(
                     this.devices.findIndex((d: DeviceModel) => d.id === device.id),
                     1)
+            })
+            .catch(() => {
+                alert("An error occurred while removing the device. Please try again later.");
             });
     }
 
@@ -134,14 +143,23 @@ export class OptionsComponent implements OnInit {
         });
     }
 
-
-
     private onError(error: string): void {
         this.isLoading = false;
         this.error = error;
     }
 
     ngOnInit(): void {
-        this.refreshDevices();
+        ChromeAuthHelper.isSignedIntoChrome()
+            .then((signedIn: boolean) => {
+                if(signedIn) {
+                    this.refreshDevices();
+                } else {
+                    this.router.navigateByUrl(Route.signedOut);
+                }
+            })
+            .catch(reason => {
+                console.log('ChromeAuthHelper.isSignedIntoChrome() threw ' + reason);
+                this.onError('Oops! An error occurred while retrieving your settings. Try again later.');
+            });
     }
 }

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DeviceModel } from '../../scripts/contracts/squid';
-import { OptionsComponent } from '../../scripts/options/options.component';
+import { OptionsComponent } from '../../scripts/options/components/options/options.component';
 import { MockChromeStorageService } from './services/chrome-storage.service.mock';
 import { MockDeviceService } from './services/device.service.mock';
 

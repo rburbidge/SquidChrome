@@ -1,15 +1,32 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
-import { OptionsComponent } from './options.component';
+import { AppComponent } from './components/app/app.component';
+import { OptionsComponent } from './components/options/options.component';
+import { SignedOutComponent } from './components/signed-out/signed-out.component';
 import { ChromeStorageService } from './services/chrome-storage.service';
 import { DeviceService } from './services/device.service';
+import { Route } from './route';
 
 @NgModule({
-    imports: [BrowserModule, HttpModule],
-    declarations: [OptionsComponent],
+    imports: [
+        BrowserModule,
+        HttpModule,
+        RouterModule.forRoot([
+            {
+                path: '',
+                component: OptionsComponent
+            },
+            {
+                path: Route.signedOut,
+                component: SignedOutComponent
+            }
+        ])
+    ],
+    declarations: [AppComponent, OptionsComponent, SignedOutComponent],
     providers: [ChromeStorageService, DeviceService],
-    bootstrap: [OptionsComponent]
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
