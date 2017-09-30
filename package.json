@@ -4,6 +4,7 @@
   "scripts": {
     "start": "tsc && concurrently \"tsc -w\"",
     "test": "karma start karma.conf.js",
+    "testSingle": "karma start karma.conf.js --single-run",
     "tsc": "tsc",
     "tsc:w": "tsc -w"
   },
