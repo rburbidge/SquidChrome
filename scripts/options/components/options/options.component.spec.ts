@@ -99,13 +99,14 @@ describe('OptionsComponent', () => {
                 { id: "id1", name: "name" }
             ];
             spyOn(mockService, 'getDevices').and.returnValue(Promise.resolve(devices));
+            spyOn(mockChromeStorageService, 'getSelectedDevice').and.returnValue(Promise.resolve(devices[0]));
     
             comp.isLoading = false; // 1. Begin with loading = false
             comp.refreshDevices()
                 .then(() => {
                     expect(comp.isLoading).toBeFalsy(); // 3. Expect loading = false once complete
                     expect(comp.devices).toEqual(devices);
-                    expect(comp.selectedDevice).toBeUndefined();
+                    expect(comp.selectedDevice).toBe(devices[0]);
                     done();
                 })
                 .catch(() => {
