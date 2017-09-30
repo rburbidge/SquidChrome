@@ -155,8 +155,8 @@ export class OptionsComponent implements OnInit {
         this.error = error;
     }
 
-    ngOnInit(): void {
-        this.chromeService.isSignedIntoChrome()
+    ngOnInit(): Promise<void> {
+        return this.chromeService.isSignedIntoChrome()
             .then((signedIn: boolean) => {
                 if(signedIn) {
                     this.refreshDevices();

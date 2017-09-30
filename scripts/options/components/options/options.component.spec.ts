@@ -13,11 +13,15 @@ import { OptionsComponent } from '../../components/options/options.component';
 import { MockChromeService } from '../../services/testing/chrome.service.mock';
 import { MockChromeStorageService } from '../../services/testing/chrome-storage.service.mock';
 import { MockDeviceService } from '../../services/testing/device.service.mock';
+import { MockRouter } from '../../services/testing/router.mock';
+import { Route } from '../../route';
 
 describe('OptionsComponent', () => {
     let deviceService: DeviceService;
     let chromeService: ChromeService;
     let chromeStorageService: ChromeStorageService;
+    let router: Router;
+
     let comp: OptionsComponent;
     let fixture: ComponentFixture<OptionsComponent>;
 
@@ -31,13 +35,18 @@ describe('OptionsComponent', () => {
     });
 
     beforeEach(async(() => {
+        let mockRouter = {
+            navigate: jasmine.createSpy('navigate'),
+            navigateByUrl: () => {}
+          };
+
         TestBed.configureTestingModule({
             declarations: [ OptionsComponent ],
             providers: [
                 { provide: ChromeService, useValue: new MockChromeService() },
                 { provide: ChromeStorageService, useValue: new MockChromeStorageService() },
                 { provide: DeviceService, useValue: new MockDeviceService() },
-                { provide: Router, useValue: null }
+                { provide: Router, useValue: mockRouter }
             ]
         })
         .compileComponents();
@@ -50,6 +59,7 @@ describe('OptionsComponent', () => {
         deviceService = TestBed.get(DeviceService);
         chromeService = TestBed.get(ChromeService);
         chromeStorageService = TestBed.get(ChromeStorageService);
+        router = TestBed.get(Router);
     })
 
     describe('constructor',() => {
@@ -142,6 +152,38 @@ describe('OptionsComponent', () => {
                 })
                 .catch(() => {
                     fail();
+                });
+        });
+    });
+
+    describe('ngInit()', () => {
+        it('Redirects to SignedOutComponent when user is not signed into Chrome', (done) => {
+            spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.resolve(false));
+            let routerSpy = spyOn(router, 'navigateByUrl').and.callFake(() => {});   
+
+            comp.ngOnInit()
+                .then(() => {
+                    expect(routerSpy.calls.all()[0].args[0]).toBe(Route.signedOut);
+                    done();
+                })
+                .catch(() => {
+                    fail();
+                    done();
+                });
+        });
+
+        it('Calls OptionsComponent.refreshDevices() if user is signed into Chrome', (done) => {
+            spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.resolve(true));
+            let compSpy = spyOn(comp, 'refreshDevices').and.callFake(() => {});   
+
+            comp.ngOnInit()
+                .then(() => {
+                    expect(compSpy.calls.all().length).toBe(1);
+                    done();
+                })
+                .catch(() => {
+                    fail();
+                    done();
                 });
         });
     });
