@@ -7,7 +7,7 @@ import { UrlHelper } from '../../../common/url-helper';
  */
 @Component({
     selector: 'signed-out',
-    templateUrl: './scripts/options/components/signed-out/signed-out.html'
+    templateUrl: './signed-out.html'
 })
 export class SignedOutComponent {
 

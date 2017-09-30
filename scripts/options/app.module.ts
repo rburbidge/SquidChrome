@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './components/app/app.component';
 import { OptionsComponent } from './components/options/options.component';
 import { SignedOutComponent } from './components/signed-out/signed-out.component';
+import { ChromeService } from './services/chrome.service';
 import { ChromeStorageService } from './services/chrome-storage.service';
 import { DeviceService } from './services/device.service';
 import { Route } from './route';
@@ -26,7 +27,7 @@ import { Route } from './route';
         ])
     ],
     declarations: [AppComponent, OptionsComponent, SignedOutComponent],
-    providers: [ChromeStorageService, DeviceService],
+    providers: [ChromeService, ChromeStorageService, DeviceService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

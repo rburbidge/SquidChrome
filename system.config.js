@@ -7,7 +7,7 @@
     },
     // map tells the System loader where to look for things
     map: {
-        // our app is within the app folder
+        // our app is within the scripts folder
         app: 'scripts',
 
         // angular bundles
@@ -36,6 +36,20 @@
     scripts: {
         format: 'register',
         defaultExtension: 'js'
+    },
+    packages: {
+        app: {
+            main: './main.js',
+            defaultExtension: 'js',
+            meta: {
+                './*.js': {
+                    loader: 'systemjs-angular-loader.js'
+                }
+            }
+        },
+        rxjs: {
+            defaultExtension: 'js'
+        }
     }
   });
 })(this);
