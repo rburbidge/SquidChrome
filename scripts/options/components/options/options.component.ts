@@ -150,7 +150,7 @@ export class OptionsComponent implements OnInit {
         });
     }
 
-    private onError(error: string): void {
+    public onError(error: string): void {
         this.isLoading = false;
         this.error = error;
     }
