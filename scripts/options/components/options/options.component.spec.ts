@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
@@ -9,7 +7,8 @@ import { ChromeService } from '../../services/chrome.service';
 import { ChromeStorageService } from '../../services/chrome-storage.service';
 import { DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
-import { OptionsComponent } from '../../components/options/options.component';
+import { loadCss } from '../testing/css-loader';
+import { OptionsComponent } from './options.component';
 import { MockChromeService } from '../../services/testing/chrome.service.mock';
 import { MockChromeStorageService } from '../../services/testing/chrome-storage.service.mock';
 import { MockDeviceService } from '../../services/testing/device.service.mock';
@@ -25,13 +24,8 @@ describe('OptionsComponent', () => {
     let comp: OptionsComponent;
     let fixture: ComponentFixture<OptionsComponent>;
 
-    /** Add styles to the page so that we can see what each test would look like in production. */
     beforeAll(() => {
-        $('body').append(
-            `<link rel="stylesheet" href="/base/scripts/css/squid.css" />
-             <link rel="stylesheet" href="/base/scripts/css/lib/material-3.0.2.css" />
-             <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-             <link rel="stylesheet" href="/base/node_modules/bootstrap/dist/css/bootstrap.min.css" />`);
+        loadCss();
     });
 
     beforeEach(async(() => {
