@@ -78,9 +78,8 @@ export class OptionsComponent implements OnInit {
     public isSelectedDeviceUnregistered(): boolean {
         if (!this.selectedDevice || !this.devices) return false;
 
-        return !this.devices.find((device: DeviceModel): boolean => {
-            return this.selectedDevice.id == device.id;
-        });
+        return !this.devices.find(
+            device => device.id == this.selectedDevice.id);
     }
 
     /**

@@ -99,6 +99,22 @@ describe('OptionsComponent', () => {
         }
     });
 
+    describe('setDevice()', () => {
+        it('Sets the selected device', (done) => {
+            const setSelectedDeviceSpy = spyOn(chromeStorageService, 'setSelectedDevice').and.returnValue(Promise.resolve());
+            
+            setupCompWithDevices(devices, undefined)
+                .then(() => comp.setDevice(devices[0]))
+                .then(() => {
+                    testHeaderTextShown(`Pages will be sent to ${devices[0].name}`);
+
+                    expect(comp.selectedDevice).toBe(devices[0]);
+                    expect(setSelectedDeviceSpy).toHaveBeenCalledWith(devices[0]);
+                    done();
+                });
+        });
+    });
+
     describe('isDeviceSelected()', () => {
         it('Returns false when there is no selected device', function() {
             expect(comp.isDeviceSelected(null)).toBeFalsy();
@@ -195,19 +211,29 @@ describe('OptionsComponent', () => {
                 });
         });
 
-        const devices: DeviceModel[] = [
-            { id: "id1", name: "Nexus 5X" },
-            { id: "id3", name: "Pixel" },
-            { id: "id2", name: "Samsung Galaxy" },
-        ];
+        it('Shows message when user\'s device is not registered', (done) => {                
+            const selectedDevice = { id: 'ID does not exist', name: 'BlackBerry Bold'};
+            setupCompWithDevices(devices, selectedDevice)
+                .then(() => comp.refreshDevices())
+                .then(() => {
+                    testHeaderTextShown(`${selectedDevice.name} was not found. Select a device`);
 
-        function mockGetDevicesReturns(devices: DeviceModel[]) {
-            spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices))
-        }
+                    expect(comp.selectedDevice).toBe(selectedDevice);
+                    done();
+                });
+        });
 
-        function mockGetSelectedDeviceReturns(device: DeviceModel) {
-            spyOn(chromeStorageService, 'getSelectedDevice').and.returnValue(Promise.resolve(device));
-        }
+        it('Shows message when user\'s device is not registered and there are no devices', (done) => {                
+            const selectedDevice = { id: 'ID does not exist', name: 'BlackBerry Bold'};
+            setupCompWithDevices([], selectedDevice)
+                .then(() => comp.refreshDevices())
+                .then(() => {
+                    testHeaderTextShown(`${selectedDevice.name} was not found`);
+
+                    expect(comp.selectedDevice).toBe(selectedDevice);
+                    done();
+                });
+        });
 
         function testNoDevicesFound() {
             fixture.detectChanges();
@@ -218,22 +244,16 @@ describe('OptionsComponent', () => {
             let error = fixture.debugElement.query(By.css('.squid-options-header'));
             expect(error.nativeElement.textContent).toContain('No devices found');
         }
-    
-        function testErrorShown(expectedError: string) {
-            fixture.detectChanges();
-            let error = fixture.debugElement.query(By.css('.squid-error'));
-            expect(error.nativeElement.textContent).toContain(expectedError);
-        }
     });
 
-    describe('ngInit()', () => {
+    describe('ngOnInit()', () => {
         it('When user not signed into Chrome, redirects to SignedOutComponent', (done) => {
-            spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.resolve(false));
+            mockIsSignedIntoChromeReturns(false);
             let routerSpy = spyOn(router, 'navigateByUrl').and.callFake(() => {});   
 
             comp.ngOnInit()
                 .then(() => {
-                    expect(routerSpy.calls.all()[0].args[0]).toBe(Route.signedOut);
+                    expect(routerSpy).toHaveBeenCalledWith(Route.signedOut);
                     done();
                 })
                 .catch(() => {
@@ -243,7 +263,7 @@ describe('OptionsComponent', () => {
         });
 
         it('When user signed into Chrome, calls OptionsComponent.refreshDevices()', (done) => {
-            spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.resolve(true));
+            mockIsSignedIntoChromeReturns(true);
             const compSpy = spyOn(comp, 'refreshDevices').and.callFake(() => {});
 
             comp.ngOnInit()
@@ -259,13 +279,49 @@ describe('OptionsComponent', () => {
 
         it('When ChromeService.isSignedIntoChrome() throws, shows error', (done) => {
             spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.reject('An error'));
-            const compSpy = spyOn(comp, 'onError').and.callThrough();
             comp.ngOnInit()
             .then(() => {
-                //fixture.detectChanges();
-                expect(compSpy.calls.all()[0].args[0]).toBe('Oops! An error occurred while retrieving your settings. Try again later.');
+                testErrorShown('Oops! An error occurred while retrieving your settings. Try again later.')
                 done();
             })
         });
     });
+
+    const devices: DeviceModel[] = [
+        { id: "id1", name: "Nexus 5X" },
+        { id: "id3", name: "Pixel" },
+        { id: "id2", name: "Samsung Galaxy" },
+    ];
+
+    function mockIsSignedIntoChromeReturns(isSignedIn: boolean) {
+        spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.resolve(isSignedIn));
+    }
+
+    function mockGetDevicesReturns(devices: DeviceModel[]) {
+        spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices))
+    }
+
+    function mockGetSelectedDeviceReturns(device: DeviceModel) {
+        spyOn(chromeStorageService, 'getSelectedDevice').and.returnValue(Promise.resolve(device));
+    }
+
+    function testErrorShown(expectedError: string) {
+        fixture.detectChanges();
+        let error = fixture.debugElement.query(By.css('.squid-error'));
+        expect(error.nativeElement.textContent).toContain(expectedError);
+    }
+
+    function testHeaderTextShown(expectedText) {
+        fixture.detectChanges();
+        let header = fixture.debugElement.query(By.css('.squid-options-header'));
+        expect(header.nativeElement.textContent).toContain(expectedText);
+    }
+
+    function setupCompWithDevices(devices: DeviceModel[], selectedDevice: DeviceModel): Promise<void> {
+        mockIsSignedIntoChromeReturns(true);
+        mockGetDevicesReturns(devices);
+        mockGetSelectedDeviceReturns(selectedDevice);
+
+        return comp.ngOnInit();
+    }
 });
