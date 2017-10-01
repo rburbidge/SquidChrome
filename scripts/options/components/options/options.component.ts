@@ -41,12 +41,11 @@ export class OptionsComponent implements OnInit {
         // No-op if the device is already selected
         if (this.selectedDevice && this.selectedDevice.id == device.id) return;
 
-        this.selectedDevice = device;
-        this.refreshMessage();
-
-        // TODO Check that storage was set correctly. Waiting on the callback before setting the selected device is
-        // currently causing a bug where the data binding intermittently doesn't take effect
-        return this.chromeStorageService.setSelectedDevice(device);
+        return this.chromeStorageService.setSelectedDevice(device)
+            .then(() => {
+                this.selectedDevice = device;
+                this.refreshMessage();
+            });
     }
 
     private refreshMessage() {
@@ -98,23 +97,32 @@ export class OptionsComponent implements OnInit {
     /**
      * Remove the a device, and delete it from the model set of devices.
      */
-    public removeDevice(event: Event, device: DeviceModel): Promise<any> {
+    public removeDevice(event: Event, device: DeviceModel): Promise<void> {
         event.stopPropagation();
+
+        // Delete the device from Chrome storage if it is currently the selected device
+        let deleteSelectedDevice: Promise<void>;
         if(this.selectedDevice && this.selectedDevice.id == device.id) {
-            this.chromeStorageService.setSelectedDevice(null);
-            delete this.selectedDevice;
+            deleteSelectedDevice = this.chromeStorageService.setSelectedDevice(null)
+                .then(() => {
+                    delete this.selectedDevice;
+                });
+        } else {
+            deleteSelectedDevice = Promise.resolve();
         }
 
-        return this.deviceService.removeDevice(device.id)
+        // Delete the device from the server
+        const removeDevice = this.deviceService.removeDevice(device.id)
             .then(() => {
                 this.message = `${device.name} has been deleted`;
                 this.devices.splice(
                     this.devices.findIndex((d: DeviceModel) => d.id === device.id),
                     1)
-            })
-            .catch(() => {
-                alert("An error occurred while removing the device. Please try again later.");
             });
+
+        return Promise.all([deleteSelectedDevice, removeDevice])
+            .then(d => undefined)
+            .catch(() => alert("An error occurred while removing the device. Please try again later."))
     }
 
     /**

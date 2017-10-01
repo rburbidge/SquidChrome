@@ -113,6 +113,18 @@ describe('OptionsComponent', () => {
                     done();
                 });
         });
+
+        it('Does nothing if the device was already set', (done) => {
+            const setSelectedDeviceSpy = spyOn(chromeStorageService, 'setSelectedDevice').and.returnValue(Promise.resolve());
+            const selectedDevice = devices[1];
+
+            setupCompWithDevices(devices, selectedDevice)
+                .then(() => comp.setDevice(selectedDevice))
+                .then(() => {
+                    expect(setSelectedDeviceSpy).toHaveBeenCalledTimes(0);
+                    done();
+                });
+        });
     });
 
     describe('isDeviceSelected()', () => {
@@ -127,6 +139,53 @@ describe('OptionsComponent', () => {
             comp.selectedDevice = device1;
             expect(comp.isDeviceSelected(device2)).toBeFalsy();
             expect(comp.isDeviceSelected(device1)).toBeTruthy();
+        });
+    });
+
+    describe('removeDevice()', () => {
+        it('Removes a device', (done) => {
+            spyOn(deviceService, 'removeDevice').and.returnValue(Promise.resolve());
+            const removedDevice = devices[1];
+
+            setupCompWithDevices(devices, undefined)
+                .then(() => comp.removeDevice(new Event('fake event'), removedDevice))
+                .then(() => {
+                    expect(comp.devices.find(d => d.id == removedDevice.id)).toBeUndefined('Devices still contained the deleted device');
+                    testHeaderTextShown(`${removedDevice.name} has been deleted`);
+                    done();
+                });
+        });
+
+        it('Removes device that is selected', (done) => {
+            const setSelectedDeviceSpy = spyOn(chromeStorageService, 'setSelectedDevice').and.returnValue(Promise.resolve());
+            const removeDeviceSpy = spyOn(deviceService, 'removeDevice').and.returnValue(Promise.resolve());
+            const selectedDevice = { ...devices[2] }; // Copy the device because it's going to be deleted
+
+            setupCompWithDevices(devices, selectedDevice)
+                .then(() => comp.removeDevice(new Event('fake event'), selectedDevice))
+                .then(() => {
+                    expect(removeDeviceSpy).toHaveBeenCalledWith(selectedDevice.id);
+                    expect(setSelectedDeviceSpy).toHaveBeenCalledWith(null);
+
+                    expect(comp.devices.find(d => d.id == selectedDevice.id)).toBeUndefined('Devices still contained the deleted device');
+                    expect(comp.selectedDevice).toBeUndefined('Devices still contained the deleted device');
+
+                    testHeaderTextShown(`${selectedDevice.name} has been deleted`);
+                    done();
+                });
+        });
+
+        it('Shows an error if the device could not be removed', (done) => {
+            spyOn(deviceService, 'removeDevice').and.returnValue(Promise.reject('An error'));
+            const windowAlertSpy = spyOn(window, 'alert').and.returnValue(undefined);
+            const removedDevice = devices[0];
+
+            setupCompWithDevices(devices, undefined)
+                .then(() => comp.removeDevice(new Event('fake event'), removedDevice))
+                .then(() => {
+                    expect(windowAlertSpy).toHaveBeenCalledWith('An error occurred while removing the device. Please try again later.');
+                    done();
+                });
         });
     });
 
