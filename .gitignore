@@ -1,2 +1,4 @@
 node_modules/
 build/
+!src/options/bootstrap.js
+!src/popup/bootstrap.js

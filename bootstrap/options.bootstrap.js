@@ -1,1 +1,0 @@
-System.import('../scripts/options/main').then(null, console.error.bind(console));

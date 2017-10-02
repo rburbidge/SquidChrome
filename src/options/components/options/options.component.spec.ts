@@ -12,8 +12,8 @@ import { OptionsComponent } from './options.component';
 import { MockChromeService } from '../../services/testing/chrome.service.mock';
 import { MockChromeStorageService } from '../../services/testing/chrome-storage.service.mock';
 import { MockDeviceService } from '../../services/testing/device.service.mock';
-import { MockRouter } from '../../services/testing/router.mock';
 import { Route } from '../../route';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('OptionsComponent', () => {
     let deviceService: DeviceService;
@@ -29,18 +29,13 @@ describe('OptionsComponent', () => {
     });
 
     beforeEach(async(() => {
-        let mockRouter = {
-            navigate: jasmine.createSpy('navigate'),
-            navigateByUrl: () => {}
-          };
-
         TestBed.configureTestingModule({
             declarations: [ OptionsComponent ],
+            imports: [ RouterTestingModule ],
             providers: [
                 { provide: ChromeService, useValue: new MockChromeService() },
                 { provide: ChromeStorageService, useValue: new MockChromeStorageService() },
                 { provide: DeviceService, useValue: new MockDeviceService() },
-                { provide: Router, useValue: mockRouter }
             ]
         })
         .compileComponents();
