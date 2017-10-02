@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChromeService } from '../../services/chrome.service';

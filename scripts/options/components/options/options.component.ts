@@ -157,12 +157,12 @@ export class OptionsComponent implements OnInit {
         });
     }
 
-    public onError(error: string): void {
+    private onError(error: string): void {
         this.isLoading = false;
         this.error = error;
     }
 
-    ngOnInit(): Promise<void> {
+    public ngOnInit(): Promise<void> {
         return this.chromeService.isSignedIntoChrome()
             .then((signedIn: boolean) => {
                 if(signedIn) {
