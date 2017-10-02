@@ -19,10 +19,10 @@ import { Route } from '../../route';
 })
 export class OptionsComponent implements OnInit {
     constructor(
-        private deviceService: DeviceService,
-        private router: Router,
-        private chromeStorageService: ChromeStorageService,
-        chromeService: ChromeService)
+        private readonly deviceService: DeviceService,
+        private readonly router: Router,
+        private readonly chromeService: ChromeService,
+        private readonly chromeStorageService: ChromeStorageService)
     {
         this.isDevMode = chromeService.isDevMode();
     }
@@ -41,12 +41,11 @@ export class OptionsComponent implements OnInit {
         // No-op if the device is already selected
         if (this.selectedDevice && this.selectedDevice.id == device.id) return;
 
-        this.selectedDevice = device;
-        this.refreshMessage();
-
-        // TODO Check that storage was set correctly. Waiting on the callback before setting the selected device is
-        // currently causing a bug where the data binding intermittently doesn't take effect
-        return this.chromeStorageService.setSelectedDevice(device);
+        return this.chromeStorageService.setSelectedDevice(device)
+            .then(() => {
+                this.selectedDevice = device;
+                this.refreshMessage();
+            });
     }
 
     private refreshMessage() {
@@ -78,9 +77,8 @@ export class OptionsComponent implements OnInit {
     public isSelectedDeviceUnregistered(): boolean {
         if (!this.selectedDevice || !this.devices) return false;
 
-        return !this.devices.find((device: DeviceModel): boolean => {
-            return this.selectedDevice.id == device.id;
-        });
+        return !this.devices.find(
+            device => device.id == this.selectedDevice.id);
     }
 
     /**
@@ -99,23 +97,32 @@ export class OptionsComponent implements OnInit {
     /**
      * Remove the a device, and delete it from the model set of devices.
      */
-    public removeDevice(event: Event, device: DeviceModel): Promise<any> {
+    public removeDevice(event: Event, device: DeviceModel): Promise<void> {
         event.stopPropagation();
+
+        // Delete the device from Chrome storage if it is currently the selected device
+        let deleteSelectedDevice: Promise<void>;
         if(this.selectedDevice && this.selectedDevice.id == device.id) {
-            this.chromeStorageService.setSelectedDevice(null);
-            delete this.selectedDevice;
+            deleteSelectedDevice = this.chromeStorageService.setSelectedDevice(null)
+                .then(() => {
+                    delete this.selectedDevice;
+                });
+        } else {
+            deleteSelectedDevice = Promise.resolve();
         }
 
-        return this.deviceService.removeDevice(device.id)
+        // Delete the device from the server
+        const removeDevice = this.deviceService.removeDevice(device.id)
             .then(() => {
                 this.message = `${device.name} has been deleted`;
                 this.devices.splice(
                     this.devices.findIndex((d: DeviceModel) => d.id === device.id),
                     1)
-            })
-            .catch(() => {
-                alert("An error occurred while removing the device. Please try again later.");
             });
+
+        return Promise.all([deleteSelectedDevice, removeDevice])
+            .then(d => undefined)
+            .catch(() => alert("An error occurred while removing the device. Please try again later."))
     }
 
     /**
@@ -139,7 +146,7 @@ export class OptionsComponent implements OnInit {
                     resolve();
                 })
                 .catch((error: ErrorModel) => {
-                    if (error.code == ErrorCode.UserNotFound) {
+                    if (error && error.code == ErrorCode.UserNotFound) {
                         this.isLoading = false;
                         this.refreshMessage();
                     } else {
@@ -155,8 +162,8 @@ export class OptionsComponent implements OnInit {
         this.error = error;
     }
 
-    ngOnInit(): void {
-        ChromeAuthHelper.isSignedIntoChrome()
+    public ngOnInit(): Promise<void> {
+        return this.chromeService.isSignedIntoChrome()
             .then((signedIn: boolean) => {
                 if(signedIn) {
                     this.refreshDevices();
@@ -165,7 +172,7 @@ export class OptionsComponent implements OnInit {
                 }
             })
             .catch(reason => {
-                console.log('ChromeAuthHelper.isSignedIntoChrome() threw ' + reason);
+                console.warn('ChromeService.isSignedIntoChrome() threw ' + reason);
                 this.onError('Oops! An error occurred while retrieving your settings. Try again later.');
             });
     }
