@@ -7,8 +7,8 @@
     },
     // map tells the System loader where to look for things
     map: {
-        // our app is within the scripts folder
-        app: 'scripts',
+        // our app is within the src folder
+        app: 'src',
 
         // angular bundles
         'angular2-uuid' : 'npm:angular2-uuid/index.js',

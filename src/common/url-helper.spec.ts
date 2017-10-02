@@ -1,5 +1,5 @@
-import { UrlHelper } from '../../scripts/common/url-helper';
-import { UrlType } from '../../scripts/common/url-type';
+import { UrlHelper } from './url-helper';
+import { UrlType } from './url-type';
 
 describe('UrlHelper', () => {
     describe('getUrlType()', () => {

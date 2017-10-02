@@ -1,5 +1,5 @@
 module.exports = function(config) {
-  var scriptsBase = 'scripts/'; // transpiled src
+  var scriptsBase = 'src/'; // transpiled src
 
   config.set({
     basePath: '',
