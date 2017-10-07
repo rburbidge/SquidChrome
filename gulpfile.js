@@ -20,7 +20,14 @@ gulp.task('clean', function(cb) {
 gulp.task('transpile', ['clean'], function() {
     return tsProject.src()
         .pipe(tsProject())
-        .js.pipe(gulp.dest("."));
+        .js.pipe(gulp.dest("./src"));
+});
+
+// Copies the TypeScript build's JS files
+gulp.task('copyCompiledFiles', ['clean', 'transpile'], function() {
+    var folders = ['src/**/*.js'];
+    return gulp.src(folders, { base: '.' })
+        .pipe(gulp.dest('./build'));
 });
 
 // Copies any files that don't need to be built
@@ -30,8 +37,10 @@ gulp.task('copyResources', ['clean'], function() {
         '*.html',
         'manifest.json',
         'system.config.js',
+        'systemjs-angular-loader.js',
         'bootstrap/**/*',
-        'css/**/*',
+        'src/**/*.css',
+        'src/**/*.html',
         'lib/**/*',
         'templates/**/*'];
     return gulp.src(files, { base: '.' })
@@ -47,6 +56,7 @@ gulp.task('copyNodeModules', ['clean'], function() {
         '@angular/http/bundles/http.umd.js',
         '@angular/platform-browser/bundles/platform-browser.umd.js',
         '@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
+        '@angular/router/bundles/router.umd.js',
         'angular2-uuid/index.js',
         'bootstrap/dist/css/bootstrap.min.css',
         'core-js/client/shim.min.js',
@@ -73,13 +83,6 @@ gulp.task('copyRxjs', ['clean'], function() {
     ];
     return gulp.src(files, { cwd: '**/node_modules/rxjs/'})
         .pipe(gulp.dest('build'));
-});
-
-// Copies the TypeScript build's JS files
-gulp.task('copyCompiledFiles', ['clean', 'transpile'], function() {
-    var folders = ['scripts/**/*.js'];
-    return gulp.src(folders, { base: '.' })
-        .pipe(gulp.dest('./build'));
 });
 
 gulp.task('zip', ['default'], function() {
