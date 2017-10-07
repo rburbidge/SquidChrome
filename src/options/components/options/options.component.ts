@@ -100,6 +100,11 @@ export class OptionsComponent implements OnInit {
     public removeDevice(event: Event, device: DeviceModel): Promise<void> {
         event.stopPropagation();
 
+        if(!confirm(
+            `To use this ${device.name} again, you will need to register it through the Squid app on your Android device.
+
+Are you sure you want to delete ${device.name}?`)) return;
+
         // Delete the device from Chrome storage if it is currently the selected device
         let deleteSelectedDevice: Promise<void>;
         if(this.selectedDevice && this.selectedDevice.id == device.id) {

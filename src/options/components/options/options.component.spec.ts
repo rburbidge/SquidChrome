@@ -133,6 +133,7 @@ describe('OptionsComponent', () => {
 
     describe('removeDevice()', () => {
         it('Removes a device', (done) => {
+            spyOn(window, "confirm").and.returnValue(true);
             spyOn(deviceService, 'removeDevice').and.returnValue(Promise.resolve());
             const removedDevice = devices[1];
 
@@ -146,6 +147,7 @@ describe('OptionsComponent', () => {
         });
 
         it('Removes device that is selected', (done) => {
+            spyOn(window, "confirm").and.returnValue(true);
             const setSelectedDeviceSpy = spyOn(chromeStorageService, 'setSelectedDevice').and.returnValue(Promise.resolve());
             const removeDeviceSpy = spyOn(deviceService, 'removeDevice').and.returnValue(Promise.resolve());
             const selectedDevice = { ...devices[2] }; // Copy the device because it's going to be deleted
@@ -165,6 +167,7 @@ describe('OptionsComponent', () => {
         });
 
         it('Shows an error if the device could not be removed', (done) => {
+            spyOn(window, "confirm").and.returnValue(true);
             spyOn(deviceService, 'removeDevice').and.returnValue(Promise.reject('An error'));
             const windowAlertSpy = spyOn(window, 'alert').and.returnValue(undefined);
             const removedDevice = devices[0];
@@ -173,6 +176,19 @@ describe('OptionsComponent', () => {
                 .then(() => comp.removeDevice(new Event('fake event'), removedDevice))
                 .then(() => {
                     expect(windowAlertSpy).toHaveBeenCalledWith('An error occurred while removing the device. Please try again later.');
+                    done();
+                });
+        });
+
+        it('Does not remove device when user denies removal', (done) => {
+            spyOn(window, "confirm").and.returnValue(false);
+            let removeDeviceSpy = spyOn(deviceService, 'removeDevice').and.returnValue(Promise.reject('An error'));
+
+            setupCompWithDevices(devices, undefined)
+                .then(() => comp.removeDevice(new Event('fake event'), devices[0]))
+                .then(() => {
+                    fixture.detectChanges();
+                    expect(removeDeviceSpy).toHaveBeenCalledTimes(0);
                     done();
                 });
         });
