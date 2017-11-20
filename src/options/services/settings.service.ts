@@ -23,7 +23,7 @@ export interface Settings {
  * @see https://developer.chrome.com/apps/storage
  */
 @Injectable()
-export class ChromeStorageService {
+export class SettingsService {
     
     /**
      * Creates the default settings. Used by production and test code.
@@ -45,7 +45,7 @@ export class ChromeStorageService {
     public getSettings(): Promise<Settings> {
         return new Promise<Settings>((resolve, reject) => {
             chrome.storage.sync.get(
-                ChromeStorageService.createDefault(),
+                SettingsService.createDefault(),
                 (settings: Settings) => {
                     if (chrome.runtime.lastError) {
                         reject(chrome.runtime.lastError);

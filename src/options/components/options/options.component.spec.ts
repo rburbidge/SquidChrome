@@ -4,7 +4,6 @@ import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ChromeService } from '../../services/chrome.service';
-import { ChromeStorageService, Settings } from '../../services/chrome-storage.service';
 import { DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { loadCss } from '../testing/css-loader';
@@ -13,11 +12,12 @@ import { MockChromeService } from '../../services/testing/chrome.service.mock';
 import { MockDeviceService } from '../../services/testing/device.service.mock';
 import { Route } from '../../route';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Settings, SettingsService } from '../../services/settings.service';
 
 describe('OptionsComponent', () => {
     let deviceService: DeviceService;
     let chromeService: ChromeService;
-    let chromeStorageService: ChromeStorageService;
+    let settingsService: SettingsService;
     let router: Router;
 
     let comp: OptionsComponent;
@@ -35,7 +35,7 @@ describe('OptionsComponent', () => {
             imports: [ RouterTestingModule ],
             providers: [
                 { provide: ChromeService, useValue: new MockChromeService() },
-                { provide: ChromeStorageService, useValue: new ChromeStorageService() },
+                { provide: SettingsService, useValue: new SettingsService() },
                 { provide: DeviceService, useValue: new MockDeviceService() },
             ]
         })
@@ -48,11 +48,11 @@ describe('OptionsComponent', () => {
 
         deviceService = TestBed.get(DeviceService);
         chromeService = TestBed.get(ChromeService);
-        chromeStorageService = TestBed.get(ChromeStorageService);
+        settingsService = TestBed.get(SettingsService);
         router = TestBed.get(Router);
 
         // Set default settings. If a test needs to override, it can set the values directly on the settings object
-        settings = ChromeStorageService.createDefault();
+        settings = SettingsService.createDefault();
         mockGetSettingsReturns(settings);
     })
 
@@ -95,7 +95,7 @@ describe('OptionsComponent', () => {
 
     describe('setDevice()', () => {
         it('Sets the selected device', (done) => {
-            const setSelectedDeviceSpy = spyOn(chromeStorageService, 'setSelectedDevice').and.returnValue(Promise.resolve());
+            const setSelectedDeviceSpy = spyOn(settingsService, 'setSelectedDevice').and.returnValue(Promise.resolve());
             
             setupCompWithDevices(devices, undefined)
                 .then(() => comp.setDevice(devices[0]))
@@ -109,7 +109,7 @@ describe('OptionsComponent', () => {
         });
 
         it('Does nothing if the device was already set', (done) => {
-            const setSelectedDeviceSpy = spyOn(chromeStorageService, 'setSelectedDevice').and.returnValue(Promise.resolve());
+            const setSelectedDeviceSpy = spyOn(settingsService, 'setSelectedDevice').and.returnValue(Promise.resolve());
             const selectedDevice = devices[1];
 
             setupCompWithDevices(devices, selectedDevice)
@@ -153,7 +153,7 @@ describe('OptionsComponent', () => {
 
         it('Removes device that is selected', (done) => {
             spyOn(window, "confirm").and.returnValue(true);
-            const setSelectedDeviceSpy = spyOn(chromeStorageService, 'setSelectedDevice').and.returnValue(Promise.resolve());
+            const setSelectedDeviceSpy = spyOn(settingsService, 'setSelectedDevice').and.returnValue(Promise.resolve());
             const removeDeviceSpy = spyOn(deviceService, 'removeDevice').and.returnValue(Promise.resolve());
             const selectedDevice = { ...devices[2] }; // Copy the device because it's going to be deleted
 
@@ -368,7 +368,7 @@ describe('OptionsComponent', () => {
     }
 
     function mockGetSettingsReturns(settings: Settings) {
-        spyOn(chromeStorageService, 'getSettings').and.returnValue(Promise.resolve(settings));
+        spyOn(settingsService, 'getSettings').and.returnValue(Promise.resolve(settings));
     }
 
     function testErrorShown(expectedError: string) {

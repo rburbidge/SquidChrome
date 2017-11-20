@@ -1,11 +1,11 @@
 import $ from 'jquery';
 
 import { ChromeAuthHelper } from '../common/chrome-auth-helper';
-import { ChromeStorageService, Settings } from '../options/services/chrome-storage.service';
 import { ChromeService } from '../options/services/chrome.service';
 import { Config } from '../config';
 import { Devices } from './devices';
 import { DeviceModel } from '../contracts/squid';
+import { Settings, SettingsService } from '../options/services/settings.service';
 import { UrlHelper } from '../common/url-helper';
 import { UrlType } from '../common/url-type';
 
@@ -57,7 +57,7 @@ Promise.all(
     [
         new ChromeService().isSignedIntoChrome(),
         Popup.getCurrentTabUrl(),
-        new ChromeStorageService().getSettings()
+        new SettingsService().getSettings()
     ])
     .then((values) => {
         const isSignedIn = values[0];
