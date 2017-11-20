@@ -10,7 +10,6 @@ import { DeviceService } from '../../services/device.service';
 import { loadCss } from '../testing/css-loader';
 import { OptionsComponent } from './options.component';
 import { MockChromeService } from '../../services/testing/chrome.service.mock';
-import { MockChromeStorageService } from '../../services/testing/chrome-storage.service.mock';
 import { MockDeviceService } from '../../services/testing/device.service.mock';
 import { Route } from '../../route';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -36,7 +35,7 @@ describe('OptionsComponent', () => {
             imports: [ RouterTestingModule ],
             providers: [
                 { provide: ChromeService, useValue: new MockChromeService() },
-                { provide: ChromeStorageService, useValue: new MockChromeStorageService() },
+                { provide: ChromeStorageService, useValue: new ChromeStorageService() },
                 { provide: DeviceService, useValue: new MockDeviceService() },
             ]
         })
