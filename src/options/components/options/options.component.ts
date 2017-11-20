@@ -31,7 +31,7 @@ export class OptionsComponent implements OnInit {
     public isLoading: boolean = true;
     public error: string;
     public devices: DeviceModel[] = [];
-    public selectedDevice?: DeviceModel;
+    public selectedDevice?: DeviceModel = null;
     public message: string;
 
     /**
@@ -138,7 +138,8 @@ Are you sure you want to delete ${device.name}?`)) return;
         delete this.error;
 
         return new Promise<void>((resolve, reject) => {
-            let getSelectedDevice: Promise<DeviceModel> = this.chromeStorageService.getSelectedDevice();
+            let getSelectedDevice: Promise<DeviceModel> = this.chromeStorageService.getSettings()
+                .then(settings => settings.device);
             let getDevices: Promise<DeviceModel[]> = this.deviceService.getDevices();
             Promise.all([getSelectedDevice, getDevices])
                 .then(values => {
@@ -171,7 +172,7 @@ Are you sure you want to delete ${device.name}?`)) return;
         return this.chromeService.isSignedIntoChrome()
             .then((signedIn: boolean) => {
                 if(signedIn) {
-                    this.refreshDevices();
+                    return this.refreshDevices();
                 } else {
                     this.router.navigateByUrl(Route.signedOut);
                 }

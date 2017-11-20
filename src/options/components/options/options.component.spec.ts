@@ -4,7 +4,7 @@ import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ChromeService } from '../../services/chrome.service';
-import { ChromeStorageService } from '../../services/chrome-storage.service';
+import { ChromeStorageService, Settings } from '../../services/chrome-storage.service';
 import { DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { loadCss } from '../testing/css-loader';
@@ -23,6 +23,8 @@ describe('OptionsComponent', () => {
 
     let comp: OptionsComponent;
     let fixture: ComponentFixture<OptionsComponent>;
+
+    let settings: Settings;
 
     beforeAll(() => {
         loadCss();
@@ -49,6 +51,10 @@ describe('OptionsComponent', () => {
         chromeService = TestBed.get(ChromeService);
         chromeStorageService = TestBed.get(ChromeStorageService);
         router = TestBed.get(Router);
+
+        // Set default settings. If a test needs to override, it can set the values directly on the settings object
+        settings = ChromeStorageService.createDefault();
+        mockGetSettingsReturns(settings);
     })
 
     describe('constructor',() => {
@@ -56,7 +62,7 @@ describe('OptionsComponent', () => {
             expect(comp.isLoading).toBeTruthy();
             expect(comp.error).toBeUndefined();
             expect(comp.devices.length).toBe(0);
-            expect(comp.selectedDevice).toBeUndefined();
+            expect(comp.selectedDevice).toBeNull();
             expect(comp.message).toBeUndefined();
         });
 
@@ -197,7 +203,8 @@ describe('OptionsComponent', () => {
     describe('refreshDevices()', () => {
         it('Shows devices and selected device on success', (done) => {
             mockGetDevicesReturns(devices);
-            mockGetSelectedDeviceReturns(devices[1]);
+            settings.device = devices[1];
+            
             spyOn(comp, 'ngOnInit').and.returnValue(Promise.resolve()); // Fake ngOnInit() to prevent it from interfering with refreshDevices() results
 
             comp.isLoading = false; // 1. Begin with loading = false and an error
@@ -218,7 +225,6 @@ describe('OptionsComponent', () => {
 
         it('Shows no selected device when the user hasn\'t selected a device yet', (done) => {
             mockGetDevicesReturns(devices);
-            mockGetSelectedDeviceReturns(undefined);
             spyOn(comp, 'ngOnInit').and.returnValue(Promise.resolve()); // Fake ngOnInit() to prevent it from interfering with refreshDevices() results
 
             comp.isLoading = false; // 1. Begin with loading = false and an error
@@ -230,7 +236,7 @@ describe('OptionsComponent', () => {
                     expect(comp.isLoading).toBeFalsy(); // 3. Expect loading = false once complete
                     expect(comp.error).toBeUndefined();
                     expect(comp.devices).toEqual(devices);
-                    expect(comp.selectedDevice).toBe(undefined);
+                    expect(comp.selectedDevice).toBeNull();
                     done();
                 });
             expect(comp.isLoading).toBeTruthy(); // 2. Expect loading = true and that the error was cleared
@@ -239,7 +245,6 @@ describe('OptionsComponent', () => {
 
         it('Shows message when the user has no devices', (done) => {
             mockGetDevicesReturns([]);
-            mockGetSelectedDeviceReturns(undefined);
     
             comp.refreshDevices()
                 .then(() => {
@@ -255,7 +260,6 @@ describe('OptionsComponent', () => {
                 message: ''
             };
             spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject(error))
-            mockGetSelectedDeviceReturns(undefined);
     
             comp.refreshDevices()
                 .then(() => {
@@ -266,7 +270,6 @@ describe('OptionsComponent', () => {
     
         it('Shows error if loading fails', (done) => {
             spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject('An error'))
-            mockGetSelectedDeviceReturns(undefined);
     
             comp.refreshDevices()
                 .then(() => {
@@ -302,7 +305,7 @@ describe('OptionsComponent', () => {
         function testNoDevicesFound() {
             fixture.detectChanges();
             expect(comp.devices.length).toBe(0);
-            expect(comp.selectedDevice).toBeUndefined();
+            expect(comp.selectedDevice).toBeNull();
             expect(comp.isLoading).toBeFalsy();
     
             let error = fixture.debugElement.query(By.css('.squid-options-header'));
@@ -365,8 +368,8 @@ describe('OptionsComponent', () => {
         spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices))
     }
 
-    function mockGetSelectedDeviceReturns(device: DeviceModel) {
-        spyOn(chromeStorageService, 'getSelectedDevice').and.returnValue(Promise.resolve(device));
+    function mockGetSettingsReturns(settings: Settings) {
+        spyOn(chromeStorageService, 'getSettings').and.returnValue(Promise.resolve(settings));
     }
 
     function testErrorShown(expectedError: string) {
@@ -384,7 +387,8 @@ describe('OptionsComponent', () => {
     function setupCompWithDevices(devices: DeviceModel[], selectedDevice: DeviceModel): Promise<void> {
         mockIsSignedIntoChromeReturns(true);
         mockGetDevicesReturns(devices);
-        mockGetSelectedDeviceReturns(selectedDevice);
+        
+        settings.device = selectedDevice;
 
         return comp.ngOnInit();
     }
