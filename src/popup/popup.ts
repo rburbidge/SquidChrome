@@ -1,11 +1,11 @@
 import $ from 'jquery';
 
 import { ChromeAuthHelper } from '../common/chrome-auth-helper';
-import { ChromeStorageService } from '../options/services/chrome-storage.service';
 import { ChromeService } from '../options/services/chrome.service';
 import { Config } from '../config';
 import { Devices } from './devices';
 import { DeviceModel } from '../contracts/squid';
+import { Settings, SettingsService } from '../options/services/settings.service';
 import { UrlHelper } from '../common/url-helper';
 import { UrlType } from '../common/url-type';
 
@@ -57,12 +57,12 @@ Promise.all(
     [
         new ChromeService().isSignedIntoChrome(),
         Popup.getCurrentTabUrl(),
-        new ChromeStorageService().getSelectedDevice()
+        new SettingsService().getSettings()
     ])
     .then((values) => {
         const isSignedIn = values[0];
         const url: string = values[1];
-        const device: DeviceModel = values[2];
+        const device: DeviceModel = values[2].device;
 
         // If the user is not signed in, then open the options page. It will force the user to log in
         if(!isSignedIn) {

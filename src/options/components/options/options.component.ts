@@ -4,11 +4,11 @@ import { UUID } from 'angular2-uuid';
 
 import { ChromeService } from '../../services/chrome.service';
 import { ChromeAuthHelper } from '../../../common/chrome-auth-helper';
-import { ChromeStorageService } from '../../services/chrome-storage.service';
 import { Config } from '../../../config';
 import { DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { Route } from '../../route';
+import { SettingsService } from '../../services/settings.service';
 
 /**
  * The options page. Allows the user to manage their registered devices.
@@ -22,7 +22,7 @@ export class OptionsComponent implements OnInit {
         private readonly deviceService: DeviceService,
         private readonly router: Router,
         private readonly chromeService: ChromeService,
-        private readonly chromeStorageService: ChromeStorageService)
+        private readonly settingsService: SettingsService)
     {
         this.isDevMode = chromeService.isDevMode();
     }
@@ -31,7 +31,7 @@ export class OptionsComponent implements OnInit {
     public isLoading: boolean = true;
     public error: string;
     public devices: DeviceModel[] = [];
-    public selectedDevice?: DeviceModel;
+    public selectedDevice?: DeviceModel = null;
     public message: string;
 
     /**
@@ -41,7 +41,7 @@ export class OptionsComponent implements OnInit {
         // No-op if the device is already selected
         if (this.selectedDevice && this.selectedDevice.id == device.id) return;
 
-        return this.chromeStorageService.setSelectedDevice(device)
+        return this.settingsService.setSelectedDevice(device)
             .then(() => {
                 this.selectedDevice = device;
                 this.refreshMessage();
@@ -108,7 +108,7 @@ Are you sure you want to delete ${device.name}?`)) return;
         // Delete the device from Chrome storage if it is currently the selected device
         let deleteSelectedDevice: Promise<void>;
         if(this.selectedDevice && this.selectedDevice.id == device.id) {
-            deleteSelectedDevice = this.chromeStorageService.setSelectedDevice(null)
+            deleteSelectedDevice = this.settingsService.setSelectedDevice(null)
                 .then(() => {
                     delete this.selectedDevice;
                 });
@@ -138,7 +138,8 @@ Are you sure you want to delete ${device.name}?`)) return;
         delete this.error;
 
         return new Promise<void>((resolve, reject) => {
-            let getSelectedDevice: Promise<DeviceModel> = this.chromeStorageService.getSelectedDevice();
+            let getSelectedDevice: Promise<DeviceModel> = this.settingsService.getSettings()
+                .then(settings => settings.device);
             let getDevices: Promise<DeviceModel[]> = this.deviceService.getDevices();
             Promise.all([getSelectedDevice, getDevices])
                 .then(values => {
@@ -171,7 +172,7 @@ Are you sure you want to delete ${device.name}?`)) return;
         return this.chromeService.isSignedIntoChrome()
             .then((signedIn: boolean) => {
                 if(signedIn) {
-                    this.refreshDevices();
+                    return this.refreshDevices();
                 } else {
                     this.router.navigateByUrl(Route.signedOut);
                 }
