@@ -9,6 +9,7 @@ import { DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { Route } from '../../route';
 import { SettingsService } from '../../services/settings.service';
+import { UrlHelper } from '../../../common/url-helper';
 
 /**
  * The options page. Allows the user to manage their registered devices.
@@ -84,13 +85,23 @@ export class OptionsComponent implements OnInit {
     /**
      * Add a fake device with an invalid GCM token. For testing purposes only.
      */
-    public addDevice(): Promise<any> {
+    public addDevice(): Promise<void> {
         let gcmToken = UUID.UUID();
         let name = 'Device ' + gcmToken.substring(0, 8); // Use only the first 8 chars of the token, for readability
         return this.deviceService.addDevice(name, gcmToken)
             .then(device => {
                 this.devices.push(device);
                 this.refreshMessage();
+            });
+    }
+
+    /**
+     * Reset the app to default settings.
+     */
+    public resetApp(): Promise<void> {
+        return this.settingsService.reset()
+            .then(() => {
+                UrlHelper.openOptionsPage();
             });
     }
 
@@ -169,13 +180,27 @@ Are you sure you want to delete ${device.name}?`)) return;
     }
 
     public ngOnInit(): Promise<void> {
-        return this.chromeService.isSignedIntoChrome()
-            .then((signedIn: boolean) => {
-                if(signedIn) {
+        const getSettings = this.settingsService.getSettings()
+        const getIsSignedIn = this.chromeService.isSignedIntoChrome();
+
+        return Promise.all([getSettings, getIsSignedIn])
+            .then(results => {
+                const isInitialized = results[0].initialized;
+                const isSignedIn = results[1];
+
+                if(isInitialized && isSignedIn) {
                     return this.refreshDevices();
-                } else {
-                    this.router.navigateByUrl(Route.signedOut);
                 }
+
+                let route: string;
+                if(!isSignedIn) {
+                    route = Route.signedOut;
+                } else {
+                    route = Route.addDevice;
+                }
+
+                if(!route) return;
+                this.router.navigateByUrl(route);
             })
             .catch(reason => {
                 console.warn('ChromeService.isSignedIntoChrome() threw ' + reason);

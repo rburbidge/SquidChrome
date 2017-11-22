@@ -1,0 +1,17 @@
+<div class="container squid-options">
+    <div *ngIf="isLoading" class="row text-center fade-in">
+        <div class="row">Registering your device...</div>
+        <div class="row spacer-12-top">
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <form *ngIf="!isLoading">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" #deviceName class="form-control" id="name" value="Chrome Browser" required>
+        </div>
+
+        <button (click)="addDevice(deviceName.value)" class="btn btn-success">Add device</button>    
+    </form>
+</div>

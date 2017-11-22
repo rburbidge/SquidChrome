@@ -26,15 +26,16 @@ export class UrlHelper {
         return type == UrlType.Http || type == UrlType.Https;
     }
 
-    public static openOptionsPage(): void {
-        // openOptionsPage() was introduced in Chrome 42. This will not open a duplicate options tab, but will focus on
-        // any existing one
-        if (chrome.runtime.openOptionsPage) {
-            chrome.runtime.openOptionsPage();
-            return;
-        }
+    public static openOptionsPage(newTab: boolean = false): void {
+        if(newTab) {
+            if (chrome.runtime.openOptionsPage) {
+                chrome.runtime.openOptionsPage();
+                return;
+            }
 
-        // Fallback to opening options page by name. This will open a duplicate options tab if one is already open
-        window.open(chrome.runtime.getURL(UrlHelper.OptionsPageName));
+            window.open(chrome.runtime.getURL(UrlHelper.OptionsPageName));
+        }
+        
+        location.href = chrome.runtime.getURL(UrlHelper.OptionsPageName);
     }
 }
