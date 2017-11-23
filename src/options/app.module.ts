@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './components/app/app.component';
 import { ChromeService } from './services/chrome.service';
+import { DeveloperComponent } from './components/developer/developer.component';
 import { DeviceService } from './services/device.service';
 import { OptionsComponent } from './components/options/options.component';
 import { Route } from './route';
@@ -26,7 +27,7 @@ import { SignedOutComponent } from './components/signed-out/signed-out.component
             }
         ])
     ],
-    declarations: [AppComponent, OptionsComponent, SignedOutComponent],
+    declarations: [AppComponent, DeveloperComponent, OptionsComponent, SignedOutComponent],
     providers: [ChromeService, SettingsService, DeviceService],
     bootstrap: [AppComponent]
 })
