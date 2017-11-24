@@ -1,7 +1,7 @@
+import { ChromeService } from '../options/services/chrome.service';
 import { UrlType } from './url-type';
 
 export const optionsPageName = "options.html";
-export const optionsPageUrl = chrome.runtime.getURL(optionsPageName)
 
 export class UrlHelper {
 
@@ -37,6 +37,6 @@ export class UrlHelper {
         }
 
         // Fallback to opening options page by name. This will open a duplicate options tab if one is already open
-        window.open(optionsPageUrl);
+        window.open(new ChromeService().getOptionsUrl());
     }
 }

@@ -1,8 +1,16 @@
 import { Injectable } from '@angular/core';
 import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
+import { optionsPageName } from '../../common/url-helper';
 
 @Injectable()
 export class ChromeService {
+    /**
+     * Returns the options URL of the app.
+     */
+    public getOptionsUrl(): string {
+        return chrome.runtime.getURL(optionsPageName);
+    }
+
     /**
      * Returns true if the extension was installed from an unpacked folder, rather than from a .crx file.
      */

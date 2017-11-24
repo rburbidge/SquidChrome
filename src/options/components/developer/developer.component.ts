@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 
+import { ChromeService } from '../../services/chrome.service';
 import { DeviceService } from '../../services/device.service';
 import { SettingsService } from '../../services/settings.service';
-import { optionsPageUrl, UrlHelper } from '../../../common/url-helper';
+import { UrlHelper } from '../../../common/url-helper';
 
 /**
  * Shows developer options.
@@ -14,6 +15,7 @@ import { optionsPageUrl, UrlHelper } from '../../../common/url-helper';
 })
 export class DeveloperComponent {
     constructor(
+        private readonly chromeService: ChromeService,
         private readonly deviceService: DeviceService,
         private readonly settingsService: SettingsService) { }
 
@@ -34,7 +36,8 @@ export class DeveloperComponent {
             .then(() => {
                 // Developer component is currently being by the options page. On reset of application, just refresh
                 // the options page
-                window.location.href = optionsPageUrl;
+                
+                window.location.href = this.chromeService.getOptionsUrl();
             });
     }
 }

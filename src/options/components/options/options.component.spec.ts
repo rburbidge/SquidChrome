@@ -4,6 +4,7 @@ import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ChromeService } from '../../services/chrome.service';
+import { DeveloperComponent } from '../developer/developer.component';
 import { DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { loadCss } from '../testing/css-loader';
@@ -31,7 +32,7 @@ describe('OptionsComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ OptionsComponent ],
+            declarations: [ DeveloperComponent, OptionsComponent ],
             imports: [ RouterTestingModule ],
             providers: [
                 { provide: ChromeService, useValue: new MockChromeService() },
