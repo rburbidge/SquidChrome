@@ -42,12 +42,9 @@
         <div *ngIf="!devices || devices.length == 0" class="row spacer-12-top text-center">
             <button class="btn btn-primary" (click)="refreshDevices()">Retry</button>
         </div>
-
     </div>
 
     <div *ngIf="isDevMode && !isLoading" class="row spacer-12-top squid-dev-options squid-panel">
-        <div class="row text-center">Dev Options</div>
-            <button class="btn btn-primary" (click)="addDevice()">Add Device</button>
-            <button class="btn btn-primary" (click)="resetApp()">Reset app</button>
+        <developer></developer>
     </div>
 </div>

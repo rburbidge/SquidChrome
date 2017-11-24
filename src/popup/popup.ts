@@ -47,7 +47,7 @@ class Popup {
         // to read it
         if (!isOptionsPage) {
             const timeToShowMs = 2000;
-            window.setTimeout(() => UrlHelper.openOptionsPage(true), timeToShowMs);
+            window.setTimeout(() => UrlHelper.openOptionsPage(), timeToShowMs);
         }
     }
 }
@@ -66,7 +66,7 @@ Promise.all(
 
         // If the user is not signed in, then open the options page. It will force the user to log in
         if(!isSignedIn) {
-            UrlHelper.openOptionsPage(true);
+            UrlHelper.openOptionsPage();
         }
 
         console.log('Sending URL: ' + url);

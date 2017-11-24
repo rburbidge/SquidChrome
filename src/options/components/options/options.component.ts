@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UUID } from 'angular2-uuid';
 
 import { ChromeService } from '../../services/chrome.service';
 import { ChromeAuthHelper } from '../../../common/chrome-auth-helper';
@@ -80,29 +79,6 @@ export class OptionsComponent implements OnInit {
 
         return !this.devices.find(
             device => device.id == this.selectedDevice.id);
-    }
-
-    /**
-     * Add a fake device with an invalid GCM token. For testing purposes only.
-     */
-    public addDevice(): Promise<void> {
-        let gcmToken = UUID.UUID();
-        let name = 'Device ' + gcmToken.substring(0, 8); // Use only the first 8 chars of the token, for readability
-        return this.deviceService.addDevice(name, gcmToken)
-            .then(device => {
-                this.devices.push(device);
-                this.refreshMessage();
-            });
-    }
-
-    /**
-     * Reset the app to default settings.
-     */
-    public resetApp(): Promise<void> {
-        return this.settingsService.reset()
-            .then(() => {
-                UrlHelper.openOptionsPage();
-            });
     }
 
     /**
