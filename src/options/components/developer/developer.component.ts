@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 
 import { ChromeService } from '../../services/chrome.service';
@@ -19,7 +18,6 @@ export class DeveloperComponent {
     constructor(
         private readonly chromeService: ChromeService,
         private readonly deviceService: DeviceService,
-        private readonly router: Router,
         private readonly settingsService: SettingsService,
         private readonly windowService: WindowService) { }
 

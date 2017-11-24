@@ -1,7 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { ChromeService } from '../../services/chrome.service';
 import { DeveloperComponent } from '../developer/developer.component';
@@ -18,7 +15,6 @@ describe('DeveloperComponent', () => {
     let chromeService: ChromeService;
     let settingsService: SettingsService;
     let windowService: WindowService;
-    let router: Router;
 
     let comp: DeveloperComponent;
     let fixture: ComponentFixture<DeveloperComponent>;
@@ -51,7 +47,6 @@ describe('DeveloperComponent', () => {
         chromeService = TestBed.get(ChromeService);
         settingsService = TestBed.get(SettingsService);
         windowService = TestBed.get(WindowService);
-        router = TestBed.get(Router);
     })
 
     describe('addDevice()', () => {
