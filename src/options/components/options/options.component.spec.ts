@@ -14,6 +14,7 @@ import { MockDeviceService } from '../../services/testing/device.service.mock';
 import { Route } from '../../route';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Settings, SettingsService } from '../../services/settings.service';
+import { WindowService } from '../../services/window.service';
 
 describe('OptionsComponent', () => {
     let deviceService: DeviceService;
@@ -38,6 +39,7 @@ describe('OptionsComponent', () => {
                 { provide: ChromeService, useValue: new MockChromeService() },
                 { provide: SettingsService, useValue: new SettingsService() },
                 { provide: DeviceService, useValue: new MockDeviceService() },
+                { provide: WindowService, useValue: new WindowService() }
             ]
         })
         .compileComponents();

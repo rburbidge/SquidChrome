@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 
 import { ChromeService } from '../../services/chrome.service';
 import { DeviceService } from '../../services/device.service';
 import { SettingsService } from '../../services/settings.service';
 import { UrlHelper } from '../../../common/url-helper';
+import { WindowService } from '../../services/window.service';
 
 /**
  * Shows developer options.
@@ -17,7 +19,9 @@ export class DeveloperComponent {
     constructor(
         private readonly chromeService: ChromeService,
         private readonly deviceService: DeviceService,
-        private readonly settingsService: SettingsService) { }
+        private readonly router: Router,
+        private readonly settingsService: SettingsService,
+        private readonly windowService: WindowService) { }
 
     /**
      * Add a fake device with an invalid GCM token.
@@ -36,8 +40,7 @@ export class DeveloperComponent {
             .then(() => {
                 // Developer component is currently being by the options page. On reset of application, just refresh
                 // the options page
-                
-                window.location.href = this.chromeService.getOptionsUrl();
+                this.windowService.setUrl(this.chromeService.getOptionsUrl());
             });
     }
 }

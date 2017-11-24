@@ -11,6 +11,7 @@ import { OptionsComponent } from './components/options/options.component';
 import { Route } from './route';
 import { SettingsService } from './services/settings.service';
 import { SignedOutComponent } from './components/signed-out/signed-out.component';
+import { WindowService } from './services/window.service';
 
 @NgModule({
     imports: [
@@ -28,7 +29,7 @@ import { SignedOutComponent } from './components/signed-out/signed-out.component
         ])
     ],
     declarations: [AppComponent, DeveloperComponent, OptionsComponent, SignedOutComponent],
-    providers: [ChromeService, SettingsService, DeviceService],
+    providers: [ChromeService, SettingsService, DeviceService, WindowService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
