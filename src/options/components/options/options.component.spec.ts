@@ -4,6 +4,7 @@ import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ChromeService } from '../../services/chrome.service';
+import { DeveloperComponent } from '../developer/developer.component';
 import { DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { loadCss } from '../testing/css-loader';
@@ -13,6 +14,7 @@ import { MockDeviceService } from '../../services/testing/device.service.mock';
 import { Route } from '../../route';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Settings, SettingsService } from '../../services/settings.service';
+import { WindowService } from '../../services/window.service';
 
 describe('OptionsComponent', () => {
     let deviceService: DeviceService;
@@ -31,12 +33,13 @@ describe('OptionsComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ OptionsComponent ],
+            declarations: [ DeveloperComponent, OptionsComponent ],
             imports: [ RouterTestingModule ],
             providers: [
                 { provide: ChromeService, useValue: new MockChromeService() },
                 { provide: SettingsService, useValue: new SettingsService() },
                 { provide: DeviceService, useValue: new MockDeviceService() },
+                { provide: WindowService, useValue: new WindowService() }
             ]
         })
         .compileComponents();

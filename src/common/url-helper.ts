@@ -1,14 +1,16 @@
+import { ChromeService } from '../options/services/chrome.service';
 import { UrlType } from './url-type';
 
+export const optionsPageName = "options.html";
+
 export class UrlHelper {
-    public static OptionsPageName = "options.html";
 
     /**
      * Gets the page type for a URL.
      */
     public static getUrlType(url: string): UrlType {
         if (url.startsWith('chrome-extension')) {
-            return url.endsWith(UrlHelper.OptionsPageName)
+            return url.endsWith(optionsPageName)
                 ? UrlType.Options
                 : UrlType.ChromeExtension;
         }
@@ -35,6 +37,6 @@ export class UrlHelper {
         }
 
         // Fallback to opening options page by name. This will open a duplicate options tab if one is already open
-        window.open(chrome.runtime.getURL(UrlHelper.OptionsPageName));
+        window.open(new ChromeService().getOptionsUrl());
     }
 }
