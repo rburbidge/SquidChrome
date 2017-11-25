@@ -98,26 +98,10 @@ describe('AddDeviceComponent', () => {
         });
     });
 
-    function setupGcmRegisterReturns(gcmToken: string): jasmine.Spy {
-        return spyOn(gcmService, "register").and.returnValue(Promise.resolve(gcmToken));
-    }
-
-    function setupAddDeviceSpy(): jasmine.Spy {
-        return spyOn(deviceService, "addDevice").and.returnValue(Promise.resolve());
-    }
-
-    function setupNavigateSpy(): jasmine.Spy {
-        return spyOn(router, "navigateByUrl").and.returnValue(Promise.resolve());
-    }
-
-    function setupInitializedSpy(): jasmine.Spy {
-        return spyOn(settingsService, "setInitialized").and.returnValue(Promise.resolve());
-    }
-
     function setupMocks(gcmToken: string = "GCM token") {
-        gcmRegisterSpy = setupGcmRegisterReturns(gcmToken);
-        addDeviceSpy = setupAddDeviceSpy();
-        navigateSpy = setupNavigateSpy();
-        setInitalizedSpy = setupInitializedSpy();
+        gcmRegisterSpy = spyOn(gcmService, "register").and.returnValue(Promise.resolve(gcmToken));
+        addDeviceSpy = spyOn(deviceService, "addDevice").and.returnValue(Promise.resolve());
+        navigateSpy = spyOn(router, "navigateByUrl").and.returnValue(Promise.resolve());
+        setInitalizedSpy = spyOn(settingsService, "setInitialized").and.returnValue(Promise.resolve());
     }
 });
