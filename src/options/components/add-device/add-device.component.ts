@@ -32,7 +32,7 @@ export class AddDeviceComponent {
 
         // Use default device name if none was chosen
         if(!name) {
-            name = this.strings.defaultDeviceName;
+            name = this.strings.addDevice.defaultDeviceName;
         }
 
         return this.gcmService.register([Config.gcmSenderId])

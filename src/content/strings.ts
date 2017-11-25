@@ -1,11 +1,37 @@
 export class Strings {
-    public addDevice = 'Add device';
+    public loading = 'Loading...';
     public name = 'Name';
-    public registeringDevice = 'Registering your device...';
-    public defaultDeviceName = 'Chrome Browser';
+    public retry = 'Retry';
 
-    public signedOutMessage = 'Squid requires you to be signed into Google Chrome';
-    public signIn = 'Sign in';
+    public addDevice = {
+        addDevice: 'Add device',
+        addingDevice: 'Registering your device...',
+        defaultDeviceName: 'Chrome Browser',
+    };
+
+    public signedOut = {
+        signedOutMessage: 'Squid requires you to be signed into Google Chrome',
+        signIn: 'Sign in',
+    };
+
+    public devices = {
+        deleteComplete: (deviceName: string) => `${deviceName} has been deleted`,
+        deleteConfirm: (deviceName: string) => `To use this ${deviceName} again, you will need to register it through the Squid app on your Android device.
+        
+Are you sure you want to delete ${deviceName}?`,
+        deleteError: 'An error occurred while removing the device. Please try again later.',
+
+        noDevicesTitle: 'No devices found',
+        noDevicesMessage: 'Install Squid on your Android phone, and then retry!',
+
+        refreshError: 'Oops! An error occurred while retrieving your settings. Try again later.',
+
+        selectDevice: 'Select a device',
+        selectDeviceComplete: (deviceName: string) => `Pages will be sent to ${deviceName}`,
+        
+        selectedDeviceNotFound:(deviceName: string) => `${deviceName} was not found`,
+        selectedDeviceNotFoundSelect:(deviceName: string) => `${deviceName} was not found. Select a device`,
+    };
 
     /**
      * Strings for the send page pop-up action.
@@ -18,5 +44,5 @@ export class Strings {
         pageCannotBeSentOptions: 'Click this while on a different tab. This page cannot be sent.',
         sendingTo: (deviceName: string) => `Sending to ${deviceName}...`,
         sentTo: (deviceName: string) => `Sent to ${deviceName}!`,
-    }
+    };
 }

@@ -1,6 +1,6 @@
 <div class="container squid-options">
     <div *ngIf="isLoading" class="row text-center fade-in">
-        <div class="row">Loading...</div>
+        <div class="row">{{strings.loading}}</div>
         <div class="row spacer-12-top">
             <div class="loader"></div>
         </div>
@@ -15,8 +15,7 @@
         <!-- No devices message -->
         <div *ngIf="!error && (!devices || devices.length == 0)" class="row text-center">
             <div class="row">
-                <p>You have no devices.</p>
-                <p>Install Squid on your Android phone, and then retry!</p>
+                <p>{{strings.devices.noDevicesMessage}}</p>
             </div>
         </div>
 
@@ -40,7 +39,7 @@
         </div>
 
         <div *ngIf="!devices || devices.length == 0" class="row spacer-12-top text-center">
-            <button class="btn btn-primary" (click)="refreshDevices()">Retry</button>
+            <button class="btn btn-primary" (click)="refreshDevices()">{{strings.retry}}</button>
         </div>
     </div>
 
