@@ -1,6 +1,7 @@
 import { ChromeService } from '../../services/chrome.service';
 import { ChromeAuthHelper } from '../../../common/chrome-auth-helper';
 import { Component } from '@angular/core';
+import { Strings } from '../../../content/strings';
 import { UrlHelper } from '../../../common/url-helper';
 
 /**
@@ -11,6 +12,8 @@ import { UrlHelper } from '../../../common/url-helper';
     templateUrl: './signed-out.html'
 })
 export class SignedOutComponent {
+
+    public readonly strings: Strings = new Strings();
 
     constructor(private readonly chromeService: ChromeService) { }
 
