@@ -26,7 +26,7 @@ export class AddDeviceComponent {
         private readonly router: Router,
         private readonly settingsService: SettingsService) { }
 
-    public addDevice(name: string): Promise<void> {
+    public addDevice(name: string): Promise<any> {
         this.isLoading = true;
 
         // Use default device name if none was chosen
@@ -36,13 +36,12 @@ export class AddDeviceComponent {
 
         return this.gcmService.register([Config.gcmSenderId])
             .then(gcmToken => {
-                // TODO Save device model in settings
-                this.settingsService.setInitialized()
-                    .then(() => this.deviceService.addDevice(name, gcmToken))
-                    .then(() => this.router.navigateByUrl(Route.options))
+                this.deviceService.addDevice(name, gcmToken)
+                    .then(() => this.settingsService.setInitialized())
+                    .then(() => this.router.navigateByUrl(Route.options));
             })
             .catch(error => {
-                // TODO Show some error message
+                // TODO Show some error message. Figure out how to do this in a uniform way
             })
     }
 }
