@@ -6,6 +6,7 @@ import { DeviceService } from '../../services/device.service';
 import { GcmService } from '../../services/gcm.service';
 import { Route } from '../../route';
 import { SettingsService } from '../../services/settings.service';
+import { Strings } from '../../../content/strings';
 import { UrlHelper } from '../../../common/url-helper';
 
 /**
@@ -16,9 +17,9 @@ import { UrlHelper } from '../../../common/url-helper';
     templateUrl: './add-device.html'
 })
 export class AddDeviceComponent {
-    private static defaultDeviceName: string = 'Chrome Browser';
+    public readonly strings: Strings = new Strings();
 
-    private isLoading: boolean = false;
+    public isLoading: boolean = false;
 
     constructor(
         private readonly gcmService: GcmService,
@@ -31,7 +32,7 @@ export class AddDeviceComponent {
 
         // Use default device name if none was chosen
         if(!name) {
-            name = AddDeviceComponent.defaultDeviceName;
+            name = this.strings.defaultDeviceName;
         }
 
         return this.gcmService.register([Config.gcmSenderId])

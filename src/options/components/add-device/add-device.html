@@ -1,6 +1,6 @@
 <div class="container squid-options squid-intro">
     <div *ngIf="isLoading" class="row text-center fade-in">
-        <div class="row">Registering your device...</div>
+        <div class="row">{{strings.registeringDevice}}</div>
         <div class="row spacer-12-top">
             <div class="loader"></div>
         </div>
@@ -8,10 +8,10 @@
 
     <form *ngIf="!isLoading">
         <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" #deviceName class="form-control" id="name" value="Chrome Browser" required>
+            <label for="name">{{strings.name}}</label>
+            <input type="text" #deviceName class="form-control" id="name" value="{{strings.defaultDeviceName}}" required>
         </div>
 
-        <button (click)="addDevice(deviceName.value)" class="btn btn-success">Add device</button>    
+        <button (click)="addDevice(deviceName.value)" class="btn btn-success">{{strings.addDevice}}</button>    
     </form>
 </div>
