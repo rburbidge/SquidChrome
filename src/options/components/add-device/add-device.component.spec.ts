@@ -19,6 +19,11 @@ describe('AddDeviceComponent', () => {
     let comp: AddDeviceComponent;
     let fixture: ComponentFixture<AddDeviceComponent>;
 
+    let gcmRegisterSpy: jasmine.Spy;
+    let addDeviceSpy: jasmine.Spy;
+    let navigateSpy: jasmine.Spy;
+    let setInitalizedSpy: jasmine.Spy;
+
     beforeAll(() => {
         loadCss();
     });
@@ -48,11 +53,7 @@ describe('AddDeviceComponent', () => {
 
     describe('addDevice()', () => {
         it('Base success case: Makes correct calls', (done) => {
-            const gcmToken = "GCM token";
-            const gcmRegisterSpy = spyOn(gcmService, "register").and.returnValue(Promise.resolve(gcmToken));
-            const addDeviceSpy = spyOn(deviceService, "addDevice").and.returnValue(Promise.resolve());
-            const navigateSpy = spyOn(router, "navigateByUrl").and.returnValue(true);
-            const setInitalizedSpy = spyOn(settingsService, "setInitialized").and.returnValue(Promise.resolve());
+            setupMocks();
             comp.addDevice(null)
                 .then(device => {
                     expect(gcmRegisterSpy).toHaveBeenCalledTimes(1);
@@ -65,30 +66,33 @@ describe('AddDeviceComponent', () => {
                 })
         });
 
-        it("Uses default 'Chrome Browser' device name if no name is provided", (done) => {
-            const gcmToken = "GCM token";
-            const gcmRegisterSpy = setupGcmRegisterReturns(gcmToken);
-            const addDeviceSpy = setupAddDeviceSpy();
-            const navigateSpy = setupNavigateSpy();
-            const setInitalizedSpy = setupInitializedSpy();
+        it("Sends default device name if no name was provided", (done) => {
+            setupMocks();
             comp.addDevice(null)
                 .then(device => {
                     // "Chrome Browser" is the default device name
-                    expect(addDeviceSpy).toHaveBeenCalledWith("Chrome Browser", gcmToken);
+                    expect(addDeviceSpy).toHaveBeenCalledWith("Chrome Browser", "GCM token");
                     done();
                 })
         });
 
-        it("Uses user-input name if it is provided", (done) => {
-            const gcmToken = "GCM token";
-            const gcmRegisterSpy = setupGcmRegisterReturns(gcmToken);
-            const addDeviceSpy = setupAddDeviceSpy();
-            const navigateSpy = setupNavigateSpy();
-            const setInitalizedSpy = setupInitializedSpy();
+        it("Sends user-defined device name", (done) => {
             const deviceName = "Pixel 2";
+            setupMocks();
             comp.addDevice(deviceName)
                 .then(device => {
-                    expect(addDeviceSpy).toHaveBeenCalledWith(deviceName, gcmToken);
+                    expect(addDeviceSpy).toHaveBeenCalledWith(deviceName, "GCM token");
+                    done();
+                })
+        });
+
+        it("Sends gcm token", (done) => {
+            const gcmToken = "This is the token";
+            setupMocks(gcmToken);
+            comp.addDevice(null)
+                .then(device => {
+                    // "Chrome Browser" is the default device name
+                    expect(addDeviceSpy).toHaveBeenCalledWith("Chrome Browser", gcmToken);
                     done();
                 })
         });
@@ -108,5 +112,12 @@ describe('AddDeviceComponent', () => {
 
     function setupInitializedSpy(): jasmine.Spy {
         return spyOn(settingsService, "setInitialized").and.returnValue(Promise.resolve());
+    }
+
+    function setupMocks(gcmToken: string = "GCM token") {
+        gcmRegisterSpy = setupGcmRegisterReturns(gcmToken);
+        addDeviceSpy = setupAddDeviceSpy();
+        navigateSpy = setupNavigateSpy();
+        setInitalizedSpy = setupInitializedSpy();
     }
 });
