@@ -56,6 +56,7 @@ describe('OptionsComponent', () => {
 
         // Set default settings. If a test needs to override, it can set the values directly on the settings object
         settings = SettingsService.createDefault();
+        settings.initialized = true;
         mockGetSettingsReturns(settings);
     })
 

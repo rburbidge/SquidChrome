@@ -9,6 +9,7 @@
 
   "permissions": [
     "activeTab",
+    "gcm",
     "identity",
     "identity.email",
     "storage",
@@ -31,5 +32,13 @@
     "default_title": "Send to device"
   },
 
-  "options_page": "options.html"
+  "options_page": "options.html",
+
+  "background": {
+    "scripts": [
+      "node_modules/systemjs/dist/system.src.js",
+      "system.config.js",
+      "src/background/bootstrap.js"
+    ]
+  }
 }

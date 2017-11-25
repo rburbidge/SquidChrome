@@ -51,6 +51,12 @@ export class DeviceService {
                         .toPromise()
                         .then(resolve)
                         .catch((response: Response) => {
+                            // Resolve on 302. This indicates that a POST request resulted in no change in storage (e.g. Found)
+                            if(response.status === 302) {
+                                resolve(response);
+                                return;
+                            }
+
                             let error: ErrorModel;
                             if (response && response.json().codeString) {
                                 error = response.json();

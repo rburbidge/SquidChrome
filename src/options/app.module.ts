@@ -3,10 +3,12 @@ import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import { AddDeviceComponent } from './components/add-device/add-device.component';
 import { AppComponent } from './components/app/app.component';
 import { ChromeService } from './services/chrome.service';
 import { DeveloperComponent } from './components/developer/developer.component';
 import { DeviceService } from './services/device.service';
+import { GcmService } from './services/gcm.service';
 import { OptionsComponent } from './components/options/options.component';
 import { Route } from './route';
 import { SettingsService } from './services/settings.service';
@@ -23,13 +25,17 @@ import { WindowService } from './services/window.service';
                 component: OptionsComponent
             },
             {
+                path: Route.addDevice,
+                component: AddDeviceComponent
+            },
+            {
                 path: Route.signedOut,
                 component: SignedOutComponent
             }
         ])
     ],
-    declarations: [AppComponent, DeveloperComponent, OptionsComponent, SignedOutComponent],
-    providers: [ChromeService, SettingsService, DeviceService, WindowService],
+    declarations: [AddDeviceComponent, AppComponent, DeveloperComponent, OptionsComponent, SignedOutComponent],
+    providers: [ChromeService, GcmService, SettingsService, DeviceService, WindowService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

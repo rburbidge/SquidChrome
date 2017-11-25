@@ -29,7 +29,7 @@ export class UrlHelper {
     }
 
     public static openOptionsPage(): void {
-        // openOptionsPage() was introduced in Chrome 42. This will not open a duplicate options tab, but will focus on
+        // openOptionsPage() was introduced in Chrome 42. This will not open a duplicate options tab, but will focus on		
         // any existing one
         if (chrome.runtime.openOptionsPage) {
             chrome.runtime.openOptionsPage();

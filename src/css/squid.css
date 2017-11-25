@@ -4,6 +4,11 @@
     background-color: #252839;
 }
 
+/* Squid intro */
+.squid-intro {
+    max-width: 500px;
+}
+
 /* Squid options page */
 
 .squid-options {
