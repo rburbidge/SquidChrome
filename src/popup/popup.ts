@@ -8,6 +8,9 @@ import { DeviceModel } from '../contracts/squid';
 import { Settings, SettingsService } from '../options/services/settings.service';
 import { UrlHelper } from '../common/url-helper';
 import { UrlType } from '../common/url-type';
+import { Strings } from '../content/strings';
+
+const strings = new Strings();
 
 class Popup {
     /**
@@ -37,10 +40,9 @@ class Popup {
      */
     public static noSelectedDevice(isOptionsPage: boolean): void {
         // Render the 'no device' message
-        let message = 'You have no selected device.';
-        if (!isOptionsPage) {
-            message += ' Opening options page...';
-        }
+        const message = isOptionsPage
+            ? strings.sendPage.noSelectedDevice
+            : strings.sendPage.noSelectedDeviceOpeningOptionsPage;
         Popup.renderStatus(message);
 
         // The pop-up will close when the options page is opened, so do so after a delay to give the user a chance
@@ -85,21 +87,21 @@ Promise.all(
         // *This is intentionally after the device check because we are more concerned that the user has no selected
         // device
         if (urlType == UrlType.Options) {
-            Popup.renderStatus('Click this while on a different tab. The options page cannot be sent.');
+            Popup.renderStatus(strings.sendPage.pageCannotBeSentOptions);
             return;
         }
 
         if(!UrlHelper.canSendUrlType(urlType)) {
-            Popup.renderStatus('Click this while on a different tab. This page cannot be sent.');
+            Popup.renderStatus(strings.sendPage.pageCannotBeSent);
             return;
         }
 
         // Send the URL
-        Popup.renderStatus(`Sending to ${device.name}...`);
+        Popup.renderStatus(strings.sendPage.sendingTo(device.name));
 
         new Devices(Config.squidEndpoint).sendUrl(device.id, url)
             .then(() => {
-                Popup.renderStatus(`Sent to ${device.name}!`);
+                Popup.renderStatus(strings.sendPage.sentTo(device.name));
                 const timeToShowMs = 3000;
                 window.setTimeout(window.close, timeToShowMs);
             })
@@ -109,7 +111,7 @@ Promise.all(
                     return;
                 }
 
-                Popup.renderStatus('An error occurred');
+                Popup.renderStatus(strings.sendPage.error);
 
                 // TODO Log telemetry when there is an error
             });

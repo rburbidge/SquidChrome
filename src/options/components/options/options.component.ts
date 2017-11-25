@@ -8,6 +8,7 @@ import { DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { Route } from '../../route';
 import { SettingsService } from '../../services/settings.service';
+import { Strings } from '../../../content/strings';
 import { UrlHelper } from '../../../common/url-helper';
 
 /**
@@ -18,6 +19,9 @@ import { UrlHelper } from '../../../common/url-helper';
     templateUrl: './options.html'
 })
 export class OptionsComponent implements OnInit {
+
+    public readonly strings: Strings = new Strings();
+
     constructor(
         private readonly deviceService: DeviceService,
         private readonly router: Router,
@@ -56,17 +60,17 @@ export class OptionsComponent implements OnInit {
         if (this.selectedDevice) {
             if (this.isSelectedDeviceUnregistered()) {
                 if(this.devices && this.devices.length !== 0) {
-                    return `${this.selectedDevice.name} was not found. Select a device`
+                    return this.strings.devices.selectedDeviceNotFoundSelect(this.selectedDevice.name);
                 } else {
-                    return `${this.selectedDevice.name} was not found`;
+                    return this.strings.devices.selectedDeviceNotFound(this.selectedDevice.name);
                 }
             } else {
-                return `Pages will be sent to ${this.selectedDevice.name}`
+                return this.strings.devices.selectDeviceComplete(this.selectedDevice.name)
             }
         } else if(!this.devices || this.devices.length == 0) {
-            return 'No devices found';
+            return this.strings.devices.noDevicesTitle;
         } else {
-            return 'Select a device';
+            return this.strings.devices.selectDevice;
         }
     }
 
@@ -87,10 +91,7 @@ export class OptionsComponent implements OnInit {
     public removeDevice(event: Event, device: DeviceModel): Promise<void> {
         event.stopPropagation();
 
-        if(!confirm(
-            `To use this ${device.name} again, you will need to register it through the Squid app on your Android device.
-
-Are you sure you want to delete ${device.name}?`)) return;
+        if(!confirm(this.strings.devices.deleteConfirm(device.name))) return;
 
         // Delete the device from Chrome storage if it is currently the selected device
         let deleteSelectedDevice: Promise<void>;
@@ -106,7 +107,7 @@ Are you sure you want to delete ${device.name}?`)) return;
         // Delete the device from the server
         const removeDevice = this.deviceService.removeDevice(device.id)
             .then(() => {
-                this.message = `${device.name} has been deleted`;
+                this.message = this.strings.devices.deleteComplete(device.name);
                 this.devices.splice(
                     this.devices.findIndex((d: DeviceModel) => d.id === device.id),
                     1)
@@ -114,7 +115,7 @@ Are you sure you want to delete ${device.name}?`)) return;
 
         return Promise.all([deleteSelectedDevice, removeDevice])
             .then(d => undefined)
-            .catch(() => alert("An error occurred while removing the device. Please try again later."))
+            .catch(() => alert(this.strings.devices.deleteError))
     }
 
     /**
@@ -143,7 +144,7 @@ Are you sure you want to delete ${device.name}?`)) return;
                         this.isLoading = false;
                         this.refreshMessage();
                     } else {
-                        this.onError('Oops! An error occurred while retrieving your settings. Try again later.');
+                        this.onError(this.strings.devices.refreshError);
                     }
                     resolve();
                 });
@@ -180,7 +181,7 @@ Are you sure you want to delete ${device.name}?`)) return;
             })
             .catch(reason => {
                 console.warn('ChromeService.isSignedIntoChrome() threw ' + reason);
-                this.onError('Oops! An error occurred while retrieving your settings. Try again later.');
+                this.onError(this.strings.devices.refreshError);
             });
     }
 }
