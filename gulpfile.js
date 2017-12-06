@@ -33,15 +33,16 @@ gulp.task('copyCompiledFiles', ['clean', 'transpile'], function() {
 // Copies any files that don't need to be built
 gulp.task('copyResources', ['clean'], function() {
     var files = [
-        '*.png', 
+        
         '*.html',
         'manifest.json',
         'system.config.js',
         'systemjs-angular-loader.js',
         'bootstrap/**/*',
+        'icons/**/*',
+        'lib/**/*',
         'src/**/*.css',
         'src/**/*.html',
-        'lib/**/*',
         'templates/**/*'];
     return gulp.src(files, { base: '.' })
         .pipe(gulp.dest('./build'));
@@ -75,6 +76,7 @@ gulp.task('copyRxjs', ['clean'], function() {
         '*.js',
         'observable/*.js',
         'operator/*.js',
+        'operators/*.js',
         'add/observable/*.js',
         'add/operator/*.js',
         'scheduler/*.js',
