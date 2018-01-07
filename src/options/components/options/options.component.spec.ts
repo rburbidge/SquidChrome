@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 import { ChromeService } from '../../services/chrome.service';
 import { DeveloperComponent } from '../developer/developer.component';
-import { DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
+import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { loadCss } from '../testing/css-loader';
 import { OptionsComponent } from './options.component';
@@ -97,6 +97,26 @@ describe('OptionsComponent', () => {
         }
     });
 
+    describe('getDeviceIcon()', () => {
+        it('Returns icon for Android device', () => {
+            testIcon(DeviceType.android, 'phone_android');
+        });
+
+        it('Returns icon for Chrome device', () => {
+            testIcon(DeviceType.chrome, 'laptop');
+        });
+
+        it('Returns Android icon for other device types', () => {
+            testIcon(undefined, 'phone_android');
+        });
+
+        function testIcon(deviceType: string, expected: string): void {
+            const device = createDevice();
+            device.deviceType = deviceType;
+            expect(comp.getDeviceIcon(device)).toBe(expected);
+        }
+    });
+
     describe('setDevice()', () => {
         it('Sets the selected device', (done) => {
             const setSelectedDeviceSpy = spyOn(settingsService, 'setSelectedDevice').and.returnValue(Promise.resolve());
@@ -128,12 +148,12 @@ describe('OptionsComponent', () => {
     describe('isDeviceSelected()', () => {
         it('Returns false when there is no selected device', function() {
             expect(comp.isDeviceSelected(null)).toBeFalsy();
-            expect(comp.isDeviceSelected({ id: "id", name: "name" })).toBeFalsy();
+            expect(comp.isDeviceSelected({ id: "id", name: "name", deviceType: DeviceType.android})).toBeFalsy();
         });
     
         it('Returns true when a device is selected and they share the same ID', function() {
-            let device1 = { id: "id1", name: "doesn't matter" };
-            let device2 = { id: "id2", name: "also doesn't matter" };
+            let device1 = { id: "id1", name: "doesn't matter", deviceType: DeviceType.android };
+            let device2 = { id: "id2", name: "also doesn't matter", deviceType: DeviceType.android };
             comp.selectedDevice = device1;
             expect(comp.isDeviceSelected(device2)).toBeFalsy();
             expect(comp.isDeviceSelected(device1)).toBeTruthy();
@@ -282,7 +302,7 @@ describe('OptionsComponent', () => {
         });
 
         it('Shows message when user\'s device is not registered', (done) => {                
-            const selectedDevice = { id: 'ID does not exist', name: 'BlackBerry Bold'};
+            const selectedDevice = { id: 'ID does not exist', name: 'Samsung Galaxy', deviceType: DeviceType.android};
             setupCompWithDevices(devices, selectedDevice)
                 .then(() => comp.refreshDevices())
                 .then(() => {
@@ -294,7 +314,7 @@ describe('OptionsComponent', () => {
         });
 
         it('Shows message when user\'s device is not registered and there are no devices', (done) => {                
-            const selectedDevice = { id: 'ID does not exist', name: 'BlackBerry Bold'};
+            const selectedDevice = { id: 'ID does not exist', name: 'Samsung Galaxy', deviceType: DeviceType.android};
             setupCompWithDevices([], selectedDevice)
                 .then(() => comp.refreshDevices())
                 .then(() => {
@@ -358,10 +378,18 @@ describe('OptionsComponent', () => {
     });
 
     const devices: DeviceModel[] = [
-        { id: "id1", name: "Nexus 5X" },
-        { id: "id3", name: "Pixel" },
-        { id: "id2", name: "Samsung Galaxy" },
+        { id: "id1", name: "Nexus 5X", deviceType: DeviceType.android},
+        { id: "id3", name: "Pixel", deviceType: DeviceType.android},
+        { id: "id2", name: "Samsung Galaxy", deviceType: DeviceType.android},
     ];
+
+    function createDevice(): DeviceModel {
+        return {
+            id: "id1",
+            name: "Nexus 5X",
+            deviceType: DeviceType.android
+        };
+    }
 
     function mockIsSignedIntoChromeReturns(isSignedIn: boolean) {
         spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.resolve(isSignedIn));

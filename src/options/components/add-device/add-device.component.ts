@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { DeviceType } from '../../../contracts/squid';
 import { Config } from '../../../config';
 import { DeviceService } from '../../services/device.service';
 import { GcmService } from '../../services/gcm.service';
@@ -37,7 +38,7 @@ export class AddDeviceComponent {
 
         return this.gcmService.register([Config.gcmSenderId])
             .then(gcmToken => {
-                this.deviceService.addDevice(name, gcmToken)
+                this.deviceService.addDevice({name: name, gcmToken: gcmToken, deviceType: DeviceType.chrome})
                     .then(() => this.settingsService.setInitialized())
                     .then(() => this.router.navigateByUrl(Route.options));
             })

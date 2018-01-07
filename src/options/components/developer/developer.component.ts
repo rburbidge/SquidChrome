@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 
 import { ChromeService } from '../../services/chrome.service';
+import { DeviceType } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { SettingsService } from '../../services/settings.service';
 import { UrlHelper } from '../../../common/url-helper';
@@ -27,7 +28,7 @@ export class DeveloperComponent {
     public addDevice(): Promise<any> {
         let gcmToken = UUID.UUID();
         let name = 'Device ' + gcmToken.substring(0, 8); // Use only the first 8 chars of the token, for readability
-        return this.deviceService.addDevice(name, gcmToken)
+        return this.deviceService.addDevice({name: name, gcmToken: gcmToken, deviceType: DeviceType.chrome})
     }
 
     /**

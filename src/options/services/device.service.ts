@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
 import { Config } from '../../config';
-import { DeviceModel, ErrorCode, ErrorModel } from '../../contracts/squid';
+import { AddDeviceBody, DeviceModel, ErrorCode, ErrorModel } from '../../contracts/squid';
 
 /**
  * The device service.
@@ -17,13 +17,13 @@ export class DeviceService {
 
     constructor(private http: Http) { }
 
-    public addDevice(name: string, gcmToken: string): Promise<DeviceModel> {
+    public addDevice(deviceInfo: AddDeviceBody): Promise<DeviceModel> {
         let headers = new Headers();
         headers.append('Content-type', 'application/json');
         return this.sendAuthorizedRequest('/api/devices', new RequestOptions(
             {
                 method: 'POST',
-                body: JSON.stringify({ name: name, gcmToken: gcmToken }),
+                body: JSON.stringify(deviceInfo),
                 headers: headers
             })).then(response => response.json() as DeviceModel);
     }
