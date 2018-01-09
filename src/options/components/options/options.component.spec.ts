@@ -99,18 +99,18 @@ describe('OptionsComponent', () => {
 
     describe('getDeviceIcon()', () => {
         it('Returns icon for Android device', () => {
-            testIcon(DeviceType.android, 'phone_android');
+            testIcon(DeviceType.Android, 'phone_android');
         });
 
         it('Returns icon for Chrome device', () => {
-            testIcon(DeviceType.chrome, 'laptop');
+            testIcon(DeviceType.Chrome, 'laptop');
         });
 
         it('Returns Android icon for other device types', () => {
             testIcon(undefined, 'phone_android');
         });
 
-        function testIcon(deviceType: string, expected: string): void {
+        function testIcon(deviceType: DeviceType, expected: string): void {
             const device = createDevice();
             device.deviceType = deviceType;
             expect(comp.getDeviceIcon(device)).toBe(expected);

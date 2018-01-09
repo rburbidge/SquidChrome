@@ -1,7 +1,7 @@
 /** High level device type.  */
-export class DeviceType {
-    public static android = 'android';
-    public static chrome = 'chrome';
+export enum DeviceType {
+    Android = "android",
+    Chrome = "chrome"
 }
 
 export interface AddDeviceBody {
