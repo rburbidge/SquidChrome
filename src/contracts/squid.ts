@@ -1,7 +1,7 @@
 /** High level device type.  */
 export enum DeviceType {
-    Android = "android",
-    Chrome = "chrome"
+    android = "android",
+    chrome = "chrome"
 }
 
 export interface AddDeviceBody {

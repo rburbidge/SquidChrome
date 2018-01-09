@@ -55,9 +55,9 @@ export class OptionsComponent implements OnInit {
     /** Returns the device icon for a device. */
     public getDeviceIcon(device: DeviceModel): string {
         switch(device.deviceType) {
-            case DeviceType.Chrome:
+            case DeviceType.chrome:
                 return 'laptop';
-            case DeviceType.Android:
+            case DeviceType.android:
             default:
                 return 'phone_android';
         }

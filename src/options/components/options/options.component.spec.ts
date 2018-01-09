@@ -99,11 +99,11 @@ describe('OptionsComponent', () => {
 
     describe('getDeviceIcon()', () => {
         it('Returns icon for Android device', () => {
-            testIcon(DeviceType.Android, 'phone_android');
+            testIcon(DeviceType.android, 'phone_android');
         });
 
         it('Returns icon for Chrome device', () => {
-            testIcon(DeviceType.Chrome, 'laptop');
+            testIcon(DeviceType.chrome, 'laptop');
         });
 
         it('Returns Android icon for other device types', () => {
