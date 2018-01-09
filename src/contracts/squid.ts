@@ -12,7 +12,7 @@ export interface AddDeviceBody {
     gcmToken: string;
 
     /** The device type. */
-    deviceType: string;
+    deviceType: DeviceType;
 }
 
 export interface CommandBody {
@@ -29,7 +29,7 @@ export interface DeviceModel {
     name: string;
 
     /** The device type. */
-    deviceType: string;
+    deviceType: DeviceType;
 }
 
 /** Error info returned by SquidService. */
