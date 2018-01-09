@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 
 import { AddDeviceComponent } from './add-device.component';
 import { DeviceService } from '../../services/device.service';
+import { DeviceType } from '../../../contracts/squid';
 import { GcmService } from '../../services/gcm.service';
 import { loadCss } from '../testing/css-loader';
 import { MockDeviceService } from '../../services/testing/device.service.mock';
@@ -58,7 +59,7 @@ describe('AddDeviceComponent', () => {
                 .then(device => {
                     expect(gcmRegisterSpy).toHaveBeenCalledTimes(1);
                     expect(addDeviceSpy).toHaveBeenCalledTimes(1);
-                    expect(addDeviceSpy).toHaveBeenCalledWith("Chrome Browser", "GCM token");
+                    expect(addDeviceSpy).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: 'GCM token', deviceType: DeviceType.chrome});
                     expect(setInitalizedSpy).toHaveBeenCalledTimes(1);
                     expect(navigateSpy).toHaveBeenCalledTimes(1);
                     expect(navigateSpy).toHaveBeenCalledWith(Route.options);
@@ -71,7 +72,7 @@ describe('AddDeviceComponent', () => {
             comp.addDevice(null)
                 .then(device => {
                     // "Chrome Browser" is the default device name
-                    expect(addDeviceSpy).toHaveBeenCalledWith("Chrome Browser", "GCM token");
+                    expect(addDeviceSpy).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: 'GCM token', deviceType: DeviceType.chrome});
                     done();
                 })
         });
@@ -81,7 +82,7 @@ describe('AddDeviceComponent', () => {
             setupMocks();
             comp.addDevice(deviceName)
                 .then(device => {
-                    expect(addDeviceSpy).toHaveBeenCalledWith(deviceName, "GCM token");
+                    expect(addDeviceSpy).toHaveBeenCalledWith({ name: deviceName, gcmToken: 'GCM token', deviceType: DeviceType.chrome});
                     done();
                 })
         });
@@ -92,7 +93,7 @@ describe('AddDeviceComponent', () => {
             comp.addDevice(null)
                 .then(device => {
                     // "Chrome Browser" is the default device name
-                    expect(addDeviceSpy).toHaveBeenCalledWith("Chrome Browser", gcmToken);
+                    expect(addDeviceSpy).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: gcmToken, deviceType: DeviceType.chrome});
                     done();
                 })
         });

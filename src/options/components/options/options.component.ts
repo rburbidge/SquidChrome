@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ChromeService } from '../../services/chrome.service';
 import { ChromeAuthHelper } from '../../../common/chrome-auth-helper';
 import { Config } from '../../../config';
-import { DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
+import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { Route } from '../../route';
 import { SettingsService } from '../../services/settings.service';
@@ -50,6 +50,17 @@ export class OptionsComponent implements OnInit {
                 this.selectedDevice = device;
                 this.refreshMessage();
             });
+    }
+
+    /** Returns the device icon for a device. */
+    public getDeviceIcon(device: DeviceModel): string {
+        switch(device.deviceType) {
+            case DeviceType.chrome:
+                return 'laptop';
+            case DeviceType.android:
+            default:
+                return 'phone_android';
+        }
     }
 
     private refreshMessage() {

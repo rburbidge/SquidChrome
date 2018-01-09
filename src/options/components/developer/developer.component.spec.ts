@@ -47,7 +47,7 @@ describe('DeveloperComponent', () => {
         chromeService = TestBed.get(ChromeService);
         settingsService = TestBed.get(SettingsService);
         windowService = TestBed.get(WindowService);
-    })
+    });
 
     describe('addDevice()', () => {
         it('Adds a fake device', (done) => {
@@ -57,7 +57,7 @@ describe('DeveloperComponent', () => {
                     expect(addDeviceSpy).toHaveBeenCalledTimes(1);
                     done();
                 })
-        })
+        });
     });
 
     describe('resetApp()', () => {
