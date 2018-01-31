@@ -168,31 +168,6 @@ export class OptionsComponent implements OnInit {
     }
 
     public ngOnInit(): Promise<void> {
-        const getSettings = this.settingsService.getSettings()
-        const getIsSignedIn = this.chromeService.isSignedIntoChrome();
-
-        return Promise.all([getSettings, getIsSignedIn])
-            .then(results => {
-                const isInitialized = results[0].initialized;
-                const isSignedIn = results[1];
-
-                if(isInitialized && isSignedIn) {
-                    return this.refreshDevices();
-                }
-
-                let route: string;
-                if(!isSignedIn) {
-                    route = Route.signedOut;
-                } else {
-                    route = Route.addDevice;
-                }
-
-                if(!route) return;
-                this.router.navigateByUrl(route);
-            })
-            .catch(reason => {
-                console.warn('ChromeService.isSignedIntoChrome() threw ' + reason);
-                this.onError(this.strings.devices.refreshError);
-            });
+        return this.refreshDevices();
     }
 }
