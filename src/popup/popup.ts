@@ -64,7 +64,7 @@ Promise.all(
     .then((values) => {
         const isSignedIn = values[0];
         const url: string = values[1];
-        const device: DeviceModel = values[2].device;
+        const device: DeviceModel = undefined; // TODO Popup will be refactored so device is selected each time
 
         // If the user is not signed in, then open the options page. It will force the user to log in
         if(!isSignedIn) {

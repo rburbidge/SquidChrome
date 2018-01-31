@@ -11,11 +11,6 @@ export interface Settings {
      * True iff the app has been initialized before.
      */
     initialized: boolean;
-
-    /**
-     * The user's default selected device to send to.
-     */
-    device: DeviceModel;
 }
 
 /**
@@ -32,7 +27,6 @@ export class SettingsService {
         // NOTE: All object-type fields should be null, not undefined. This is used to retrieve settings from Chrome
         // Storage. If a field is undefined, then it will not be retrieved.
         return {
-            device: null,
             initialized: false
         }
     };
