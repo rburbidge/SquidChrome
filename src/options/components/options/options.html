@@ -25,7 +25,7 @@
 
         <!-- List of devices -->
         <div *ngIf="devices && devices.length != 0" class="squid-device-list squid-panel">
-            <div *ngFor="let device of devices" class="row squid-device vertical-align" [class.squid-device-selected]="isDeviceSelected(device)" (click)="setDevice(device)">
+            <div *ngFor="let device of devices" class="row squid-device vertical-align">
                 <div class="col-xs-4">
                     <i class="material-icons squid-icon">{{getDeviceIcon(device)}}</i>
                 </div>

@@ -65,7 +65,6 @@ describe('OptionsComponent', () => {
             expect(comp.isLoading).toBeTruthy();
             expect(comp.error).toBeUndefined();
             expect(comp.devices.length).toBe(0);
-            expect(comp.selectedDevice).toBeNull();
             expect(comp.message).toBeUndefined();
         });
 
@@ -117,80 +116,17 @@ describe('OptionsComponent', () => {
         }
     });
 
-    describe('setDevice()', () => {
-        it('Sets the selected device', (done) => {
-            const setSelectedDeviceSpy = spyOn(settingsService, 'setSelectedDevice').and.returnValue(Promise.resolve());
-            
-            setupCompWithDevices(devices, undefined)
-                .then(() => comp.setDevice(devices[0]))
-                .then(() => {
-                    testHeaderTextShown(`Pages will be sent to ${devices[0].name}`);
-
-                    expect(comp.selectedDevice).toBe(devices[0]);
-                    expect(setSelectedDeviceSpy).toHaveBeenCalledWith(devices[0]);
-                    done();
-                });
-        });
-
-        it('Does nothing if the device was already set', (done) => {
-            const setSelectedDeviceSpy = spyOn(settingsService, 'setSelectedDevice').and.returnValue(Promise.resolve());
-            const selectedDevice = devices[1];
-
-            setupCompWithDevices(devices, selectedDevice)
-                .then(() => comp.setDevice(selectedDevice))
-                .then(() => {
-                    expect(setSelectedDeviceSpy).toHaveBeenCalledTimes(0);
-                    done();
-                });
-        });
-    });
-
-    describe('isDeviceSelected()', () => {
-        it('Returns false when there is no selected device', function() {
-            expect(comp.isDeviceSelected(null)).toBeFalsy();
-            expect(comp.isDeviceSelected({ id: "id", name: "name", deviceType: DeviceType.android})).toBeFalsy();
-        });
-    
-        it('Returns true when a device is selected and they share the same ID', function() {
-            let device1 = { id: "id1", name: "doesn't matter", deviceType: DeviceType.android };
-            let device2 = { id: "id2", name: "also doesn't matter", deviceType: DeviceType.android };
-            comp.selectedDevice = device1;
-            expect(comp.isDeviceSelected(device2)).toBeFalsy();
-            expect(comp.isDeviceSelected(device1)).toBeTruthy();
-        });
-    });
-
     describe('removeDevice()', () => {
         it('Removes a device', (done) => {
             spyOn(window, "confirm").and.returnValue(true);
             spyOn(deviceService, 'removeDevice').and.returnValue(Promise.resolve());
             const removedDevice = devices[1];
 
-            setupCompWithDevices(devices, undefined)
+            setupCompWithDevices(devices)
                 .then(() => comp.removeDevice(new Event('fake event'), removedDevice))
                 .then(() => {
                     expect(comp.devices.find(d => d.id == removedDevice.id)).toBeUndefined('Devices still contained the deleted device');
                     testHeaderTextShown(`${removedDevice.name} has been deleted`);
-                    done();
-                });
-        });
-
-        it('Removes device that is selected', (done) => {
-            spyOn(window, "confirm").and.returnValue(true);
-            const setSelectedDeviceSpy = spyOn(settingsService, 'setSelectedDevice').and.returnValue(Promise.resolve());
-            const removeDeviceSpy = spyOn(deviceService, 'removeDevice').and.returnValue(Promise.resolve());
-            const selectedDevice = { ...devices[2] }; // Copy the device because it's going to be deleted
-
-            setupCompWithDevices(devices, selectedDevice)
-                .then(() => comp.removeDevice(new Event('fake event'), selectedDevice))
-                .then(() => {
-                    expect(removeDeviceSpy).toHaveBeenCalledWith(selectedDevice.id);
-                    expect(setSelectedDeviceSpy).toHaveBeenCalledWith(null);
-
-                    expect(comp.devices.find(d => d.id == selectedDevice.id)).toBeUndefined('Devices still contained the deleted device');
-                    expect(comp.selectedDevice).toBeUndefined('Devices still contained the deleted device');
-
-                    testHeaderTextShown(`${selectedDevice.name} has been deleted`);
                     done();
                 });
         });
@@ -201,7 +137,7 @@ describe('OptionsComponent', () => {
             const windowAlertSpy = spyOn(window, 'alert').and.returnValue(undefined);
             const removedDevice = devices[0];
 
-            setupCompWithDevices(devices, undefined)
+            setupCompWithDevices(devices)
                 .then(() => comp.removeDevice(new Event('fake event'), removedDevice))
                 .then(() => {
                     expect(windowAlertSpy).toHaveBeenCalledWith('An error occurred while removing the device. Please try again later.');
@@ -213,7 +149,7 @@ describe('OptionsComponent', () => {
             spyOn(window, "confirm").and.returnValue(false);
             let removeDeviceSpy = spyOn(deviceService, 'removeDevice').and.returnValue(Promise.reject('An error'));
 
-            setupCompWithDevices(devices, undefined)
+            setupCompWithDevices(devices)
                 .then(() => comp.removeDevice(new Event('fake event'), devices[0]))
                 .then(() => {
                     fixture.detectChanges();
@@ -224,9 +160,8 @@ describe('OptionsComponent', () => {
     });
 
     describe('refreshDevices()', () => {
-        it('Shows devices and selected device on success', (done) => {
+        it('Shows devices on success', (done) => {
             mockGetDevicesReturns(devices);
-            settings.device = devices[1];
             
             spyOn(comp, 'ngOnInit').and.returnValue(Promise.resolve()); // Fake ngOnInit() to prevent it from interfering with refreshDevices() results
 
@@ -239,27 +174,6 @@ describe('OptionsComponent', () => {
                     expect(comp.isLoading).toBeFalsy(); // 3. Expect loading = false once complete
                     expect(comp.error).toBeUndefined();
                     expect(comp.devices).toEqual(devices);
-                    expect(comp.selectedDevice).toBe(devices[1]);
-                    done();
-                });
-            expect(comp.isLoading).toBeTruthy(); // 2. Expect loading = true and that the error was cleared
-            expect(comp.error).toBeUndefined();
-        });
-
-        it('Shows no selected device when the user hasn\'t selected a device yet', (done) => {
-            mockGetDevicesReturns(devices);
-            spyOn(comp, 'ngOnInit').and.returnValue(Promise.resolve()); // Fake ngOnInit() to prevent it from interfering with refreshDevices() results
-
-            comp.isLoading = false; // 1. Begin with loading = false and an error
-            comp.error = 'Some random error';
-            
-            comp.refreshDevices()
-                .then(() => {
-                    fixture.detectChanges();
-                    expect(comp.isLoading).toBeFalsy(); // 3. Expect loading = false once complete
-                    expect(comp.error).toBeUndefined();
-                    expect(comp.devices).toEqual(devices);
-                    expect(comp.selectedDevice).toBeNull();
                     done();
                 });
             expect(comp.isLoading).toBeTruthy(); // 2. Expect loading = true and that the error was cleared
@@ -301,34 +215,9 @@ describe('OptionsComponent', () => {
                 });
         });
 
-        it('Shows message when user\'s device is not registered', (done) => {                
-            const selectedDevice = { id: 'ID does not exist', name: 'Samsung Galaxy', deviceType: DeviceType.android};
-            setupCompWithDevices(devices, selectedDevice)
-                .then(() => comp.refreshDevices())
-                .then(() => {
-                    testHeaderTextShown(`${selectedDevice.name} was not found. Select a device`);
-
-                    expect(comp.selectedDevice).toBe(selectedDevice);
-                    done();
-                });
-        });
-
-        it('Shows message when user\'s device is not registered and there are no devices', (done) => {                
-            const selectedDevice = { id: 'ID does not exist', name: 'Samsung Galaxy', deviceType: DeviceType.android};
-            setupCompWithDevices([], selectedDevice)
-                .then(() => comp.refreshDevices())
-                .then(() => {
-                    testHeaderTextShown(`${selectedDevice.name} was not found`);
-
-                    expect(comp.selectedDevice).toBe(selectedDevice);
-                    done();
-                });
-        });
-
         function testNoDevicesFound() {
             fixture.detectChanges();
             expect(comp.devices.length).toBe(0);
-            expect(comp.selectedDevice).toBeNull();
             expect(comp.isLoading).toBeFalsy();
     
             let error = fixture.debugElement.query(By.css('.squid-options-header'));
@@ -415,11 +304,9 @@ describe('OptionsComponent', () => {
         expect(header.nativeElement.textContent).toContain(expectedText);
     }
 
-    function setupCompWithDevices(devices: DeviceModel[], selectedDevice: DeviceModel): Promise<void> {
+    function setupCompWithDevices(devices: DeviceModel[]): Promise<void> {
         mockIsSignedIntoChromeReturns(true);
         mockGetDevicesReturns(devices);
-        
-        settings.device = selectedDevice;
 
         return comp.ngOnInit();
     }
