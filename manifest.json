@@ -20,7 +20,9 @@
     "identity.email",
     "storage",
     "http://localhost/",
-    "https://sirnommington.com/"
+    "https://sirnommington.com/",
+    "https://sirnommington-test.azurewebsites.net/",
+    "https://sirnommington-ppe.azurewebsites.net/"
   ],
 
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",

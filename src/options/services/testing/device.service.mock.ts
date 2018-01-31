@@ -10,5 +10,5 @@ interface GetDevices {
 }
 
 export class MockDeviceService extends DeviceService {
-    constructor() { super(null); }
+    constructor() { super(null, null); }
 };

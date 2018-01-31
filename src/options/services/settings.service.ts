@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { callRejectOnError } from '../../common/chrome-promise';
+import { Config } from '../../config';
 import { DeviceModel } from '../../contracts/squid';
 
 /**
@@ -16,6 +17,11 @@ export interface Settings {
      * The user's default selected device to send to.
      */
     device: DeviceModel;
+
+    /**
+     * The service endpoint to hit.
+     */
+    serviceEndpoint: string;
 }
 
 /**
@@ -33,7 +39,8 @@ export class SettingsService {
         // Storage. If a field is undefined, then it will not be retrieved.
         return {
             device: null,
-            initialized: false
+            initialized: false,
+            serviceEndpoint: Config.squidDefaultEndpoint,
         }
     };
 

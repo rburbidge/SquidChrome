@@ -6,16 +6,16 @@ import 'rxjs/add/operator/toPromise';
 import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
 import { Config } from '../../config';
 import { AddDeviceBody, DeviceModel, ErrorCode, ErrorModel } from '../../contracts/squid';
+import { Settings, SettingsService } from '../services/settings.service';
 
 /**
  * The device service.
  */
 @Injectable()
 export class DeviceService {
-    private baseUrl: string = Config.squidEndpoint;
     private static timeoutMillis: number = 3000;
 
-    constructor(private http: Http) { }
+    constructor(private readonly http: Http, private readonly settings: SettingsService) { }
 
     public addDevice(deviceInfo: AddDeviceBody): Promise<DeviceModel> {
         let headers = new Headers();
@@ -37,24 +37,26 @@ export class DeviceService {
             .then(response => response.json() as DeviceModel[]);
     }
 
-    private sendAuthorizedRequest(relativePath: string, options: RequestOptions): Promise<Response> {
-        return new Promise<Response>((resolve, reject) => {
-            return ChromeAuthHelper.createAuthHeader()
-                .then((authHeader: string) => {
+    private sendAuthorizedRequest(relativePath: string, options: RequestOptions): any {
+        let settings: Settings;
+
+        return this.settings.getSettings()
+            .then(settings => {
+                settings = settings;
+                return ChromeAuthHelper.createAuthHeader();
+            })
+            .then((authHeader: string) => {
                     if (!options.headers) {
                         options.headers = new Headers();
                     }
-
                     options.headers.append('Authorization', authHeader);
 
-                    this.http.request(this.baseUrl + relativePath, options)
+                    return this.http.request(settings.serviceEndpoint + relativePath, options)
                         .toPromise()
-                        .then(resolve)
                         .catch((response: Response) => {
                             // Resolve on 302. This indicates that a POST request resulted in no change in storage (e.g. Found)
                             if(response.status === 302) {
-                                resolve(response);
-                                return;
+                                return response;
                             }
 
                             let error: ErrorModel;
@@ -74,9 +76,8 @@ export class DeviceService {
                                 };
                             }
 
-                            reject(error);
+                            throw error;
                         });
                 });
-            });   
     }
 };
