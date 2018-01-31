@@ -35,22 +35,7 @@ export class OptionsComponent implements OnInit {
     public isLoading: boolean = true;
     public error: string;
     public devices: DeviceModel[] = [];
-    public selectedDevice?: DeviceModel = null;
     public message: string;
-
-    /**
-     * Set the selected device.
-     */
-    public setDevice(device: DeviceModel): Promise<void> {
-        // No-op if the device is already selected
-        if (this.selectedDevice && this.selectedDevice.id == device.id) return;
-
-        return this.settingsService.setSelectedDevice(device)
-            .then(() => {
-                this.selectedDevice = device;
-                this.refreshMessage();
-            });
-    }
 
     /** Returns the device icon for a device. */
     public getDeviceIcon(device: DeviceModel): string {
@@ -68,32 +53,11 @@ export class OptionsComponent implements OnInit {
     }
 
     private getMessage(): string {
-        if (this.selectedDevice) {
-            if (this.isSelectedDeviceUnregistered()) {
-                if(this.devices && this.devices.length !== 0) {
-                    return this.strings.devices.selectedDeviceNotFoundSelect(this.selectedDevice.name);
-                } else {
-                    return this.strings.devices.selectedDeviceNotFound(this.selectedDevice.name);
-                }
-            } else {
-                return this.strings.devices.selectDeviceComplete(this.selectedDevice.name)
-            }
-        } else if(!this.devices || this.devices.length == 0) {
+        if(!this.devices || this.devices.length == 0) {
             return this.strings.devices.noDevicesTitle;
         } else {
             return this.strings.devices.selectDevice;
         }
-    }
-
-    public isDeviceSelected(device: DeviceModel): boolean {
-        return !!(this.selectedDevice && this.selectedDevice.id == device.id);
-    }
-
-    public isSelectedDeviceUnregistered(): boolean {
-        if (!this.selectedDevice || !this.devices) return false;
-
-        return !this.devices.find(
-            device => device.id == this.selectedDevice.id);
     }
 
     /**
@@ -104,29 +68,14 @@ export class OptionsComponent implements OnInit {
 
         if(!confirm(this.strings.devices.deleteConfirm(device.name))) return;
 
-        // Delete the device from Chrome storage if it is currently the selected device
-        let deleteSelectedDevice: Promise<void>;
-        if(this.selectedDevice && this.selectedDevice.id == device.id) {
-            deleteSelectedDevice = this.settingsService.setSelectedDevice(null)
-                .then(() => {
-                    delete this.selectedDevice;
-                });
-        } else {
-            deleteSelectedDevice = Promise.resolve();
-        }
-
-        // Delete the device from the server
-        const removeDevice = this.deviceService.removeDevice(device.id)
+        return this.deviceService.removeDevice(device.id)
             .then(() => {
                 this.message = this.strings.devices.deleteComplete(device.name);
                 this.devices.splice(
                     this.devices.findIndex((d: DeviceModel) => d.id === device.id),
                     1)
-            });
-
-        return Promise.all([deleteSelectedDevice, removeDevice])
-            .then(d => undefined)
-            .catch(() => alert(this.strings.devices.deleteError))
+            })
+            .catch(() => alert(this.strings.devices.deleteError));
     }
 
     /**
@@ -136,30 +85,21 @@ export class OptionsComponent implements OnInit {
         this.isLoading = true;
         delete this.error;
 
-        return new Promise<void>((resolve, reject) => {
-            let getSelectedDevice: Promise<DeviceModel> = this.settingsService.getSettings()
-                .then(settings => settings.device);
-            let getDevices: Promise<DeviceModel[]> = this.deviceService.getDevices();
-            Promise.all([getSelectedDevice, getDevices])
-                .then(values => {
-                    this.selectedDevice = values[0];
-                    this.devices = values[1];
+        return this.deviceService.getDevices()
+            .then(devices => {
+                this.devices = devices;
+                this.isLoading = false;
 
+                this.refreshMessage();
+            })
+            .catch((error: ErrorModel) => {
+                if (error && error.code == ErrorCode.UserNotFound) {
                     this.isLoading = false;
-
                     this.refreshMessage();
-                    resolve();
-                })
-                .catch((error: ErrorModel) => {
-                    if (error && error.code == ErrorCode.UserNotFound) {
-                        this.isLoading = false;
-                        this.refreshMessage();
-                    } else {
-                        this.onError(this.strings.devices.refreshError);
-                    }
-                    resolve();
-                });
-        });
+                } else {
+                    this.onError(this.strings.devices.refreshError);
+                }
+            });
     }
 
     private onError(error: string): void {

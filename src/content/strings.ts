@@ -30,11 +30,7 @@ Are you sure you want to delete ${deviceName}?`,
 
         refreshError: 'Oops! An error occurred while retrieving your settings. Try again later.',
 
-        selectDevice: 'Select a device',
-        selectDeviceComplete: (deviceName: string) => `Pages will be sent to ${deviceName}`,
-        
-        selectedDeviceNotFound:(deviceName: string) => `${deviceName} was not found`,
-        selectedDeviceNotFoundSelect:(deviceName: string) => `${deviceName} was not found. Select a device`,
+        selectDevice: 'Select a device'
     };
 
     /**
