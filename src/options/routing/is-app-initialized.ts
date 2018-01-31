@@ -7,7 +7,7 @@ import { Route } from '../route';
 import { SettingsService } from '../services/settings.service';
 
 @Injectable()
-export class CanActivateApp implements CanActivate {
+export class IsAppInitialized implements CanActivate {
     constructor(
         private router: Router,
         private readonly chromeService: ChromeService,

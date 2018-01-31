@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { AddDeviceComponent } from './components/add-device/add-device.component';
 import { AppComponent } from './components/app/app.component';
-import { CanActivateApp } from './routing/can-activate';
+import { IsAppInitialized } from './routing/is-app-initialized';
 import { ChromeService } from './services/chrome.service';
 import { DeveloperComponent } from './components/developer/developer.component';
 import { DeviceService } from './services/device.service';
@@ -24,7 +24,7 @@ import { WindowService } from './services/window.service';
             {
                 path: '',
                 component: OptionsComponent,
-                canActivate: [CanActivateApp]
+                canActivate: [IsAppInitialized]
             },
             {
                 path: Route.addDevice,
@@ -37,7 +37,7 @@ import { WindowService } from './services/window.service';
         ])
     ],
     declarations: [AddDeviceComponent, AppComponent, DeveloperComponent, OptionsComponent, SignedOutComponent],
-    providers: [CanActivateApp, ChromeService, GcmService, SettingsService, DeviceService, WindowService],
+    providers: [IsAppInitialized, ChromeService, GcmService, SettingsService, DeviceService, WindowService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
