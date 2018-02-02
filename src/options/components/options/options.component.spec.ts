@@ -11,7 +11,6 @@ import { loadCss } from '../testing/css-loader';
 import { OptionsComponent } from './options.component';
 import { MockChromeService } from '../../services/testing/chrome.service.mock';
 import { MockDeviceService } from '../../services/testing/device.service.mock';
-import { Route } from '../../route';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Settings, SettingsService } from '../../services/settings.service';
 import { WindowService } from '../../services/window.service';
@@ -24,8 +23,6 @@ describe('OptionsComponent', () => {
 
     let comp: OptionsComponent;
     let fixture: ComponentFixture<OptionsComponent>;
-
-    let settings: Settings;
 
     beforeAll(() => {
         loadCss();
@@ -53,11 +50,6 @@ describe('OptionsComponent', () => {
         chromeService = TestBed.get(ChromeService);
         settingsService = TestBed.get(SettingsService);
         router = TestBed.get(Router);
-
-        // Set default settings. If a test needs to override, it can set the values directly on the settings object
-        settings = SettingsService.createDefault();
-        settings.initialized = true;
-        mockGetSettingsReturns(settings);
     })
 
     describe('constructor',() => {
@@ -247,17 +239,9 @@ describe('OptionsComponent', () => {
         };
     }
 
-    function mockIsSignedIntoChromeReturns(isSignedIn: boolean) {
-        spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.resolve(isSignedIn));
-    }
-
     function mockGetDevicesReturns(devices: DeviceModel[]) {
         spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices))
-    }
-
-    function mockGetSettingsReturns(settings: Settings) {
-        spyOn(settingsService, 'getSettings').and.returnValue(Promise.resolve(settings));
-    }
+    }   
 
     function testErrorShown(expectedError: string) {
         expect(comp.isLoading).toBe(false);
@@ -275,7 +259,6 @@ describe('OptionsComponent', () => {
     }
 
     function setupCompWithDevices(devices: DeviceModel[]): Promise<void> {
-        mockIsSignedIntoChromeReturns(true);
         mockGetDevicesReturns(devices);
 
         return comp.ngOnInit();
