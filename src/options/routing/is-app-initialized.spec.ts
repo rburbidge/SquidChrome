@@ -11,9 +11,9 @@ describe("IsAppInitialized", () => {
 
     let isAppInitialized: IsAppInitialized;
     let chromeService: ChromeService;
+    let router: Router;
     let settings: Settings;
     let settingsService: SettingsService;
-    let router: Router;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -34,44 +34,32 @@ describe("IsAppInitialized", () => {
     });
 
     it('Returns true when user is signed into Chrome and is initialized', (done) => {
-        settings.initialized = true;
-        mockGetSettingsReturns(settings);
-        mockIsSignedIntoChromeReturns(true);
-        callActivate()
-            .then(result => {
-                expect(result).toBeFalsy();
-                done();
-            });
+        testIsAppInitialized(true, true, undefined, done);
     });
 
     it('Redirects to sign-in when user is not signed into Chrome', (done) => {
-        settings.initialized = true;
-        mockGetSettingsReturns(settings);
-        mockIsSignedIntoChromeReturns(false);
-        let routerSpy = spyOn(router, 'navigateByUrl').and.callFake(() => {});   
-        callActivate()
-            .then(result => {
-                expect(result).toBeFalsy();
-                expect(routerSpy).toHaveBeenCalledWith(Route.signedOut);
-                done();
-            });
+        testIsAppInitialized(true, false, Route.signedOut, done);
     });
 
     it('Redirects to intro when app is not initialized', (done) => {
-        settings.initialized = false;
-        mockGetSettingsReturns(settings);
-        mockIsSignedIntoChromeReturns(true);
-        let routerSpy = spyOn(router, 'navigateByUrl').and.callFake(() => {});
-        callActivate()
-            .then(result => {
-                expect(result).toBeFalsy();
-                expect(routerSpy).toHaveBeenCalledWith(Route.addDevice);
-                done();
-            });
+        testIsAppInitialized(false, true, Route.addDevice, done);
     });
 
-    function callActivate() {
-        return (isAppInitialized.canActivate(null, null) as Promise<boolean>);
+    function testIsAppInitialized(isInitialized: boolean, isSignedIn: boolean, redirectRoute: string, done: Function) {
+        settings.initialized = isInitialized;
+        mockGetSettingsReturns(settings);
+        mockIsSignedIntoChromeReturns(isSignedIn);
+        let routerSpy = spyOn(router, 'navigateByUrl').and.callFake(() => {});
+
+        (isAppInitialized.canActivate(null, null) as Promise<boolean>)
+            .then(result => {
+                expect(result).toBe(!redirectRoute);
+
+                if(redirectRoute) {
+                    expect(routerSpy).toHaveBeenCalledWith(redirectRoute);
+                }
+                done();
+            });
     }
 
     function mockIsSignedIntoChromeReturns(isSignedIn: boolean) {

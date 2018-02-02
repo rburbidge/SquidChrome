@@ -27,7 +27,7 @@ export class IsAppInitialized implements CanActivate {
                 let route: string;
                 if(!isSignedIn) {
                     route = Route.signedOut;
-                } else {
+                } else if(!isInitialized)  {
                     route = Route.addDevice;
                 }
 
