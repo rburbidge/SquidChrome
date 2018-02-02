@@ -94,11 +94,11 @@ export class OptionsComponent implements OnInit {
             })
             .catch((error: ErrorModel) => {
                 if (error && error.code == ErrorCode.UserNotFound) {
-                    this.isLoading = false;
                     this.refreshMessage();
                 } else {
                     this.onError(this.strings.devices.refreshError);
                 }
+                this.isLoading = false;
             });
     }
 
