@@ -61,6 +61,15 @@ export class OptionsComponent implements OnInit {
     }
 
     /**
+     * Sends a URL to a device.
+     * @param device The device to send the URL to.
+     */
+    public sendUrl(device: DeviceModel): Promise<void> {
+        return this.chromeService.getCurrentTabUrl()
+            .then(url => this.deviceService.sendUrl(device.id, url));
+    }
+
+    /**
      * Remove the a device, and delete it from the model set of devices.
      */
     public removeDevice(event: Event, device: DeviceModel): Promise<void> {

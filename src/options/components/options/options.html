@@ -26,14 +26,16 @@
         <!-- List of devices -->
         <div *ngIf="devices && devices.length != 0" class="squid-device-list squid-panel">
             <div *ngFor="let device of devices" class="row squid-device vertical-align">
-                <div class="col-xs-4">
-                    <i class="material-icons squid-icon">{{getDeviceIcon(device)}}</i>
-                </div>
-                <div class="col-xs-4 text-center">
-                    <div class="squid-device-name">{{device.name}}</div>
-                </div>
-                <div class="col-xs-4">
-                    <div class="pull-right" (click)="removeDevice($event, device)">X</div>
+                <div (click)="sendUrl(device)">
+                    <div class="col-xs-4">
+                        <i class="material-icons squid-icon">{{getDeviceIcon(device)}}</i>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                        <div class="squid-device-name">{{device.name}}</div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="pull-right" (click)="removeDevice($event, device)">X</div>
+                    </div>
                 </div>
             </div>
         </div>

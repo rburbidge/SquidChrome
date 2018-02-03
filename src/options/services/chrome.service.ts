@@ -12,6 +12,23 @@ export class ChromeService {
     }
 
     /**
+     * Returns the current tab URL.
+     */
+    public getCurrentTabUrl(): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            var queryInfo = {
+                active: true,
+                currentWindow: true
+            };
+
+            chrome.tabs.query(queryInfo, function(tabs) {
+                // Can safely assume that at least one tab is open
+                resolve(tabs[0].url);
+            });
+        });
+    }
+
+    /**
      * Returns true if the extension was installed from an unpacked folder, rather than from a .crx file.
      */
     public isDevMode(): boolean {

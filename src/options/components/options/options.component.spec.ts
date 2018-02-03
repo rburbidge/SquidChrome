@@ -108,6 +108,22 @@ describe('OptionsComponent', () => {
         }
     });
 
+    describe('sendUrl()', () => {
+        it('Sends a URL to the device', (done) => {
+            let sendUrl = spyOn(deviceService, 'sendUrl').and.returnValue(Promise.resolve());
+            const url = 'https://www.example.com';
+            let getCurrentTabUrl = spyOn(chromeService, 'getCurrentTabUrl').and.returnValue(Promise.resolve(url));
+
+            const device = createDevice();
+            comp.sendUrl(device)
+                .then(() => {
+                    expect(getCurrentTabUrl).toHaveBeenCalledTimes(1);
+                    expect(sendUrl).toHaveBeenCalledWith(device.id, url);
+                    done();
+                })
+        });
+    });
+
     describe('removeDevice()', () => {
         it('Removes a device', (done) => {
             spyOn(window, "confirm").and.returnValue(true);
