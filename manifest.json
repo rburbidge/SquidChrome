@@ -44,7 +44,7 @@
     "scripts": [
       "node_modules/systemjs/dist/system.src.js",
       "system.config.js",
-      "src/background/bootstrap.js"
+      "src/areas/background/bootstrap.js"
     ]
   }
 }
