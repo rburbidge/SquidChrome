@@ -1,7 +1,7 @@
 import { ChromeService } from '../../services/chrome.service';
 import { ChromeAuthHelper } from '../../../common/chrome-auth-helper';
 import { Component } from '@angular/core';
-import { Strings } from '../../../content/strings';
+import { Strings } from '../../../../content/strings';
 import { UrlHelper } from '../../../common/url-helper';
 
 /**

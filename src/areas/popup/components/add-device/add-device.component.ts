@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { DeviceType } from '../../../contracts/squid';
-import { Config } from '../../../config';
+import { DeviceType } from '../../../../contracts/squid';
+import { Config } from '../../../../config';
 import { DeviceService } from '../../services/device.service';
 import { GcmService } from '../../services/gcm.service';
 import { Route } from '../../routing/route';
 import { SettingsService } from '../../services/settings.service';
-import { Strings } from '../../../content/strings';
+import { Strings } from '../../../../content/strings';
 import { UrlHelper } from '../../../common/url-helper';
 
 /**
