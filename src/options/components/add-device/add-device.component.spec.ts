@@ -7,7 +7,7 @@ import { DeviceType } from '../../../contracts/squid';
 import { GcmService } from '../../services/gcm.service';
 import { loadCss } from '../testing/css-loader';
 import { MockDeviceService } from '../../services/testing/device.service.mock';
-import { Route } from '../../route';
+import { Route } from '../../routing/route';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SettingsService } from '../../services/settings.service';
 

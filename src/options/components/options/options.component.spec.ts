@@ -11,7 +11,6 @@ import { loadCss } from '../testing/css-loader';
 import { OptionsComponent } from './options.component';
 import { MockChromeService } from '../../services/testing/chrome.service.mock';
 import { MockDeviceService } from '../../services/testing/device.service.mock';
-import { Route } from '../../route';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Settings, SettingsService } from '../../services/settings.service';
 import { WindowService } from '../../services/window.service';
@@ -24,8 +23,6 @@ describe('OptionsComponent', () => {
 
     let comp: OptionsComponent;
     let fixture: ComponentFixture<OptionsComponent>;
-
-    let settings: Settings;
 
     beforeAll(() => {
         loadCss();
@@ -53,11 +50,6 @@ describe('OptionsComponent', () => {
         chromeService = TestBed.get(ChromeService);
         settingsService = TestBed.get(SettingsService);
         router = TestBed.get(Router);
-
-        // Set default settings. If a test needs to override, it can set the values directly on the settings object
-        settings = SettingsService.createDefault();
-        settings.initialized = true;
-        mockGetSettingsReturns(settings);
     })
 
     describe('constructor',() => {
@@ -116,11 +108,29 @@ describe('OptionsComponent', () => {
         }
     });
 
+    describe('sendUrl()', () => {
+        it('Sends a URL to the device', (done) => {
+            let sendUrl = spyOn(deviceService, 'sendUrl').and.returnValue(Promise.resolve());
+            const url = 'https://www.example.com';
+            let getCurrentTabUrl = spyOn(chromeService, 'getCurrentTabUrl').and.returnValue(Promise.resolve(url));
+
+            const device = createDevice();
+            comp.sendUrl(device)
+                .then(() => {
+                    expect(getCurrentTabUrl).toHaveBeenCalledTimes(1);
+                    expect(sendUrl).toHaveBeenCalledWith(device.id, url);
+                    done();
+                })
+        });
+    });
+
     describe('removeDevice()', () => {
         it('Removes a device', (done) => {
             spyOn(window, "confirm").and.returnValue(true);
             spyOn(deviceService, 'removeDevice').and.returnValue(Promise.resolve());
             const removedDevice = devices[1];
+
+            fixture.detectChanges();
 
             setupCompWithDevices(devices)
                 .then(() => comp.removeDevice(new Event('fake event'), removedDevice))
@@ -182,7 +192,7 @@ describe('OptionsComponent', () => {
 
         it('Shows message when the user has no devices', (done) => {
             mockGetDevicesReturns([]);
-    
+            fixture.detectChanges();
             comp.refreshDevices()
                 .then(() => {
                     testNoDevicesFound();
@@ -197,7 +207,7 @@ describe('OptionsComponent', () => {
                 message: ''
             };
             spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject(error))
-    
+            fixture.detectChanges();
             comp.refreshDevices()
                 .then(() => {
                     testNoDevicesFound();
@@ -207,18 +217,20 @@ describe('OptionsComponent', () => {
     
         it('Shows error if loading fails', (done) => {
             spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject('An error'))
-    
+            fixture.detectChanges();
             comp.refreshDevices()
                 .then(() => {
                     testErrorShown('Oops! An error occurred while retrieving your settings. Try again later.');
                     done();
+                }).catch(e => {
+                    console.log(e);
                 });
         });
 
         function testNoDevicesFound() {
             fixture.detectChanges();
             expect(comp.devices.length).toBe(0);
-            expect(comp.isLoading).toBeFalsy();
+            expect(comp.isLoading).toBeFalsy('comp.isLoading');
     
             let error = fixture.debugElement.query(By.css('.squid-options-header'));
             expect(error.nativeElement.textContent).toContain('No devices found');
@@ -226,44 +238,7 @@ describe('OptionsComponent', () => {
     });
 
     describe('ngOnInit()', () => {
-        it('When user not signed into Chrome, redirects to SignedOutComponent', (done) => {
-            mockIsSignedIntoChromeReturns(false);
-            let routerSpy = spyOn(router, 'navigateByUrl').and.callFake(() => {});   
-
-            comp.ngOnInit()
-                .then(() => {
-                    expect(routerSpy).toHaveBeenCalledWith(Route.signedOut);
-                    done();
-                })
-                .catch(() => {
-                    fail();
-                    done();
-                });
-        });
-
-        it('When user signed into Chrome, calls OptionsComponent.refreshDevices()', (done) => {
-            mockIsSignedIntoChromeReturns(true);
-            const compSpy = spyOn(comp, 'refreshDevices').and.callFake(() => {});
-
-            comp.ngOnInit()
-                .then(() => {
-                    expect(compSpy.calls.all().length).toBe(1);
-                    done();
-                })
-                .catch(() => {
-                    fail();
-                    done();
-                });
-        });
-
-        it('When ChromeService.isSignedIntoChrome() throws, shows error', (done) => {
-            spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.reject('An error'));
-            comp.ngOnInit()
-            .then(() => {
-                testErrorShown('Oops! An error occurred while retrieving your settings. Try again later.')
-                done();
-            })
-        });
+        
     });
 
     const devices: DeviceModel[] = [
@@ -280,21 +255,16 @@ describe('OptionsComponent', () => {
         };
     }
 
-    function mockIsSignedIntoChromeReturns(isSignedIn: boolean) {
-        spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.resolve(isSignedIn));
-    }
-
     function mockGetDevicesReturns(devices: DeviceModel[]) {
         spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices))
-    }
-
-    function mockGetSettingsReturns(settings: Settings) {
-        spyOn(settingsService, 'getSettings').and.returnValue(Promise.resolve(settings));
-    }
+    }   
 
     function testErrorShown(expectedError: string) {
+        expect(comp.isLoading).toBe(false);
+        expect(comp.error).toBe(expectedError);
         fixture.detectChanges();
         let error = fixture.debugElement.query(By.css('.squid-error'));
+        expect(error).toBeTruthy();
         expect(error.nativeElement.textContent).toContain(expectedError);
     }
 
@@ -305,7 +275,6 @@ describe('OptionsComponent', () => {
     }
 
     function setupCompWithDevices(devices: DeviceModel[]): Promise<void> {
-        mockIsSignedIntoChromeReturns(true);
         mockGetDevicesReturns(devices);
 
         return comp.ngOnInit();

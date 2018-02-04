@@ -6,7 +6,7 @@ import { ChromeAuthHelper } from '../../../common/chrome-auth-helper';
 import { Config } from '../../../config';
 import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
-import { Route } from '../../route';
+import { Route } from '../../routing/route';
 import { SettingsService } from '../../services/settings.service';
 import { Strings } from '../../../content/strings';
 import { UrlHelper } from '../../../common/url-helper';
@@ -61,6 +61,15 @@ export class OptionsComponent implements OnInit {
     }
 
     /**
+     * Sends a URL to a device.
+     * @param device The device to send the URL to.
+     */
+    public sendUrl(device: DeviceModel): Promise<void> {
+        return this.chromeService.getCurrentTabUrl()
+            .then(url => this.deviceService.sendUrl(device.id, url));
+    }
+
+    /**
      * Remove the a device, and delete it from the model set of devices.
      */
     public removeDevice(event: Event, device: DeviceModel): Promise<void> {
@@ -94,11 +103,11 @@ export class OptionsComponent implements OnInit {
             })
             .catch((error: ErrorModel) => {
                 if (error && error.code == ErrorCode.UserNotFound) {
-                    this.isLoading = false;
                     this.refreshMessage();
                 } else {
                     this.onError(this.strings.devices.refreshError);
                 }
+                this.isLoading = false;
             });
     }
 
@@ -108,31 +117,6 @@ export class OptionsComponent implements OnInit {
     }
 
     public ngOnInit(): Promise<void> {
-        const getSettings = this.settingsService.getSettings()
-        const getIsSignedIn = this.chromeService.isSignedIntoChrome();
-
-        return Promise.all([getSettings, getIsSignedIn])
-            .then(results => {
-                const isInitialized = results[0].initialized;
-                const isSignedIn = results[1];
-
-                if(isInitialized && isSignedIn) {
-                    return this.refreshDevices();
-                }
-
-                let route: string;
-                if(!isSignedIn) {
-                    route = Route.signedOut;
-                } else {
-                    route = Route.addDevice;
-                }
-
-                if(!route) return;
-                this.router.navigateByUrl(route);
-            })
-            .catch(reason => {
-                console.warn('ChromeService.isSignedIntoChrome() threw ' + reason);
-                this.onError(this.strings.devices.refreshError);
-            });
+        return this.refreshDevices();
     }
 }
