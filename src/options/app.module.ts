@@ -11,7 +11,7 @@ import { DeveloperComponent } from './components/developer/developer.component';
 import { DeviceService } from './services/device.service';
 import { GcmService } from './services/gcm.service';
 import { OptionsComponent } from './components/options/options.component';
-import { Route } from './route';
+import { Route } from './routing/route';
 import { SettingsService } from './services/settings.service';
 import { SignedOutComponent } from './components/signed-out/signed-out.component';
 import { WindowService } from './services/window.service';

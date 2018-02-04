@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { ChromeService } from '../services/chrome.service';
-import { Route } from '../route';
+import { Route } from '../routing/route';
 import { SettingsService } from '../services/settings.service';
 
 @Injectable()

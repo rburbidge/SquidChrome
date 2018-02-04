@@ -6,7 +6,7 @@ import { ChromeAuthHelper } from '../../../common/chrome-auth-helper';
 import { Config } from '../../../config';
 import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
-import { Route } from '../../route';
+import { Route } from '../../routing/route';
 import { SettingsService } from '../../services/settings.service';
 import { Strings } from '../../../content/strings';
 import { UrlHelper } from '../../../common/url-helper';

@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ChromeService } from '../services/chrome.service';
 import { IsAppInitialized } from './is-app-initialized';
-import { Route } from '../route';
+import { Route } from '../routing/route';
 import { Settings, SettingsService } from '../services/settings.service';
 
 describe("IsAppInitialized", () => {
