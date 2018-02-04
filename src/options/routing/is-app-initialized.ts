@@ -6,6 +6,9 @@ import { ChromeService } from '../services/chrome.service';
 import { Route } from '../routing/route';
 import { SettingsService } from '../services/settings.service';
 
+/**
+ * Guard for checking is user is signed in and app is initialized before activating a route.
+ */
 @Injectable()
 export class IsAppInitialized implements CanActivate {
     constructor(
