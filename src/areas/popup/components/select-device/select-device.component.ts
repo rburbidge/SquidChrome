@@ -1,0 +1,182 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { ChromeService } from '../../services/chrome.service';
+import { ChromeAuthHelper } from '../../../common/chrome-auth-helper';
+import { Config } from '../../../../config/config';
+import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../../contracts/squid';
+import { DeviceService } from '../../services/device.service';
+import { Route } from '../../routing/route';
+import { SettingsService } from '../../services/settings.service';
+import { Strings } from '../../../../assets/strings/strings';
+import { UrlHelper } from '../../../common/url-helper';
+
+/**
+ * The options page. Allows the user to manage their registered devices.
+ */
+@Component({
+    selector: 'select-device',
+    templateUrl: './select-device.html',
+    styles: [`
+        .select-device {
+            padding-top: 5px;
+            padding-bottom: 20px;
+            color: white;
+        }
+    
+        .squid-device-grid {
+            display: flex;
+            flex-flow: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .squid-device-grid-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-flow: column wrap;
+            height: 150px;
+            width: 150px;
+            
+            border-style: solid;
+            border-width: medium;
+            border-color: orange;
+            border-width: 1px;
+        }
+
+        .squid-device-grid-item:hover {
+            color: white;
+            background-color: orange;
+            transition: background 0.25s linear;
+        }
+
+        .squid-device-grid-item.empty {
+            border: none;
+        }
+
+        .squid-device-grid-item.empty:hover {
+            border: none;
+            background-color:transparent;
+        }
+
+        .icon {
+            font-size: 70px;
+        }
+
+        .name {
+            text-align: center;
+            width: 100%;
+        }
+
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+        }
+    `]
+})
+export class SelectDeviceComponent implements OnInit {
+
+    public readonly strings: Strings = new Strings();
+
+    constructor(
+        private readonly deviceService: DeviceService,
+        private readonly router: Router,
+        private readonly chromeService: ChromeService,
+        private readonly settingsService: SettingsService)
+    {
+        this.isDevMode = chromeService.isDevMode();
+    }
+
+    public isDevMode: boolean;
+    public isLoading: boolean = true;
+    public error: string;
+    public devices: DeviceModel[] = [];
+    public message: string;
+
+    /** Returns the device icon for a device. */
+    public getDeviceIcon(device: DeviceModel): string {
+        switch(device.deviceType) {
+            case DeviceType.chrome:
+                return 'laptop';
+            case DeviceType.android:
+            default:
+                return 'phone_android';
+        }
+    }
+
+    private refreshMessage() {
+        this.message = this.getMessage();
+    }
+
+    private getMessage(): string {
+        if(!this.devices || this.devices.length == 0) {
+            return this.strings.devices.noDevicesTitle;
+        } else {
+            return this.strings.devices.selectDevice;
+        }
+    }
+
+    /**
+     * Sends a URL to a device.
+     * @param device The device to send the URL to.
+     */
+    public sendUrl(device: DeviceModel): Promise<void> {
+        return this.chromeService.getCurrentTabUrl()
+            .then(url => this.deviceService.sendUrl(device.id, url));
+    }
+
+    /**
+     * Remove the a device, and delete it from the model set of devices.
+     */
+    public removeDevice(event: Event, device: DeviceModel): Promise<void> {
+        event.stopPropagation();
+
+        if(!confirm(this.strings.devices.deleteConfirm(device.name))) return;
+
+        return this.deviceService.removeDevice(device.id)
+            .then(() => {
+                this.message = this.strings.devices.deleteComplete(device.name);
+                this.devices.splice(
+                    this.devices.findIndex((d: DeviceModel) => d.id === device.id),
+                    1)
+            })
+            .catch(() => alert(this.strings.devices.deleteError));
+    }
+
+    /**
+     * Sync both the selected device, and the other devices from the server.
+     */
+    public refreshDevices(): Promise<void> {
+        this.isLoading = true;
+        delete this.error;
+
+        return this.deviceService.getDevices()
+            .then(devices => {
+                this.devices = devices;
+                this.isLoading = false;
+
+                this.refreshMessage();
+            })
+            .catch((error: ErrorModel) => {
+                if (error && error.code == ErrorCode.UserNotFound) {
+                    this.refreshMessage();
+                } else {
+                    this.onError(this.strings.devices.refreshError);
+                }
+                this.isLoading = false;
+            });
+    }
+
+    private onError(error: string): void {
+        this.isLoading = false;
+        this.error = error;
+    }
+
+    public ngOnInit(): Promise<void> {
+        return this.refreshDevices();
+    }
+}

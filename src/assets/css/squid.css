@@ -2,8 +2,10 @@
 
 .squid-body {
     background-color: #252839;
-    min-width: 400px;
-    min-height:600px;
+    min-width: 350px;
+    min-height: 350px;
+    border-left: 3px solid white;
+    border-right: 3px solid white;
 }
 
 /* Squid intro */
@@ -24,9 +26,8 @@
     animation: fadein 0.5s;
 }
 
-.squid-options-header {
-    min-height: 50px;
-    font-size: 20px;
+.squid-header {
+    font-size: 18px;
 }
 
 @keyframes fadein {
@@ -86,8 +87,8 @@
 
 .loader {
     display: inline-block;
-    border: 3px solid #3498db;
-    border-top: 3px solid #f3f3f3;
+    border: 3px solid orange;
+    border-top: 3px solid transparent;
     border-radius: 50%;
     width: 50px;
     height: 50px;

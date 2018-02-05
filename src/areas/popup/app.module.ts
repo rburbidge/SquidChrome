@@ -10,8 +10,8 @@ import { ChromeService } from './services/chrome.service';
 import { DeveloperComponent } from './components/developer/developer.component';
 import { DeviceService } from './services/device.service';
 import { GcmService } from './services/gcm.service';
-import { OptionsComponent } from './components/options/options.component';
 import { Route } from './routing/route';
+import { SelectDeviceComponent } from './components/select-device/select-device.component';
 import { SettingsService } from './services/settings.service';
 import { SignedOutComponent } from './components/signed-out/signed-out.component';
 import { WindowService } from './services/window.service';
@@ -23,8 +23,7 @@ import { WindowService } from './services/window.service';
         RouterModule.forRoot([
             {
                 path: '',
-                component: OptionsComponent,
-                canActivate: [IsAppInitialized]
+                component: SelectDeviceComponent
             },
             {
                 path: Route.addDevice,
@@ -36,7 +35,7 @@ import { WindowService } from './services/window.service';
             }
         ])
     ],
-    declarations: [AddDeviceComponent, AppComponent, DeveloperComponent, OptionsComponent, SignedOutComponent],
+    declarations: [AddDeviceComponent, AppComponent, DeveloperComponent, SignedOutComponent, SelectDeviceComponent],
     providers: [IsAppInitialized, ChromeService, GcmService, SettingsService, DeviceService, WindowService],
     bootstrap: [AppComponent]
 })
