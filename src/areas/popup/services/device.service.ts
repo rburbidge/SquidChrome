@@ -4,7 +4,7 @@ import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/toPromise';
 
 import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
-import { Config } from '../../../config';
+import { Config } from '../../../config/config';
 import { AddDeviceBody, CommandBody, DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
 
 /**
