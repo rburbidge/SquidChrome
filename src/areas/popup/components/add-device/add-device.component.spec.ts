@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { AddDeviceComponent } from './add-device.component';
 import { DeviceService } from '../../services/device.service';
-import { DeviceType } from '../../../contracts/squid';
+import { DeviceType } from '../../../../contracts/squid';
 import { GcmService } from '../../services/gcm.service';
 import { loadCss } from '../testing/css-loader';
 import { MockDeviceService } from '../../services/testing/device.service.mock';

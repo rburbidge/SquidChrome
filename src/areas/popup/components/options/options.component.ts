@@ -3,12 +3,12 @@ import { Router } from '@angular/router';
 
 import { ChromeService } from '../../services/chrome.service';
 import { ChromeAuthHelper } from '../../../common/chrome-auth-helper';
-import { Config } from '../../../config';
-import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../contracts/squid';
+import { Config } from '../../../../config/config';
+import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { Route } from '../../routing/route';
 import { SettingsService } from '../../services/settings.service';
-import { Strings } from '../../../content/strings';
+import { Strings } from '../../../../assets/strings/strings';
 import { UrlHelper } from '../../../common/url-helper';
 
 /**

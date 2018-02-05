@@ -1,4 +1,4 @@
-import { ChromeService } from '../options/services/chrome.service';
+import { ChromeService } from '../popup/services/chrome.service';
 import { UrlType } from './url-type';
 
 export const optionsPageName = "options.html";

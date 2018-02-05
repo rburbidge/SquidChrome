@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 import { ChromeService } from '../../services/chrome.service';
 import { DeveloperComponent } from '../developer/developer.component';
-import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../contracts/squid';
+import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { loadCss } from '../testing/css-loader';
 import { OptionsComponent } from './options.component';

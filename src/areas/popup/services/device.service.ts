@@ -4,8 +4,8 @@ import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/toPromise';
 
 import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
-import { Config } from '../../config';
-import { AddDeviceBody, CommandBody, DeviceModel, ErrorCode, ErrorModel } from '../../contracts/squid';
+import { Config } from '../../../config/config';
+import { AddDeviceBody, CommandBody, DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
 
 /**
  * The device service.

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 
 import { ChromeService } from '../../services/chrome.service';
-import { DeviceType } from '../../../contracts/squid';
+import { DeviceType } from '../../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { SettingsService } from '../../services/settings.service';
 import { UrlHelper } from '../../../common/url-helper';

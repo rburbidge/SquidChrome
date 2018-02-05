@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { callRejectOnError } from '../../common/chrome-promise';
-import { DeviceModel } from '../../contracts/squid';
+import { DeviceModel } from '../../../contracts/squid';
 
 /**
  * The app settings.
