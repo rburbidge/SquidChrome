@@ -14,6 +14,7 @@ import { MockDeviceService } from '../../services/testing/device.service.mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Settings, SettingsService } from '../../services/settings.service';
 import { WindowService } from '../../services/window.service';
+import { ChromeDeviceModel } from '../../services/squid-converter';
 
 describe('SelectDeviceComponent', () => {
     let deviceService: DeviceService;
@@ -59,53 +60,6 @@ describe('SelectDeviceComponent', () => {
             expect(comp.devices.length).toBe(0);
             expect(comp.message).toBeUndefined();
         });
-
-        it('isDevMode is false when ChromeService says so', function() {
-            testIsDevMode(false);
-        });
-
-        it('isDevMode is true when ChromeService says so', function() {
-            testIsDevMode(true);
-        });
-
-        /** Tests that isDevMode is retrieved from ChromeService, and that the dev options panel is showing or hidden. */
-        function testIsDevMode(expected: boolean) {
-            spyOn(chromeService, 'isDevMode').and.returnValue(expected);
-            fixture = TestBed.createComponent(SelectDeviceComponent);
-            comp = fixture.debugElement.componentInstance;
-    
-            // Dev options won't show if still loading
-            comp.isLoading = false;
-            fixture.detectChanges();
-            const devOptions = fixture.debugElement.query(By.css('.squid-dev-options'));
-    
-            expect(comp.isDevMode).toBe(expected);
-            if(expected) {
-                expect(devOptions).toBeTruthy();
-            } else {
-                expect(devOptions).toBeNull();
-            }
-        }
-    });
-
-    describe('getDeviceIcon()', () => {
-        it('Returns icon for Android device', () => {
-            testIcon(DeviceType.android, 'phone_android');
-        });
-
-        it('Returns icon for Chrome device', () => {
-            testIcon(DeviceType.chrome, 'laptop');
-        });
-
-        it('Returns Android icon for other device types', () => {
-            testIcon(undefined, 'phone_android');
-        });
-
-        function testIcon(deviceType: DeviceType, expected: string): void {
-            const device = createDevice();
-            device.deviceType = deviceType;
-            expect(comp.getDeviceIcon(device)).toBe(expected);
-        }
     });
 
     describe('sendUrl()', () => {
@@ -121,51 +75,6 @@ describe('SelectDeviceComponent', () => {
                     expect(sendUrl).toHaveBeenCalledWith(device.id, url);
                     done();
                 })
-        });
-    });
-
-    describe('removeDevice()', () => {
-        it('Removes a device', (done) => {
-            spyOn(window, "confirm").and.returnValue(true);
-            spyOn(deviceService, 'removeDevice').and.returnValue(Promise.resolve());
-            const removedDevice = devices[1];
-
-            fixture.detectChanges();
-
-            setupCompWithDevices(devices)
-                .then(() => comp.removeDevice(new Event('fake event'), removedDevice))
-                .then(() => {
-                    expect(comp.devices.find(d => d.id == removedDevice.id)).toBeUndefined('Devices still contained the deleted device');
-                    testHeaderTextShown(`${removedDevice.name} has been deleted`);
-                    done();
-                });
-        });
-
-        it('Shows an error if the device could not be removed', (done) => {
-            spyOn(window, "confirm").and.returnValue(true);
-            spyOn(deviceService, 'removeDevice').and.returnValue(Promise.reject('An error'));
-            const windowAlertSpy = spyOn(window, 'alert').and.returnValue(undefined);
-            const removedDevice = devices[0];
-
-            setupCompWithDevices(devices)
-                .then(() => comp.removeDevice(new Event('fake event'), removedDevice))
-                .then(() => {
-                    expect(windowAlertSpy).toHaveBeenCalledWith('An error occurred while removing the device. Please try again later.');
-                    done();
-                });
-        });
-
-        it('Does not remove device when user denies removal', (done) => {
-            spyOn(window, "confirm").and.returnValue(false);
-            let removeDeviceSpy = spyOn(deviceService, 'removeDevice').and.returnValue(Promise.reject('An error'));
-
-            setupCompWithDevices(devices)
-                .then(() => comp.removeDevice(new Event('fake event'), devices[0]))
-                .then(() => {
-                    fixture.detectChanges();
-                    expect(removeDeviceSpy).toHaveBeenCalledTimes(0);
-                    done();
-                });
         });
     });
 
@@ -188,31 +97,6 @@ describe('SelectDeviceComponent', () => {
                 });
             expect(comp.isLoading).toBeTruthy(); // 2. Expect loading = true and that the error was cleared
             expect(comp.error).toBeUndefined();
-        });
-
-        it('Shows message when the user has no devices', (done) => {
-            mockGetDevicesReturns([]);
-            fixture.detectChanges();
-            comp.refreshDevices()
-                .then(() => {
-                    testNoDevicesFound();
-                    done();
-                });
-        });
-
-        it('Shows message on UserNotFound error', (done) => {
-            const error: ErrorModel = {
-                code: ErrorCode.UserNotFound,
-                codeString: '',
-                message: ''
-            };
-            spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject(error))
-            fixture.detectChanges();
-            comp.refreshDevices()
-                .then(() => {
-                    testNoDevicesFound();
-                    done();
-                });
         });
     
         it('Shows error if loading fails', (done) => {
@@ -241,17 +125,18 @@ describe('SelectDeviceComponent', () => {
         
     });
 
-    const devices: DeviceModel[] = [
-        { id: "id1", name: "Nexus 5X", deviceType: DeviceType.android},
-        { id: "id3", name: "Pixel", deviceType: DeviceType.android},
-        { id: "id2", name: "Samsung Galaxy", deviceType: DeviceType.android},
+    const devices: ChromeDeviceModel[] = [
+        { id: "id1", name: "Nexus 5X", deviceType: DeviceType.android, getIcon: () => "Icon" },
+        { id: "id3", name: "Pixel", deviceType: DeviceType.android, getIcon: () => "Icon" },
+        { id: "id2", name: "Samsung Galaxy", deviceType: DeviceType.android, getIcon: () => "Icon" },
     ];
 
-    function createDevice(): DeviceModel {
+    function createDevice(): ChromeDeviceModel {
         return {
             id: "id1",
             name: "Nexus 5X",
-            deviceType: DeviceType.android
+            deviceType: DeviceType.android,
+            getIcon: () => 'Icon'
         };
     }
 

@@ -6,6 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
 import { Config } from '../../../config/config';
 import { AddDeviceBody, CommandBody, DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
+import { ChromeDeviceModel, convertDeviceModel } from './squid-converter';
 
 /**
  * The device service.
@@ -17,22 +18,23 @@ export class DeviceService {
 
     constructor(private http: Http) { }
 
-    public addDevice(deviceInfo: AddDeviceBody): Promise<DeviceModel> {
+    public addDevice(deviceInfo: AddDeviceBody): Promise<ChromeDeviceModel> {
         return this.sendAuthorizedRequest('/api/devices',
             {
                 method: 'POST',
                 body: deviceInfo
-            }).then(response => response.json() as DeviceModel);
+            }).then(response => convertDeviceModel(response.json() as DeviceModel));
     }
 
     public removeDevice(id: string): Promise<any> {
         return this.sendAuthorizedRequest(`/api/devices/${id}`, { method: 'DELETE' });
     }
 
-    public getDevices(): Promise<DeviceModel[]> {
+    public getDevices(): Promise<ChromeDeviceModel[]> {
         return this.sendAuthorizedRequest('/api/devices',
             { method: 'GET' })
-            .then(response => response.json() as DeviceModel[]);
+            .then(response => (response.json() as DeviceModel[])
+                .map(device => convertDeviceModel(device)));
     }
 
     public sendUrl(id: string, url: string): Promise<any> {

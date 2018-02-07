@@ -8,14 +8,7 @@
     <div *ngIf="!isLoading" class="fade-in">
 
         <div class="row text-center">
-            <h4>{{message}}</h4>
-        </div>
-
-        <!-- No devices message -->
-        <div *ngIf="!error && (!devices || devices.length == 0)" class="row text-center">
-            <div class="row">
-                <p>{{strings.devices.noDevicesMessage}}</p>
-            </div>
+            <h4>{{strings.devices.selectDevice}}</h4>
         </div>
 
         <div *ngIf="error" class="row text-center squid-error">
@@ -25,7 +18,7 @@
         <!-- Grid of devices -->
         <div *ngIf="devices && devices.length != 0" class="device-grid">
             <div *ngFor="let device of devices" class="device" (click)="sendUrl(device)">
-                <i class="material-icons icon">{{getDeviceIcon(device)}}</i>
+                <i class="material-icons icon">{{device.getIcon()}}</i>
                 <div class="name">{{device.name}}</div>
             </div>
 
