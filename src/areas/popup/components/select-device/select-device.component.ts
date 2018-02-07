@@ -17,66 +17,7 @@ import { UrlHelper } from '../../../common/url-helper';
 @Component({
     selector: 'select-device',
     templateUrl: './select-device.html',
-    styles: [`
-        .select-device {
-            padding-top: 5px;
-            padding-bottom: 20px;
-            color: white;
-        }
-    
-        .squid-device-grid {
-            display: flex;
-            flex-flow: wrap;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .squid-device-grid-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-flow: column wrap;
-            height: 150px;
-            width: 150px;
-            
-            border-style: solid;
-            border-width: medium;
-            border-color: orange;
-            border-width: 1px;
-        }
-
-        .squid-device-grid-item:hover {
-            color: white;
-            background-color: orange;
-            transition: background 0.25s linear;
-        }
-
-        .squid-device-grid-item.empty {
-            border: none;
-        }
-
-        .squid-device-grid-item.empty:hover {
-            border: none;
-            background-color:transparent;
-        }
-
-        .icon {
-            font-size: 70px;
-        }
-
-        .name {
-            text-align: center;
-            width: 100%;
-        }
-
-        .loader-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 300px;
-        }
-    `]
+    styleUrls: ['./select-device.css']
 })
 export class SelectDeviceComponent implements OnInit {
 
