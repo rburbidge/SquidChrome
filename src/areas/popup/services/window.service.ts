@@ -8,4 +8,11 @@ export class WindowService {
     public setUrl(url: string): void {
         window.location.href = url;
     }
+
+    /**
+     * Closes the window.
+     */
+    public close(): void {
+        window.close();
+    }
 }

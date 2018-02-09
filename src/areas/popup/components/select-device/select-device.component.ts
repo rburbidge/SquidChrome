@@ -11,6 +11,7 @@ import { Route } from '../../routing/route';
 import { SettingsService } from '../../services/settings.service';
 import { Strings } from '../../../../assets/strings/strings';
 import { UrlHelper } from '../../../common/url-helper';
+import { WindowService } from '../../services/window.service';
 
 /**
  * The options page. Allows the user to manage their registered devices.
@@ -25,6 +26,7 @@ export class SelectDeviceComponent implements OnInit {
     public readonly strings: Strings = new Strings();
 
     constructor(
+        private readonly windowService: WindowService,
         private readonly deviceService: DeviceService,
         private readonly router: Router,
         private readonly chromeService: ChromeService,
@@ -42,7 +44,8 @@ export class SelectDeviceComponent implements OnInit {
      */
     public sendUrl(device: ChromeDeviceModel): Promise<void> {
         return this.chromeService.getCurrentTabUrl()
-            .then(url => this.deviceService.sendUrl(device.id, url));
+            .then(url => this.deviceService.sendUrl(device.id, url))
+            .then(() => this.windowService.close());
     }
 
     /**

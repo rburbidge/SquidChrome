@@ -21,6 +21,7 @@ describe('SelectDeviceComponent', () => {
     let chromeService: ChromeService;
     let settingsService: SettingsService;
     let router: Router;
+    let windowService: WindowService;
 
     let comp: SelectDeviceComponent;
     let fixture: ComponentFixture<SelectDeviceComponent>;
@@ -51,6 +52,7 @@ describe('SelectDeviceComponent', () => {
         chromeService = TestBed.get(ChromeService);
         settingsService = TestBed.get(SettingsService);
         router = TestBed.get(Router);
+        windowService = TestBed.get(WindowService);
     })
 
     describe('constructor',() => {
@@ -67,12 +69,14 @@ describe('SelectDeviceComponent', () => {
             let sendUrl = spyOn(deviceService, 'sendUrl').and.returnValue(Promise.resolve());
             const url = 'https://www.example.com';
             let getCurrentTabUrl = spyOn(chromeService, 'getCurrentTabUrl').and.returnValue(Promise.resolve(url));
+            let windowClose = spyOn(windowService, 'close');
 
             const device = createDevice();
             comp.sendUrl(device)
                 .then(() => {
                     expect(getCurrentTabUrl).toHaveBeenCalledTimes(1);
                     expect(sendUrl).toHaveBeenCalledWith(device.id, url);
+                    expect(windowClose).toHaveBeenCalledTimes(1);
                     done();
                 })
         });
