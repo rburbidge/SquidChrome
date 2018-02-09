@@ -1,0 +1,32 @@
+<div class="container select-device">
+    <div *ngIf="isLoading" class="row text-center fade-in loader-container">
+        <div class="row spacer-12-top">
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading" class="fade-in">
+
+        <div class="row text-center">
+            <h4>{{strings.devices.selectDevice}}</h4>
+        </div>
+
+        <div *ngIf="error" class="row text-center squid-error">
+            {{error}}
+        </div>
+
+        <!-- Grid of devices -->
+        <div *ngIf="devices && devices.length != 0" class="device-grid">
+            <div *ngFor="let device of devices" class="device" (click)="sendUrl(device)">
+                <i class="material-icons icon">{{device.getIcon()}}</i>
+                <div class="name">{{device.name}}</div>
+            </div>
+
+            <div *ngIf="devices.length % 2 == 1" class="device empty"></div>
+        </div>
+
+        <div *ngIf="!devices || devices.length == 0" class="row spacer-12-top text-center">
+            <button class="btn btn-primary" (click)="refreshDevices()">{{strings.retry}}</button>
+        </div>
+    </div>
+</div>
