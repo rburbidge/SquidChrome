@@ -33,8 +33,7 @@ export class DeviceService {
     public getDevices(): Promise<ChromeDeviceModel[]> {
         return this.sendAuthorizedRequest('/api/devices',
             { method: 'GET' })
-            .then(response => (response.json() as DeviceModel[])
-                .map(device => convertDeviceModel(device)));
+            .then(response => (response.json() as DeviceModel[]).map(device => convertDeviceModel(device)));
     }
 
     public sendUrl(id: string, url: string): Promise<any> {
