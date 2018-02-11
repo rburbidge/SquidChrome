@@ -29,12 +29,12 @@ import { ChromeExtensionSourceDirective } from '../common/directives/chrome-ext-
                 component: SelectDeviceComponent
             },
             {
-                path: Route.intro,
+                path: Route.intro.base,
                 component: IntroComponent,
                 children: [
-                    { path: '', component: DescriptionComponent },
-                    { path: 'signIn', component: SignedOutComponent },
-                    { path: 'addDevice', component: AddDeviceComponent}
+                    { path: Route.intro.description, component: DescriptionComponent },
+                    { path: Route.intro.signIn, component: SignedOutComponent },
+                    { path: Route.intro.registerDevice, component: AddDeviceComponent}
                 ]
             }
         ])

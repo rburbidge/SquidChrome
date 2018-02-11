@@ -38,11 +38,11 @@ describe("IsAppInitialized", () => {
     });
 
     it('Redirects to sign-in when user is not signed into Chrome', (done) => {
-        testIsAppInitialized(true, false, Route.introRoutes.signIn, done);
+        testIsAppInitialized(true, false, Route.intro.signIn, done);
     });
 
     it('Redirects to intro when app is not initialized', (done) => {
-        testIsAppInitialized(false, true, Route.introRoutes.registerDevice, done);
+        testIsAppInitialized(false, true, Route.intro.registerDevice, done);
     });
 
     function testIsAppInitialized(isInitialized: boolean, isSignedIn: boolean, redirectRoute: string, done: Function) {

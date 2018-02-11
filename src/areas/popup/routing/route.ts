@@ -1,6 +1,7 @@
 export const Route = {
-    intro: 'intro',
-    introRoutes: {
+    intro: {
+        base: 'intro',
+        description: '',
         signIn: 'signIn',
         registerDevice: 'registerDevice'
     },

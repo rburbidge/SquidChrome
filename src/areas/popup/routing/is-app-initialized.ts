@@ -29,9 +29,9 @@ export class IsAppInitialized implements CanActivate {
                 // Determine if we need to navigate to another route
                 let route: string;
                 if(!isSignedIn) {
-                    route = Route.introRoutes.signIn;
+                    route = Route.intro.signIn;
                 } else if(!isInitialized)  {
-                    route = Route.introRoutes.registerDevice;
+                    route = Route.intro.registerDevice;
                 }
 
                 // Return true if we don't need to navigate to another route

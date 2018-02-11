@@ -79,7 +79,7 @@ export class SelectDeviceComponent implements OnInit {
      * Navigates to the intro component.
      */
     private goToIntroComponent() {
-        this.router.navigateByUrl(Route.intro);
+        this.router.navigateByUrl(Route.intro.base);
     }
 
     private onError(error: string): void {
