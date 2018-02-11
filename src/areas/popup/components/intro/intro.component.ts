@@ -5,7 +5,8 @@ import { Component } from "@angular/core";
  */
 @Component({
     selector: 'intro',
-    templateUrl: './intro.html'
+    templateUrl: './intro.html',
+    styleUrls: [ './intro.css' ]
 })
 export class IntroComponent {
 
