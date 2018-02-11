@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 import { ChromeService } from "../../../services/chrome.service";
 import { Route } from "../../../routing/route";
+import { Strings } from "../../../../../assets/strings/strings";
 
 /**
  * The select device page for the pop-up. Allows the user to manage their registered devices.
@@ -13,6 +14,8 @@ import { Route } from "../../../routing/route";
     styleUrls: [ './description.css' ]
 })
 export class DescriptionComponent {
+    public readonly strings: Strings = new Strings();
+
     constructor(
         private readonly route: ActivatedRoute,
         private readonly chromeService: ChromeService,

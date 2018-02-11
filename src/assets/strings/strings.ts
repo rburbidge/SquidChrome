@@ -4,8 +4,9 @@
 export class Strings {
     public loading = 'Loading...';
     public name = 'Name';
+    public next = 'Next';
     public retry = 'Retry';
-
+    
     /**
      * Strings for the add device flow.
      */
@@ -31,6 +32,11 @@ Are you sure you want to delete ${deviceName}?`,
         refreshError: 'Oops! An error occurred while retrieving your settings. Try again later.',
 
         selectDevice: 'Select a device'
+    };
+
+    public intro = {
+        descriptionLine1: 'Welcome to Squid!',
+        descriptionLine2: 'Squid lets you send web pages between your devices!'
     };
 
     /**
