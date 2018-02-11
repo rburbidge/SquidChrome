@@ -62,7 +62,7 @@ describe('AddDeviceComponent', () => {
                     expect(addDeviceSpy).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: 'GCM token', deviceType: DeviceType.chrome});
                     expect(setInitalizedSpy).toHaveBeenCalledTimes(1);
                     expect(navigateSpy).toHaveBeenCalledTimes(1);
-                    expect(navigateSpy).toHaveBeenCalledWith(Route.options);
+                    expect(navigateSpy).toHaveBeenCalledWith(Route.selectDevice);
                     done();
                 })
         });

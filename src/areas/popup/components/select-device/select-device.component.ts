@@ -14,7 +14,7 @@ import { UrlHelper } from '../../../common/url-helper';
 import { WindowService } from '../../services/window.service';
 
 /**
- * The options page. Allows the user to manage their registered devices.
+ * The select device page for the pop-up. Allows the user to manage their registered devices.
  */
 @Component({
     selector: 'select-device',
@@ -58,7 +58,7 @@ export class SelectDeviceComponent implements OnInit {
         return this.deviceService.getDevices()
             .then(devices => {
                 if(!devices || devices.length == 0) {
-                    this.goToAddDeviceComponent();
+                    this.goToIntroComponent();
                     return;
                 }
 
@@ -67,7 +67,7 @@ export class SelectDeviceComponent implements OnInit {
             })
             .catch((error: ErrorModel) => {
                 if (error && error.code == ErrorCode.UserNotFound) {
-                    this.goToAddDeviceComponent();
+                    this.goToIntroComponent();
                 } else {
                     this.onError(this.strings.devices.refreshError);
                 }
@@ -76,10 +76,10 @@ export class SelectDeviceComponent implements OnInit {
     }
 
     /**
-     * Navigates the the add device component.
+     * Navigates to the intro component.
      */
-    private goToAddDeviceComponent() {
-        // TODO Implement go to add device component
+    private goToIntroComponent() {
+        this.router.navigateByUrl(Route.intro);
     }
 
     private onError(error: string): void {

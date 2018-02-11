@@ -15,6 +15,9 @@ import { SelectDeviceComponent } from './components/select-device/select-device.
 import { SettingsService } from './services/settings.service';
 import { SignedOutComponent } from './components/signed-out/signed-out.component';
 import { WindowService } from './services/window.service';
+import { IntroComponent } from './components/intro/intro.component';
+import { DescriptionComponent } from './components/intro/description/description.component';
+import { ChromeExtensionSourceDirective } from '../common/directives/chrome-ext-src.directive';
 
 @NgModule({
     imports: [
@@ -26,16 +29,31 @@ import { WindowService } from './services/window.service';
                 component: SelectDeviceComponent
             },
             {
-                path: Route.addDevice,
-                component: AddDeviceComponent
-            },
-            {
-                path: Route.signedOut,
-                component: SignedOutComponent
+                path: Route.intro,
+                component: IntroComponent,
+                children: [
+                    { path: '', component: DescriptionComponent },
+                    { path: 'signIn', component: SignedOutComponent },
+                    { path: 'addDevice', component: AddDeviceComponent}
+                ]
             }
         ])
     ],
-    declarations: [AddDeviceComponent, AppComponent, DeveloperComponent, SignedOutComponent, SelectDeviceComponent],
+    declarations: [
+        AppComponent,
+        
+        DeveloperComponent,
+        SelectDeviceComponent,
+
+        // Intro Components
+        IntroComponent,
+        AddDeviceComponent,
+        DescriptionComponent,
+        SignedOutComponent,
+
+        // Directives
+        ChromeExtensionSourceDirective,
+    ],
     providers: [IsAppInitialized, ChromeService, GcmService, SettingsService, DeviceService, WindowService],
     bootstrap: [AppComponent]
 })

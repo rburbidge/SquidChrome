@@ -40,7 +40,7 @@ export class AddDeviceComponent {
             .then(gcmToken => {
                 this.deviceService.addDevice({name: name, gcmToken: gcmToken, deviceType: DeviceType.chrome})
                     .then(() => this.settingsService.setInitialized())
-                    .then(() => this.router.navigateByUrl(Route.options));
+                    .then(() => this.router.navigateByUrl(Route.selectDevice));
             })
             .catch(error => {
                 // TODO Show some error message. Figure out how to do this in a uniform way
