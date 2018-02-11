@@ -9,7 +9,8 @@ import { Route } from "../../../routing/route";
  */
 @Component({
     selector: 'description',
-    templateUrl: './description.html'
+    templateUrl: './description.html',
+    styleUrls: [ './description.css' ]
 })
 export class DescriptionComponent {
     constructor(

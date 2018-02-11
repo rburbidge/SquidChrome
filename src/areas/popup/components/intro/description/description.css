@@ -1,0 +1,20 @@
+.description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50%;
+}
+
+.description-top {
+    flex: 1;
+    margin: 0 5px 0 5px;
+}
+
+.description-top h3 {
+    margin-top: 0;
+}
+
+.description-bottom {
+    width: 50%;
+    margin-bottom: 5px;
+}
