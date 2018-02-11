@@ -3,7 +3,7 @@ import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { AddDeviceComponent } from './components/add-device/add-device.component';
+import { AddDeviceComponent } from './components/intro/add-device/add-device.component';
 import { AppComponent } from './components/app/app.component';
 import { IsAppInitialized } from './routing/is-app-initialized';
 import { ChromeService } from './services/chrome.service';

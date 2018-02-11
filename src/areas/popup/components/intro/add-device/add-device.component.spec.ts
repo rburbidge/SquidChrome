@@ -1,15 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { AddDeviceComponent } from './add-device.component';
-import { DeviceService } from '../../services/device.service';
-import { DeviceType } from '../../../../contracts/squid';
-import { GcmService } from '../../services/gcm.service';
-import { loadCss } from '../testing/css-loader';
-import { MockDeviceService } from '../../services/testing/device.service.mock';
-import { Route } from '../../routing/route';
-import { RouterTestingModule } from '@angular/router/testing';
-import { SettingsService } from '../../services/settings.service';
+import { DeviceService } from '../../../services/device.service';
+import { DeviceType } from '../../../../../contracts/squid';
+import { GcmService } from '../../../services/gcm.service';
+import { loadCss } from '../../testing/css-loader';
+import { MockDeviceService } from '../../../services/testing/device.service.mock';
+import { Route } from '../../../routing/route';
+import { SettingsService } from '../../../services/settings.service';
 
 describe('AddDeviceComponent', () => {
     let deviceService: DeviceService;
