@@ -13,7 +13,7 @@ import { GcmService } from './services/gcm.service';
 import { Route } from './routing/route';
 import { SelectDeviceComponent } from './components/select-device/select-device.component';
 import { SettingsService } from './services/settings.service';
-import { SignedOutComponent } from './components/signed-out/signed-out.component';
+import { SignedOutComponent } from './components/intro/signed-out/signed-out.component';
 import { WindowService } from './services/window.service';
 import { IntroComponent } from './components/intro/intro.component';
 import { DescriptionComponent } from './components/intro/description/description.component';

@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChromeService } from '../../services/chrome.service';
-import { loadCss } from '../testing/css-loader';
-import { MockChromeService } from '../../services/testing/chrome.service.mock';
+import { ChromeService } from '../../../services/chrome.service';
+import { loadCss } from '../../testing/css-loader';
+import { MockChromeService } from '../../../services/testing/chrome.service.mock';
 import { SignedOutComponent } from './signed-out.component';
-import { UrlHelper } from '../../../common/url-helper';
+import { UrlHelper } from '../../../../common/url-helper';
 
 describe('SignedOutComponent', () => {
     let chromeService: ChromeService;
