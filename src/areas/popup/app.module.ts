@@ -5,8 +5,12 @@ import { RouterModule } from '@angular/router';
 
 import { AddDeviceComponent } from './components/intro/add-device/add-device.component';
 import { AppComponent } from './components/app/app.component';
-import { IsAppInitialized } from './routing/is-app-initialized';
+import { ChromeExtensionSourceDirective } from '../common/directives/chrome-ext-src.directive';
 import { ChromeService } from './services/chrome.service';
+import { DescriptionComponent } from './components/intro/description/description.component';
+import { IntroBottomComponent } from './components/intro/intro-bottom/intro-bottom.component';
+import { IntroComponent } from './components/intro/intro.component';
+import { IsAppInitialized } from './routing/is-app-initialized';
 import { DeveloperComponent } from './components/developer/developer.component';
 import { DeviceService } from './services/device.service';
 import { GcmService } from './services/gcm.service';
@@ -15,9 +19,6 @@ import { SelectDeviceComponent } from './components/select-device/select-device.
 import { SettingsService } from './services/settings.service';
 import { SignedOutComponent } from './components/intro/signed-out/signed-out.component';
 import { WindowService } from './services/window.service';
-import { IntroComponent } from './components/intro/intro.component';
-import { DescriptionComponent } from './components/intro/description/description.component';
-import { ChromeExtensionSourceDirective } from '../common/directives/chrome-ext-src.directive';
 
 @NgModule({
     imports: [
@@ -47,6 +48,7 @@ import { ChromeExtensionSourceDirective } from '../common/directives/chrome-ext-
 
         // Intro Components
         IntroComponent,
+        IntroBottomComponent,
         AddDeviceComponent,
         DescriptionComponent,
         SignedOutComponent,

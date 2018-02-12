@@ -15,7 +15,8 @@ import { UrlHelper } from '../../../../common/url-helper';
  */
 @Component({
     selector: 'add-device',
-    templateUrl: './add-device.html'
+    templateUrl: './add-device.html',
+    styleUrls: [ './add-device.css' ]
 })
 export class AddDeviceComponent {
     public readonly strings: Strings = new Strings();

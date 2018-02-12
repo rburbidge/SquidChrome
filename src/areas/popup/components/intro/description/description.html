@@ -1,7 +1,9 @@
-<div class="description">
-    <div class="description-top">
-        <h3>{{strings.intro.descriptionLine1}}</h3>
+<intro-bottom>
+    <div class="top">
+        <h4>{{strings.intro.descriptionLine1}}</h4>
         <p>{{strings.intro.descriptionLine2}}</p>
     </div>
-    <button (click)="onNext()" class="btn btn-primary description-bottom">{{strings.next}}</button>
-</div>
+    <div class="bottom">
+        <button (click)="onNext()" class="btn btn-primary description-bottom">{{strings.next}}</button>
+    </div>
+</intro-bottom>

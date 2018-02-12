@@ -11,6 +11,7 @@ export class Strings {
      * Strings for the add device flow.
      */
     public addDevice = {
+        line1: "What's the name of this device?",
         addDevice: 'Add device',
         addingDevice: 'Registering your device...',
         defaultDeviceName: 'Chrome Browser',
