@@ -6,5 +6,5 @@ export const Route = {
         registerDevice: 'registerDevice'
     },
 
-    selectDevice: 'selectDevice'
+    selectDevice: ''
 }
