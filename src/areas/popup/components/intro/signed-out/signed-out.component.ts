@@ -8,7 +8,8 @@ import { Strings } from '../../../../../assets/strings/strings';
  */
 @Component({
     selector: 'signed-out',
-    templateUrl: './signed-out.html'
+    templateUrl: './signed-out.html',
+    styleUrls: [ './signed-out.css' ]
 })
 export class SignedOutComponent {
 

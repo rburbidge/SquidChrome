@@ -37,7 +37,11 @@ Are you sure you want to delete ${deviceName}?`,
 
     public intro = {
         descriptionLine1: 'Welcome to Squid!',
-        descriptionLine2: 'Squid lets you send web pages between your devices!'
+        descriptionLine2: 'Squid lets you send web pages between your devices!',
+
+        signInLine1: 'Sign in to your Google account!',
+        signInLine2: 'Squid provides a secure experience using Google authentication.',
+        signIn: 'Sign in',
     };
 
     /**
@@ -51,13 +55,5 @@ Are you sure you want to delete ${deviceName}?`,
         pageCannotBeSentOptions: 'Click this while on a different tab. This page cannot be sent.',
         sendingTo: (deviceName: string) => `Sending to ${deviceName}...`,
         sentTo: (deviceName: string) => `Sent to ${deviceName}!`,
-    };
-
-    /**
-     * Strings for the signed out component.
-     */
-    public signedOut = {
-        signedOutMessage: 'Squid requires you to be signed into Google Chrome',
-        signIn: 'Sign in',
     };
 }
