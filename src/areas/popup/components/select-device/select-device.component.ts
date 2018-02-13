@@ -65,13 +65,30 @@ export class SelectDeviceComponent implements OnInit {
                 this.devices = devices;
                 this.isLoading = false;
             })
-            .catch((error: ErrorModel) => {
-                if (error && error.code == ErrorCode.UserNotFound) {
+            .catch((error: ErrorModel) => this.handleError(error));
+    }
+
+    private handleError(error: ErrorModel): Promise<void> {
+        const getSettings = this.settingsService.getSettings();
+        const getIsSignedIn = this.chromeService.isSignedIntoChrome();
+
+        return Promise.all([getSettings, getIsSignedIn])
+            .then(results => {
+                const isInitialized = results[0].initialized;
+                const isSignedIn = results[1];
+
+                // Redirect to the intro if not initialized, or user not found on the server, or not signed into Chrome
+                if(!isInitialized
+                    || (error && error.code == ErrorCode.UserNotFound)
+                    || !isSignedIn)
+                {
                     this.goToIntroComponent();
-                } else {
-                    this.onError(this.strings.devices.refreshError);
+                    return;
                 }
+
+                this.onError(this.strings.devices.refreshError);
                 this.isLoading = false;
+                return;
             });
     }
 

@@ -44,7 +44,7 @@ export class ChromeService {
      * @returns True iff the sign in succeeded, or was already signed in.
      */
     public signIntoChrome(): Promise<boolean> {
-        return ChromeAuthHelper.createAuthHeader()
+        return ChromeAuthHelper.createAuthHeader(true)
             .then(authHeader => !!authHeader)
             .catch(reason => false);
     }
