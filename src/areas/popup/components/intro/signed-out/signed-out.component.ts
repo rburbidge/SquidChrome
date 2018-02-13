@@ -16,7 +16,10 @@ export class SignedOutComponent {
 
     constructor(private readonly chromeService: ChromeService) { }
 
-    /** Sign the user in. Once the user is signed in, open the options page. */
+    /**
+     * Sign the user in.
+     * @returns true iff the user signs in.
+     */
     public signIn(): Promise<boolean> {
         return this.chromeService.signIntoChrome();
     }
