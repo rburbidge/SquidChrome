@@ -4,6 +4,7 @@ import { ChromeService } from '../../../services/chrome.service';
 import { loadCss } from '../../testing/css-loader';
 import { MockChromeService } from '../../../services/testing/chrome.service.mock';
 import { SignedOutComponent } from './signed-out.component';
+import { IntroBottomComponent } from '../intro-bottom/intro-bottom.component';
 
 describe('SignedOutComponent', () => {
     let chromeService: ChromeService;
@@ -22,7 +23,7 @@ describe('SignedOutComponent', () => {
           };
 
         TestBed.configureTestingModule({
-            declarations: [ SignedOutComponent ],
+            declarations: [ IntroBottomComponent, SignedOutComponent ],
             providers: [
                 { provide: ChromeService, useValue: new MockChromeService() }
             ]

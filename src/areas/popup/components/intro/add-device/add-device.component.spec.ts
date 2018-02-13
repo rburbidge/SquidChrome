@@ -6,6 +6,7 @@ import { AddDeviceComponent } from './add-device.component';
 import { DeviceService } from '../../../services/device.service';
 import { DeviceType } from '../../../../../contracts/squid';
 import { GcmService } from '../../../services/gcm.service';
+import { IntroBottomComponent } from '../intro-bottom/intro-bottom.component';
 import { loadCss } from '../../testing/css-loader';
 import { MockDeviceService } from '../../../services/testing/device.service.mock';
 import { Route } from '../../../routing/route';
@@ -31,7 +32,7 @@ describe('AddDeviceComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ AddDeviceComponent ],
+            declarations: [ IntroBottomComponent, AddDeviceComponent ],
             imports: [ RouterTestingModule ],
             providers: [
                 { provide: DeviceService, useValue: new MockDeviceService() },
