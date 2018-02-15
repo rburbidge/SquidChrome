@@ -6,7 +6,7 @@ import { Route } from "../../../routing/route";
 import { Strings } from "../../../../../assets/strings/strings";
 
 /**
- * The select device page for the pop-up. Allows the user to manage their registered devices.
+ * Shows a description of the app.
  */
 @Component({
     selector: 'description',
@@ -24,13 +24,7 @@ export class DescriptionComponent {
     public onNext(): Promise<any> {
         return this.chromeService.isSignedIntoChrome()
             .then(isSignedIn => {
-                let newRoute: string;
-                if(!isSignedIn) {
-                    newRoute = Route.intro.signIn
-                } else {
-                    newRoute = Route.intro.registerDevice;
-                }
-
+                const newRoute = isSignedIn ? Route.intro.registerDevice : Route.intro.signIn;
                 this.router.navigate([ newRoute ], { relativeTo: this.route});
             });
     }

@@ -39,7 +39,7 @@ describe('SignedOutComponent', () => {
     })
 
     describe('signIn()', () => {
-        it('Opens the page if the user signs in', (done) => {
+        it('Calls ChromeService.signIntoChrome()', (done) => {
             const signInSpy = spyOn(chromeService, 'signIntoChrome').and.returnValue(Promise.resolve(true));
 
             comp.signIn()

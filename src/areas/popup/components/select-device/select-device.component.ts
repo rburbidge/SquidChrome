@@ -14,7 +14,7 @@ import { UrlHelper } from '../../../common/url-helper';
 import { WindowService } from '../../services/window.service';
 
 /**
- * The select device page for the pop-up. Allows the user to manage their registered devices.
+ * Shows the user's devices. Selecting a device sends the current tab's URL to that device.
  */
 @Component({
     selector: 'select-device',
