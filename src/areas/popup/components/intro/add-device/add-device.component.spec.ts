@@ -1,15 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { AddDeviceComponent } from './add-device.component';
-import { DeviceService } from '../../services/device.service';
-import { DeviceType } from '../../../../contracts/squid';
-import { GcmService } from '../../services/gcm.service';
-import { loadCss } from '../testing/css-loader';
-import { MockDeviceService } from '../../services/testing/device.service.mock';
-import { Route } from '../../routing/route';
-import { RouterTestingModule } from '@angular/router/testing';
-import { SettingsService } from '../../services/settings.service';
+import { DeviceService } from '../../../services/device.service';
+import { DeviceType } from '../../../../../contracts/squid';
+import { GcmService } from '../../../services/gcm.service';
+import { IntroBottomComponent } from '../intro-bottom/intro-bottom.component';
+import { loadCss } from '../../testing/css-loader';
+import { MockDeviceService } from '../../../services/testing/device.service.mock';
+import { Route } from '../../../routing/route';
+import { SettingsService } from '../../../services/settings.service';
 
 describe('AddDeviceComponent', () => {
     let deviceService: DeviceService;
@@ -31,7 +32,7 @@ describe('AddDeviceComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ AddDeviceComponent ],
+            declarations: [ IntroBottomComponent, AddDeviceComponent ],
             imports: [ RouterTestingModule ],
             providers: [
                 { provide: DeviceService, useValue: new MockDeviceService() },
@@ -62,7 +63,7 @@ describe('AddDeviceComponent', () => {
                     expect(addDeviceSpy).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: 'GCM token', deviceType: DeviceType.chrome});
                     expect(setInitalizedSpy).toHaveBeenCalledTimes(1);
                     expect(navigateSpy).toHaveBeenCalledTimes(1);
-                    expect(navigateSpy).toHaveBeenCalledWith(Route.options);
+                    expect(navigateSpy).toHaveBeenCalledWith(Route.selectDevice);
                     done();
                 })
         });

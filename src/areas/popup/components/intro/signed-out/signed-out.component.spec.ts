@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChromeService } from '../../services/chrome.service';
-import { loadCss } from '../testing/css-loader';
-import { MockChromeService } from '../../services/testing/chrome.service.mock';
+import { ChromeService } from '../../../services/chrome.service';
+import { loadCss } from '../../testing/css-loader';
+import { MockChromeService } from '../../../services/testing/chrome.service.mock';
 import { SignedOutComponent } from './signed-out.component';
-import { UrlHelper } from '../../../common/url-helper';
+import { IntroBottomComponent } from '../intro-bottom/intro-bottom.component';
 
 describe('SignedOutComponent', () => {
     let chromeService: ChromeService;
@@ -23,7 +23,7 @@ describe('SignedOutComponent', () => {
           };
 
         TestBed.configureTestingModule({
-            declarations: [ SignedOutComponent ],
+            declarations: [ IntroBottomComponent, SignedOutComponent ],
             providers: [
                 { provide: ChromeService, useValue: new MockChromeService() }
             ]
@@ -39,14 +39,12 @@ describe('SignedOutComponent', () => {
     })
 
     describe('signIn()', () => {
-        it('Opens options page if the user signs in', (done) => {
+        it('Calls ChromeService.signIntoChrome()', (done) => {
             const signInSpy = spyOn(chromeService, 'signIntoChrome').and.returnValue(Promise.resolve(true));
-            const openOptionsPageSpy = spyOn(UrlHelper, 'openOptionsPage').and.returnValue(undefined);
 
             comp.signIn()
                 .then(() => {
                     expect(signInSpy).toHaveBeenCalledTimes(1);
-                    expect(openOptionsPageSpy).toHaveBeenCalledTimes(1);
                     done();
                 });
         });

@@ -4,12 +4,14 @@
 export class Strings {
     public loading = 'Loading...';
     public name = 'Name';
+    public next = 'Next';
     public retry = 'Retry';
-
+    
     /**
      * Strings for the add device flow.
      */
     public addDevice = {
+        line1: "What's the name of this device?",
         addDevice: 'Add device',
         addingDevice: 'Registering your device...',
         defaultDeviceName: 'Chrome Browser',
@@ -33,6 +35,15 @@ Are you sure you want to delete ${deviceName}?`,
         selectDevice: 'Select a device'
     };
 
+    public intro = {
+        descriptionLine1: 'Welcome to Squid!',
+        descriptionLine2: 'Squid lets you send web pages between your devices!',
+
+        signInLine1: 'Sign in to your Google account!',
+        signInLine2: 'Squid provides a secure experience using Google authentication.',
+        signIn: 'Sign in',
+    };
+
     /**
      * Strings for the send page pop-up action.
      */
@@ -44,13 +55,5 @@ Are you sure you want to delete ${deviceName}?`,
         pageCannotBeSentOptions: 'Click this while on a different tab. This page cannot be sent.',
         sendingTo: (deviceName: string) => `Sending to ${deviceName}...`,
         sentTo: (deviceName: string) => `Sent to ${deviceName}!`,
-    };
-
-    /**
-     * Strings for the signed out component.
-     */
-    public signedOut = {
-        signedOutMessage: 'Squid requires you to be signed into Google Chrome',
-        signIn: 'Sign in',
     };
 }

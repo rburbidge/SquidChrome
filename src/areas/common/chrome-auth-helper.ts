@@ -1,10 +1,12 @@
 export class ChromeAuthHelper {
     /**
-     * Creates an Authorization header for the user signed-in to Google Chrome. Signs the user in if they are signed out.
+     * Creates an Authorization header for the user signed-in to Google Chrome.
+     * @param interactiveSignIn If true, prompts the user to sign in, which opens up the Chrome Browser sign-in page
+     * and kills the current viewport. If false, throws an error.
      */
-    public static createAuthHeader(): Promise<string> {
+    public static createAuthHeader(interactiveSignIn: boolean = false): Promise<string> {
         return new Promise((resolve, reject) => {
-            chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
+            chrome.identity.getAuthToken({ 'interactive': interactiveSignIn }, (token) => {
                 if (chrome.runtime.lastError) {
                     reject(chrome.runtime.lastError);
                     return;

@@ -1,5 +1,10 @@
-export enum Route {
-    addDevice = 'adddevice',
-    options = '/',
-    signedOut = 'signedout'
+export const Route = {
+    intro: {
+        base: 'intro',
+        description: '',
+        signIn: 'signIn',
+        registerDevice: 'registerDevice'
+    },
+
+    selectDevice: ''
 }

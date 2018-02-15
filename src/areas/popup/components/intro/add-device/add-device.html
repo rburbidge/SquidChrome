@@ -1,0 +1,18 @@
+<div *ngIf="isLoading" class="row text-center fade-in">
+    <div class="row">{{strings.addDevice.addingDevice}}</div>
+    <div class="row spacer-12-top">
+        <div class="loader"></div>
+    </div>
+</div>
+
+<intro-bottom *ngIf="!isLoading">
+    <div class="top">
+        <div class="form-group">
+            <h4>{{strings.addDevice.line1}}</h4>
+            <input type="text" #deviceName class="form-control" id="name" value="{{strings.addDevice.defaultDeviceName}}" required autofocus>
+        </div>
+    </div>
+    <div class="bottom">
+        <button (click)="addDevice(deviceName.value)" class="btn btn-primary">{{strings.addDevice.addDevice}}</button>
+    </div>
+</intro-bottom>

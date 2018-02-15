@@ -14,7 +14,7 @@ import { UrlHelper } from '../../../common/url-helper';
 import { WindowService } from '../../services/window.service';
 
 /**
- * The options page. Allows the user to manage their registered devices.
+ * Shows the user's devices. Selecting a device sends the current tab's URL to that device.
  */
 @Component({
     selector: 'select-device',
@@ -58,28 +58,45 @@ export class SelectDeviceComponent implements OnInit {
         return this.deviceService.getDevices()
             .then(devices => {
                 if(!devices || devices.length == 0) {
-                    this.goToAddDeviceComponent();
+                    this.goToIntroComponent();
                     return;
                 }
 
                 this.devices = devices;
                 this.isLoading = false;
             })
-            .catch((error: ErrorModel) => {
-                if (error && error.code == ErrorCode.UserNotFound) {
-                    this.goToAddDeviceComponent();
-                } else {
-                    this.onError(this.strings.devices.refreshError);
+            .catch((error: ErrorModel) => this.handleError(error));
+    }
+
+    private handleError(error: ErrorModel): Promise<void> {
+        const getSettings = this.settingsService.getSettings();
+        const getIsSignedIn = this.chromeService.isSignedIntoChrome();
+
+        return Promise.all([getSettings, getIsSignedIn])
+            .then(results => {
+                const isInitialized = results[0].initialized;
+                const isSignedIn = results[1];
+
+                // Redirect to the intro if not initialized, or user not found on the server, or not signed into Chrome
+                if(!isInitialized
+                    || (error && error.code == ErrorCode.UserNotFound)
+                    || !isSignedIn)
+                {
+                    this.goToIntroComponent();
+                    return;
                 }
+
+                this.onError(this.strings.devices.refreshError);
                 this.isLoading = false;
+                return;
             });
     }
 
     /**
-     * Navigates the the add device component.
+     * Navigates to the intro component.
      */
-    private goToAddDeviceComponent() {
-        // TODO Implement go to add device component
+    private goToIntroComponent() {
+        this.router.navigateByUrl(Route.intro.base);
     }
 
     private onError(error: string): void {

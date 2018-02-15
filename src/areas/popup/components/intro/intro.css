@@ -1,0 +1,16 @@
+.intro {
+    text-align: center;
+    color: white;
+}
+
+.intro .intro-top {
+    height: 50%;
+}
+
+.intro .intro-top img {
+    height: 100%;
+}
+
+.intro .intro-bottom {
+    height: 50%;
+}

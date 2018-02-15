@@ -1,0 +1,10 @@
+button {
+    width: 50%;
+}
+
+input {
+    background-color: transparent;
+    border: none;
+    text-align: center;
+    color: white;
+}
