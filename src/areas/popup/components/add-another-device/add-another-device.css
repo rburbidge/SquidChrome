@@ -1,0 +1,18 @@
+.add-another-device {
+    margin: 0 30px 0 30px;
+    text-align: center;
+    padding-top: 5px;
+    color: white;
+}
+
+.unselectable {
+    user-select: none;
+}
+
+img {
+    width: 100%;
+}
+
+button {
+    width: 50%;
+}

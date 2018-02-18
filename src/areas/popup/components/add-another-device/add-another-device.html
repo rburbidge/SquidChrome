@@ -1,0 +1,9 @@
+<div class="add-another-device">
+    <h4 class="unselectable">{{strings.addAnotherDevice.line1}}</h4>
+    <p class="unselectable">{{strings.addAnotherDevice.line2}}</p>
+
+    <img (click)="openPlayStore()" chromeExtSrc="src/assets/images/google_play_badge.png" role="button"/>
+    <img (click)="openChromeWebStore()" chromeExtSrc="src/assets/images/chrome_web_store_badge.png" role="button"/>
+
+    <button (click)="back()" class="btn btn-primary">{{strings.later}}</button>
+</div>

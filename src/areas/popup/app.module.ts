@@ -3,6 +3,7 @@ import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import { AddAnotherDeviceComponent } from './components/add-another-device/add-another-device.component';
 import { AddDeviceComponent } from './components/intro/add-device/add-device.component';
 import { AppComponent } from './components/app/app.component';
 import { ChromeExtensionSourceDirective } from '../common/directives/chrome-ext-src.directive';
@@ -30,6 +31,10 @@ import { WindowService } from './services/window.service';
                 component: SelectDeviceComponent
             },
             {
+                path: Route.addAnotherDevice,
+                component: AddAnotherDeviceComponent
+            },
+            {
                 path: Route.intro.base,
                 component: IntroComponent,
                 children: [
@@ -43,6 +48,7 @@ import { WindowService } from './services/window.service';
     declarations: [
         AppComponent,
         
+        AddAnotherDeviceComponent,
         DeveloperComponent,
         SelectDeviceComponent,
 

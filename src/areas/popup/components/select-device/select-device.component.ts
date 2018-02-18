@@ -99,6 +99,10 @@ export class SelectDeviceComponent implements OnInit {
         this.router.navigateByUrl(Route.intro.base);
     }
 
+    private addAnotherDevice(): void {
+        this.router.navigateByUrl(Route.addAnotherDevice);
+    }
+
     private onError(error: string): void {
         this.isLoading = false;
         this.error = error;

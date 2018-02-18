@@ -2,6 +2,7 @@
  * The app strings.
  */
 export class Strings {
+    public later = 'Later';
     public loading = 'Loading...';
     public name = 'Name';
     public next = 'Next';
@@ -17,10 +18,17 @@ export class Strings {
         defaultDeviceName: 'Chrome Browser',
     };
 
+    public addAnotherDevice = {
+        line1: 'Add another device!',
+        line2: 'To add another device, simply install and run Squid on that device!'
+    };
+
     /**
      * Strings for the devices flow.
      */
     public devices = {
+        addDevice: 'Add a device',
+
         deleteComplete: (deviceName: string) => `${deviceName} has been deleted`,
         deleteConfirm: (deviceName: string) => `To use this ${deviceName} again, you will need to register it through the Squid app on your Android device.
         

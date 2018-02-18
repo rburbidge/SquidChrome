@@ -29,6 +29,13 @@ export class ChromeService {
     }
 
     /**
+     * Opens a new tab to a given URL.
+     */
+    public openTab(url: string): void {
+        chrome.tabs.create({ url: url });
+    }
+
+    /**
      * Returns true if the extension was installed from an unpacked folder, rather than from a .crx file.
      */
     public isDevMode(): boolean {
