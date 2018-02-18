@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { AddDeviceComponent } from './add-device.component';
 import { DeviceService } from '../../../services/device.service';
-import { DeviceType } from '../../../../../contracts/squid';
+import { DeviceType, DeviceModel } from '../../../../../contracts/squid';
 import { GcmService } from '../../../services/gcm.service';
 import { IntroBottomComponent } from '../intro-bottom/intro-bottom.component';
 import { loadCss } from '../../testing/css-loader';
@@ -55,13 +55,16 @@ describe('AddDeviceComponent', () => {
 
     describe('addDevice()', () => {
         it('Base success case: Makes correct calls', (done) => {
+            setupGetDevicesReturns([null, null]);
             setupMocks();
+
             comp.addDevice(null)
                 .then(device => {
                     expect(gcmRegisterSpy).toHaveBeenCalledTimes(1);
                     expect(addDeviceSpy).toHaveBeenCalledTimes(1);
                     expect(addDeviceSpy).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: 'GCM token', deviceType: DeviceType.chrome});
                     expect(setInitalizedSpy).toHaveBeenCalledTimes(1);
+                    expect(deviceService.getDevices).toHaveBeenCalledTimes(1);
                     expect(navigateSpy).toHaveBeenCalledTimes(1);
                     expect(navigateSpy).toHaveBeenCalledWith(Route.selectDevice);
                     done();
@@ -98,12 +101,39 @@ describe('AddDeviceComponent', () => {
                     done();
                 })
         });
+
+        it("Redirects to SelectDeviceComponent if user has other devices", (done) => {
+            setupGetDevicesReturns([null, null]);
+            setupMocks();
+            comp.addDevice(null)
+                .then(device => {
+                    expect(router.navigateByUrl).toHaveBeenCalledWith(Route.selectDevice);
+                    done();
+                });
+        });
+
+        it("Redirects to AddOtherDeviceComponent if user has no other devices", (done) => {
+            setupGetDevicesReturns(undefined);
+            setupMocks();
+            comp.addDevice(null)
+                .then(device => {
+                    expect(router.navigate).toHaveBeenCalledWith(
+                        [Route.addAnotherDevice],
+                        { queryParams: { returnUrl: Route.selectDevice }});
+                    done();
+                });
+        });
     });
+
+    function setupGetDevicesReturns(devices: DeviceModel[]) {
+        spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices));
+    }
 
     function setupMocks(gcmToken: string = "GCM token") {
         gcmRegisterSpy = spyOn(gcmService, "register").and.returnValue(Promise.resolve(gcmToken));
         addDeviceSpy = spyOn(deviceService, "addDevice").and.returnValue(Promise.resolve());
         navigateSpy = spyOn(router, "navigateByUrl").and.returnValue(Promise.resolve());
+        spyOn(router, 'navigate').and.returnValue(Promise.resolve());
         setInitalizedSpy = spyOn(settingsService, "setInitialized").and.returnValue(Promise.resolve());
     }
 });
