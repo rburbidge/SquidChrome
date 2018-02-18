@@ -26,6 +26,16 @@
     user-select: none;
 }
 
-img {
+.badges {
+    margin-top: 20px;
+}
+
+.badges img {
     width: 100%;
+    padding: 3px;
+}
+
+.badges img:hover {
+    background-color: orange;
+    transition: background 0.25s linear;
 }
