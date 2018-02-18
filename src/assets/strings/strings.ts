@@ -2,6 +2,7 @@
  * The app strings.
  */
 export class Strings {
+    public later = 'Later';
     public loading = 'Loading...';
     public name = 'Name';
     public next = 'Next';
@@ -17,28 +18,29 @@ export class Strings {
         defaultDeviceName: 'Chrome Browser',
     };
 
+    public addAnotherDevice = {
+        line1: 'Add another device!',
+        line2: 'To add another device, simply install and run Squid on that device!'
+    };
+
     /**
      * Strings for the devices flow.
      */
     public devices = {
+        addDevice: 'Add a device',
         deleteComplete: (deviceName: string) => `${deviceName} has been deleted`,
         deleteConfirm: (deviceName: string) => `To use this ${deviceName} again, you will need to register it through the Squid app on your Android device.
-        
 Are you sure you want to delete ${deviceName}?`,
         deleteError: 'An error occurred while removing the device. Please try again later.',
-
         noDevicesTitle: 'No devices found',
         noDevicesMessage: 'Install Squid on your Android phone, and then retry!',
-
         refreshError: 'Oops! An error occurred while retrieving your settings. Try again later.',
-
         selectDevice: 'Select a device'
     };
 
     public intro = {
         descriptionLine1: 'Welcome to Squid!',
         descriptionLine2: 'Squid lets you send web pages between your devices!',
-
         signInLine1: 'Sign in to your Google account!',
         signInLine2: 'Squid provides a secure experience using Google authentication.',
         signIn: 'Sign in',
