@@ -38,10 +38,18 @@ export class AddDeviceComponent {
         }
 
         return this.gcmService.register([Config.gcmSenderId])
-            .then(gcmToken => {
-                this.deviceService.addDevice({name: name, gcmToken: gcmToken, deviceType: DeviceType.chrome})
-                    .then(() => this.settingsService.setInitialized())
-                    .then(() => this.router.navigateByUrl(Route.selectDevice));
+            .then(gcmToken => this.deviceService.addDevice({name: name, gcmToken: gcmToken, deviceType: DeviceType.chrome}))
+            .then(() => this.settingsService.setInitialized())
+            .then(() => this.deviceService.getDevices())
+            .then(devices => {
+                // Send user to SelectDeviceComponent if they had other devices; AddOtherDeviceComponent otherwise
+                const selectDeviceRoute = Route.selectDevice;
+                if(!devices || devices.length <=1) {
+                    return this.router.navigate(
+                        [Route.addAnotherDevice], { queryParams: { returnUrl: selectDeviceRoute } });
+                } else {
+                    return this.router.navigateByUrl(selectDeviceRoute);
+                }
             })
             .catch(error => {
                 // TODO Show some error message. Figure out how to do this in a uniform way
