@@ -21,6 +21,7 @@ import { SelectDeviceComponent } from './components/select-device/select-device.
 import { SettingsService } from './services/settings.service';
 import { SignedOutComponent } from './components/intro/signed-out/signed-out.component';
 import { WindowService } from './services/window.service';
+import { OptionsComponent } from './components/options/options.component';
 
 @NgModule({
     imports: [
@@ -34,6 +35,10 @@ import { WindowService } from './services/window.service';
             {
                 path: Route.addAnotherDevice,
                 component: AddAnotherDeviceComponent
+            },
+            {
+                path: Route.options,
+                component: OptionsComponent
             },
             {
                 path: Route.intro.base,
@@ -52,6 +57,7 @@ import { WindowService } from './services/window.service';
         AddAnotherDeviceComponent,
         DeveloperComponent,
         MenuComponent,
+        OptionsComponent,
         SelectDeviceComponent,
 
         // Intro Components
