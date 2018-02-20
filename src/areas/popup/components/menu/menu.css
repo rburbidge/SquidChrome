@@ -1,0 +1,33 @@
+/* .menu {
+    color: white;
+    margin: 0;
+}
+
+.icon {
+    padding: 0 0 0 15px;
+}
+
+.options-button {
+    float: right;
+    color: orange;
+}
+
+.unselectable {
+    user-select: none;
+} */
+
+.menu {
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 5px;
+}
+
+.filler {
+    flex-grow: 1;
+}
+
+.options-button {
+    font-size: 30px;
+    text-decoration: none;
+}
