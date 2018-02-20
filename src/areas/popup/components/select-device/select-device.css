@@ -5,6 +5,11 @@
     background-color: #252839;
 }
 
+.header {
+    margin: 0;
+    margin-bottom: 5px;
+}
+
 .device-grid {
     display: flex;
     flex-flow: wrap;
