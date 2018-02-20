@@ -2,85 +2,25 @@
 
 .squid-body {
     background-color: #252839;
-    min-width: 350px;
+    width: 350px;
     min-height: 350px;
     border-left: 3px solid white;
     border-right: 3px solid white;
 }
 
-/* Squid intro */
-.squid-intro {
-    max-width: 500px;
+.color-primary {
+    color: orange;
 }
 
-/* Squid options page */
-
-.squid-options {
-    padding: 0;
-    padding-top: 50px;
-    color: white;
-    background-color: #252839;
-}
+/* Basic fade-in */
 
 .fade-in {
     animation: fadein 0.5s;
 }
 
-.squid-header {
-    font-size: 18px;
-}
-
 @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
-}
-
-.squid-icon {
-    font-size: 36px !important;
-}
-
-.squid-panel {
-    color: #666;
-    background-color: #e1e1e1;
-}
-
-.squid-device {
-    padding: 10px;
-    cursor: pointer;
-    animation: fadein 1s;
-}
-
-.squid-device:hover {
-    color: white;
-    background-color: #337ab7;
-    transition: background 0.25s linear;
-}
-
-.squid-device-selected {
-    background-color: #f2b632;
-}
-
-.squid-device-selected:hover {
-    background-color: #C8B052;
-}
-
-.squid-device-name {
-    font-size: 18px;
-}
-
-.squid-device-list {
-    padding: 0;
-}
-
-/* Pop-up */
-.squid-popup {
-    white-space: pre;
-    font-size: 15px;
-}
-
-.squid-dev-options {
-    margin-top: 100px;
-    padding: 10px;
 }
 
 /* Loader */
@@ -100,19 +40,6 @@
     100% { transform: rotate(360deg); }
 }
 
-/* Helpers */
-
-.vcenter {
-    display: inline-block;
-    vertical-align: middle;
-    float: none;
-}
-
-.vertical-align {
-    display: flex;
-    align-items: center;
-}
-
-.spacer-12-top {
-    padding-top: 12px;
+.loader-text {
+    padding-bottom: 12px;
 }
