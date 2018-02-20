@@ -1,6 +1,6 @@
 <div class="container select-device">
     <div *ngIf="isLoading" class="row text-center fade-in loader-container">
-        <div class="row spacer-12-top">
+        <div class="row">
             <div class="loader"></div>
         </div>
     </div>
@@ -30,7 +30,7 @@
             <div *ngIf="devices.length % 2 == 0" class="device empty"></div>
         </div>
 
-        <div *ngIf="!devices || devices.length == 0" class="row spacer-12-top text-center">
+        <div *ngIf="!devices || devices.length == 0" class="row text-center">
             <button class="btn btn-primary" (click)="refreshDevices()">{{strings.retry}}</button>
         </div>
     </div>
