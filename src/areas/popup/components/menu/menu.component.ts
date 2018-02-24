@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
+import { Location } from '@angular/common';
 
 import { Strings } from "../../../../assets/strings/strings";
 
@@ -10,5 +11,14 @@ import { Strings } from "../../../../assets/strings/strings";
 export class MenuComponent {
     public readonly strings: Strings = new Strings();
 
-    constructor() { }
+    @Input("showLogo") showSquidLogo: boolean;
+    @Input("showOptions") showOptionsButton: boolean;
+    @Input("showBack") showBackButton: boolean;
+    @Input() title: string = this.strings.title;
+
+    constructor(private readonly location: Location) { }
+
+    back(): void {
+        this.location.back();
+    }
 }

@@ -2,6 +2,7 @@
  * The app strings.
  */
 export class Strings {
+    public title = 'Squid';
     public later = 'Later';
     public loading = 'Loading...';
     public name = 'Name';
@@ -57,5 +58,9 @@ Are you sure you want to delete ${deviceName}?`,
         pageCannotBeSentOptions: 'Click this while on a different tab. This page cannot be sent.',
         sendingTo: (deviceName: string) => `Sending to ${deviceName}...`,
         sentTo: (deviceName: string) => `Sent to ${deviceName}!`,
+    };
+
+    public options = {
+        title: 'Settings'
     };
 }
