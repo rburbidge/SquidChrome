@@ -15,7 +15,7 @@ import { IsAppInitialized } from './routing/is-app-initialized';
 import { DeveloperComponent } from './components/developer/developer.component';
 import { DeviceService } from './services/device.service';
 import { GcmService } from './services/gcm.service';
-import { MenuComponent } from './components/menu/menu.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { Route } from './routing/route';
 import { SelectDeviceComponent } from './components/select-device/select-device.component';
 import { SettingsService } from './services/settings.service';
@@ -56,9 +56,9 @@ import { OptionsComponent } from './components/options/options.component';
         
         AddAnotherDeviceComponent,
         DeveloperComponent,
-        MenuComponent,
         OptionsComponent,
         SelectDeviceComponent,
+        ToolbarComponent,
 
         // Intro Components
         IntroComponent,

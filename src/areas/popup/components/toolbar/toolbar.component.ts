@@ -4,11 +4,11 @@ import { Location } from '@angular/common';
 import { Strings } from "../../../../assets/strings/strings";
 
 @Component({
-    selector: 'squid-menu',
-    templateUrl: './menu.html',
-    styleUrls: [ './menu.css' ]
+    selector: 'squid-toolbar',
+    templateUrl: './toolbar.html',
+    styleUrls: [ './toolbar.css' ]
 })
-export class MenuComponent {
+export class ToolbarComponent {
     public readonly strings: Strings = new Strings();
 
     @Input("showLogo") showSquidLogo: boolean;
