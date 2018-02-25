@@ -32,7 +32,8 @@ describe('SelectDeviceComponent', () => {
     let getSettings: jasmine.Spy;
 
     beforeAll(() => {
-        loadCss(['areas/popup/components/select-device/select-device.css']);
+        loadCss(['areas/popup/components/select-device/select-device.css',
+                 'areas/popup/components/toolbar/toolbar.css']);
     });
 
     beforeEach(async(() => {
