@@ -5,18 +5,16 @@ import $ from 'jquery';
  * @param styleUrls Set of CSS files to load. Must be relative to /src folder.
  */
 export function loadCss(styleUrls?: string[]) {
+    // Load default CSS
+    $('body').append(
+        `<link rel="stylesheet" href="/base/src/assets/css/squid.css" />
+         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+         <link rel="stylesheet" href="/base/node_modules/bootstrap/dist/css/bootstrap.min.css"/>`);
+
     // Load input CSS
     if(styleUrls) {
         for(let styleUrl of styleUrls) {
             $('body').append(`<link rel="stylesheet" href="/base/src/${styleUrl}" />`);
         }
     }
-
-    // Load default CSS
-    $('body').append(
-        `<link rel="stylesheet" href="/base/src/assets/css/squid.css" />
-         <link rel="stylesheet" href="/base/src/assets/lib/material-3.0.2.css" />
-         <link rel="stylesheet" href="/base/src/areas/popup/components/select-device/select-device.css" />
-         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-         <link rel="stylesheet" href="/base/node_modules/bootstrap/dist/css/bootstrap.min.css" />`);
 }
