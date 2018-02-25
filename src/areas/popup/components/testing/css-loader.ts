@@ -1,7 +1,13 @@
 import $ from 'jquery';
 
 /** Add styles to the page so that we can see what each test would look like in production. */
-export function loadCss() {
+export function loadCss(styleUrls?: string[]) {
+    if(styleUrls) {
+        for(let styleUrl of styleUrls) {
+            $('body').append(`<link rel="stylesheet" href="/base/src/${styleUrl}" />`);
+        }
+    }
+
     $('body').append(
         `<link rel="stylesheet" href="/base/src/assets/css/squid.css" />
          <link rel="stylesheet" href="/base/src/assets/lib/material-3.0.2.css" />
