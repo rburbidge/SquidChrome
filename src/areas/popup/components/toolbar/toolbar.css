@@ -1,0 +1,25 @@
+.toolbar {
+    display: flex;
+    align-items: center;
+    color: white;
+    height:48px;
+}
+
+.logo {
+    height: 100%;
+}
+
+.button {
+    font-size: 30px;
+    text-decoration: none;
+    min-width: 48px;
+    text-align: center;
+}
+
+.title {
+    margin: 0 5px 0 5px;
+}
+
+.filler {
+    flex-grow: 1;
+}

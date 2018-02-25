@@ -16,6 +16,7 @@ import { Settings, SettingsService } from '../../services/settings.service';
 import { WindowService } from '../../services/window.service';
 import { ChromeDeviceModel } from '../../services/squid-converter';
 import { Route } from '../../routing/route';
+import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 describe('SelectDeviceComponent', () => {
     let deviceService: DeviceService;
@@ -36,7 +37,7 @@ describe('SelectDeviceComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DeveloperComponent, SelectDeviceComponent ],
+            declarations: [ DeveloperComponent, SelectDeviceComponent, ToolbarComponent],
             imports: [ RouterTestingModule ],
             providers: [
                 { provide: ChromeService, useValue: new MockChromeService() },

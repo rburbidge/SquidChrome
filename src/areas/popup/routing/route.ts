@@ -7,6 +7,6 @@ export const Route = {
     },
 
     addAnotherDevice: 'add-another-device',
-
+    options: 'options',
     selectDevice: ''
 }

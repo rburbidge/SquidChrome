@@ -6,6 +6,7 @@
     min-height: 350px;
     border-left: 3px solid white;
     border-right: 3px solid white;
+    padding: 10px;
 }
 
 .color-primary {
@@ -38,6 +39,19 @@
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.loader-center-screen {
+    position: fixed;
+    z-index: 999;
+    height: 2em;
+    width: 2em;
+    overflow: show;
+    margin: auto;
+    top: -25px;
+    left: -25px;
+    bottom: 0;
+    right: 0;
 }
 
 .loader-text {
