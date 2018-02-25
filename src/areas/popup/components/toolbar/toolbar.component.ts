@@ -11,7 +11,7 @@ import { Strings } from "../../../../assets/strings/strings";
 export class ToolbarComponent {
     public readonly strings: Strings = new Strings();
 
-    @Input("showLogo") showSquidLogo: boolean;
+    @Input("showLogo") showLogo: boolean;
     @Input("showOptions") showOptionsButton: boolean;
     @Input("showBack") showBackButton: boolean;
     @Input() title: string = this.strings.title;
