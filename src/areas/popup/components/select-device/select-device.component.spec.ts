@@ -32,7 +32,7 @@ describe('SelectDeviceComponent', () => {
     let getSettings: jasmine.Spy;
 
     beforeAll(() => {
-        loadCss();
+        loadCss(['areas/popup/components/select-device/select-device.css']);
     });
 
     beforeEach(async(() => {
@@ -190,9 +190,10 @@ describe('SelectDeviceComponent', () => {
     });
 
     const devices: ChromeDeviceModel[] = [
-        { id: "id1", name: "Nexus 5X", deviceType: DeviceType.android, getIcon: () => "Icon" },
-        { id: "id3", name: "Pixel", deviceType: DeviceType.android, getIcon: () => "Icon" },
-        { id: "id2", name: "Samsung Galaxy", deviceType: DeviceType.android, getIcon: () => "Icon" },
+        { id: "id1", name: "Chrome Browser", deviceType: DeviceType.android, getIcon: () => "laptop" },
+        { id: "id1", name: "Nexus 5X", deviceType: DeviceType.android, getIcon: () => "phone_android" },
+        { id: "id3", name: "Pixel", deviceType: DeviceType.android, getIcon: () => "phone_android" },
+        { id: "id2", name: "Samsung Galaxy", deviceType: DeviceType.android, getIcon: () => "phone_android" },
     ];
 
     function createDevice(): ChromeDeviceModel {
