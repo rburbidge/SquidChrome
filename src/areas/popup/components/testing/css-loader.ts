@@ -8,7 +8,6 @@ export function loadCss(styleUrls?: string[]) {
     // Load default CSS
     $('body').append(
         `<link rel="stylesheet" href="/base/src/assets/css/squid.css" />
-         <link rel="stylesheet" href="/base/src/assets/css/lib/material-3.0.2.css" />
          <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
          <link rel="stylesheet" href="/base/node_modules/bootstrap/dist/css/bootstrap.min.css"/>`);
 
