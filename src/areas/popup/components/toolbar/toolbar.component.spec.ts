@@ -43,7 +43,7 @@ describe('ToolbarComponent', () => {
     });
 
     describe('Template', () => {
-        it('Shows back button', () => {
+        it('Back button is shown and can be clicked', () => {
             spyOn(comp, 'back');
             comp.showBackButton = true;
             fixture.detectChanges();
@@ -53,28 +53,56 @@ describe('ToolbarComponent', () => {
             expect(comp.back).toHaveBeenCalledTimes(1);
         });
 
-        it('Shows options button', () => {
+        it('Back button is not shown', () => {
+            comp.showBackButton = false;
+                testElementNotShownByCss('.back');
+        });
+
+        it('Options button is shown', () => {
             comp.showOptionsButton = true;
-            fixture.detectChanges();
-            let de = fixture.debugElement.query(By.css('.settings'));
-
-            expect(de).toBeTruthy();
+            testElementShownByCss('.settings');
         });
 
-        it('Shows logo', () => {
+        it('Options button is not shown', () => {
+            comp.showOptionsButton = false;
+            testElementNotShownByCss('.settings');
+        });
+
+        it('Logo is shown', () => {
             comp.showSquidLogo = true;
-            fixture.detectChanges();
-            let de = fixture.debugElement.query(By.css('.logo'));
-            
-            expect(de).toBeTruthy();
+            testElementShownByCss('.logo');
         });
 
-        it('Shows title', () => {
+        it('Logo is not shown', () => {
+            comp.showSquidLogo = false;
+            testElementNotShownByCss('.logo');
+        });
+
+        it('Title is shown as default value', () => {
+            fixture.detectChanges();
+            let de = fixture.debugElement.query(By.css('.title'));
+            
+            expect(de.nativeElement.textContent).toBe('Squid');
+        });
+
+        it('Title is shown and as inputted value', () => {
             comp.title = 'Foobar';
             fixture.detectChanges();
             let de = fixture.debugElement.query(By.css('.title'));
             
             expect(de.nativeElement.textContent).toBe(comp.title);
         });
+
+        function testElementNotShownByCss(cssSelector: string) {
+            fixture.detectChanges();
+            let de = fixture.debugElement.query(By.css(cssSelector));
+            expect(de).toBeFalsy(`${cssSelector} was shown, but expected it not to be shown`);
+        }
+
+        function testElementShownByCss(cssSelector: string) {
+            fixture.detectChanges();
+            let de = fixture.debugElement.query(By.css(cssSelector));
+            expect(de).toBeTruthy(`${cssSelector} was not shown, but expected it be shown`);
+        }
     });
 });
