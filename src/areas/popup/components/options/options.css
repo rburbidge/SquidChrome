@@ -1,7 +1,12 @@
 .option {
     color: white;
-    padding: 10px 0 10px 0;
+    padding: 0;
     border-top: 1px solid orange;
+    min-height: 58px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .last-option {
