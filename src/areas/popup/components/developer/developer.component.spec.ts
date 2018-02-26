@@ -8,6 +8,7 @@ import { MockChromeService } from '../../services/testing/chrome.service.mock';
 import { MockDeviceService } from '../../services/testing/device.service.mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Settings, SettingsService } from '../../services/settings.service';
+import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { WindowService } from '../../services/window.service';
 
 describe('DeveloperComponent', () => {
@@ -27,7 +28,7 @@ describe('DeveloperComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DeveloperComponent ],
+            declarations: [ DeveloperComponent, ToolbarComponent ],
             imports: [ RouterTestingModule ],
             providers: [
                 { provide: ChromeService, useValue: new MockChromeService() },
