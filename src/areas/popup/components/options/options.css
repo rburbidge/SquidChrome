@@ -1,0 +1,18 @@
+.option {
+    color: white;
+    padding: 10px 0 10px 0;
+    border-top: 1px solid orange;
+}
+
+.last-option {
+    border-bottom: 1px solid orange;
+}
+
+.option:hover {
+    background-color: orange;
+    transition: background 0.25s linear;
+}
+
+h4 {
+    margin: 0;
+}
