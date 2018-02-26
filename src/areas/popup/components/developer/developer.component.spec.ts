@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { ChromeService } from '../../services/chrome.service';
 import { DeveloperComponent } from '../developer/developer.component';
@@ -6,7 +8,7 @@ import { DeviceService } from '../../services/device.service';
 import { loadCss } from '../testing/css-loader';
 import { MockChromeService } from '../../services/testing/chrome.service.mock';
 import { MockDeviceService } from '../../services/testing/device.service.mock';
-import { RouterTestingModule } from '@angular/router/testing';
+import { Route } from '../../routing/route';
 import { Settings, SettingsService } from '../../services/settings.service';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { WindowService } from '../../services/window.service';
@@ -14,6 +16,7 @@ import { WindowService } from '../../services/window.service';
 describe('DeveloperComponent', () => {
     let deviceService: DeviceService;
     let chromeService: ChromeService;
+    let router: Router;
     let settingsService: SettingsService;
     let windowService: WindowService;
 
@@ -46,16 +49,19 @@ describe('DeveloperComponent', () => {
 
         deviceService = TestBed.get(DeviceService);
         chromeService = TestBed.get(ChromeService);
+        router = TestBed.get(Router);
         settingsService = TestBed.get(SettingsService);
         windowService = TestBed.get(WindowService);
     });
 
     describe('addDevice()', () => {
         it('Adds a fake device', (done) => {
-            const addDeviceSpy = spyOn(deviceService, "addDevice").and.returnValue(Promise.resolve());
+            spyOn(deviceService, "addDevice").and.returnValue(Promise.resolve());
+            spyOn(router, 'navigateByUrl');
             comp.addDevice()
                 .then(() => {
-                    expect(addDeviceSpy).toHaveBeenCalledTimes(1);
+                    expect(deviceService.addDevice).toHaveBeenCalledTimes(1);
+                    expect(router.navigateByUrl).toHaveBeenCalledWith(Route.selectDevice);
                     done();
                 })
         });
@@ -63,15 +69,12 @@ describe('DeveloperComponent', () => {
 
     describe('resetApp()', () => {
         it('Resets the app settings', (done) => {
-            const optionsUrl = "options.html";
-            const resetAppSpy = spyOn(settingsService, "reset").and.returnValue(Promise.resolve());
-            const getOptionsUrlSpy = spyOn(chromeService, "getOptionsUrl").and.returnValue(optionsUrl);
-            const setUrlSpy = spyOn(windowService, "setUrl").and.returnValue(null);
+            spyOn(settingsService, "reset").and.returnValue(Promise.resolve());
+            spyOn(windowService, 'close');
             comp.resetApp()
                 .then(() => {
-                    expect(resetAppSpy).toHaveBeenCalledTimes(1);
-                    expect(getOptionsUrlSpy).toHaveBeenCalledTimes(1);
-                    expect(setUrlSpy).toHaveBeenCalledWith(optionsUrl);
+                    expect(settingsService.reset).toHaveBeenCalledTimes(1);
+                    expect(windowService.close).toHaveBeenCalledTimes(1);
                     done();
                 });
             });
