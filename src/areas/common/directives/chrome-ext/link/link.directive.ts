@@ -1,6 +1,6 @@
 import { Directive, ElementRef, HostListener, Input } from "@angular/core";
-import { ChromeService } from "../../popup/services/chrome.service";
-import { Link } from "../link";
+import { ChromeService } from "../../../../popup/services/chrome.service";
+import { Link } from "../../../link";
 
 /**
  * Apply to an element to have its click event open a new tab.
@@ -15,7 +15,7 @@ export class ChromeExtensionLinkDirective {
         private readonly el: ElementRef,
         private readonly chrome: ChromeService) { }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         if(!this.chromeExtLink) {
             throw new Error('Must assign a Link to chromeExtLink directive');
         }

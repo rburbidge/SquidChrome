@@ -8,7 +8,7 @@ import { AddAnotherDeviceComponent } from './components/add-another-device/add-a
 import { AddDeviceComponent } from './components/intro/add-device/add-device.component';
 import { AppComponent } from './components/app/app.component';
 import { AttributionComponent } from './components/about/attribution/attribution.component';
-import { ChromeExtensionLinkDirective } from '../common/directives/chrome-ext-link.directive';
+import { ChromeExtensionLinkDirective } from '../common/directives/chrome-ext/link/link.directive';
 import { ChromeExtensionSourceDirective } from '../common/directives/chrome-ext-src.directive';
 import { ChromeService } from './services/chrome.service';
 import { DescriptionComponent } from './components/intro/description/description.component';
