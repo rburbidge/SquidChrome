@@ -10,6 +10,7 @@ import { Strings } from "../../../../assets/strings/strings";
 })
 export class OptionsComponent implements OnInit {
     public readonly strings: Strings = new Strings();
+    
     public isDevMode: boolean;
 
     constructor(private readonly chrome: ChromeService) { }
