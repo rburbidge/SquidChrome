@@ -9,6 +9,29 @@ export class Strings {
     public next = 'Next';
     public retry = 'Retry';
     
+    public about = {
+        title: 'About',
+        thankYou: 'Thank you for using Squid!',
+        appIcon: 'The app icon was provided by',
+        otherIcons: 'Other icons were provided by',
+        underThe: ' under the ',
+        apache20Link: {
+            url: 'http://www.apache.org/licenses/LICENSE-2.0.txt',
+            text: 'Apache License Version 2.0'
+        },
+        creativeCommonsLink: {
+            url: 'https://creativecommons.org/licenses/by/3.0/us/',
+            text: 'Creative Commons 3.0 BY license'
+        },
+        gameIconsLink: {
+            url: 'http://game-icons.net'
+        },
+        googleMaterialIconsLink: {
+            url: 'https://google.github.io/material-design-icons/',
+            text: 'Google Material Design'
+        }
+    }
+
     /**
      * Strings for the add device flow.
      */

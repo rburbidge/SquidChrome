@@ -6,7 +6,9 @@ export const Route = {
         registerDevice: 'registerDevice'
     },
 
+    about: 'about',
     addAnotherDevice: 'add-another-device',
+    developer: 'developer',
     options: 'options',
     selectDevice: ''
 }

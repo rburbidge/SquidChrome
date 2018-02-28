@@ -3,9 +3,12 @@ import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import { AboutComponent } from './components/about/about.component';
 import { AddAnotherDeviceComponent } from './components/add-another-device/add-another-device.component';
 import { AddDeviceComponent } from './components/intro/add-device/add-device.component';
 import { AppComponent } from './components/app/app.component';
+import { AttributionComponent } from './components/about/attribution/attribution.component';
+import { ChromeExtensionLinkDirective } from '../common/directives/chrome-ext/link/link.directive';
 import { ChromeExtensionSourceDirective } from '../common/directives/chrome-ext-src.directive';
 import { ChromeService } from './services/chrome.service';
 import { DescriptionComponent } from './components/intro/description/description.component';
@@ -15,13 +18,13 @@ import { IsAppInitialized } from './routing/is-app-initialized';
 import { DeveloperComponent } from './components/developer/developer.component';
 import { DeviceService } from './services/device.service';
 import { GcmService } from './services/gcm.service';
+import { OptionsComponent } from './components/options/options.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { Route } from './routing/route';
 import { SelectDeviceComponent } from './components/select-device/select-device.component';
 import { SettingsService } from './services/settings.service';
 import { SignedOutComponent } from './components/intro/signed-out/signed-out.component';
 import { WindowService } from './services/window.service';
-import { OptionsComponent } from './components/options/options.component';
 
 @NgModule({
     imports: [
@@ -33,8 +36,16 @@ import { OptionsComponent } from './components/options/options.component';
                 component: SelectDeviceComponent
             },
             {
+                path: Route.about,
+                component: AboutComponent
+            },
+            {
                 path: Route.addAnotherDevice,
                 component: AddAnotherDeviceComponent
+            },
+            {
+                path: Route.developer,
+                component: DeveloperComponent
             },
             {
                 path: Route.options,
@@ -54,7 +65,9 @@ import { OptionsComponent } from './components/options/options.component';
     declarations: [
         AppComponent,
         
+        AboutComponent,
         AddAnotherDeviceComponent,
+        AttributionComponent,
         DeveloperComponent,
         OptionsComponent,
         SelectDeviceComponent,
@@ -68,7 +81,8 @@ import { OptionsComponent } from './components/options/options.component';
         SignedOutComponent,
 
         // Directives
-        ChromeExtensionSourceDirective,
+        ChromeExtensionLinkDirective,
+        ChromeExtensionSourceDirective
     ],
     providers: [IsAppInitialized, ChromeService, GcmService, SettingsService, DeviceService, WindowService],
     bootstrap: [AppComponent]
