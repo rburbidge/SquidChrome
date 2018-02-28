@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 
 import { ChromeService } from "../../services/chrome.service";
 import { Strings } from "../../../../assets/strings/strings";
@@ -8,12 +8,14 @@ import { Strings } from "../../../../assets/strings/strings";
     templateUrl: './options.html',
     styleUrls: [ './options.css' ]
 })
-export class OptionsComponent {
+export class OptionsComponent implements OnInit {
     public readonly strings: Strings = new Strings();
 
-    public readonly isDevMode: boolean;
+    public isDevMode: boolean;
 
-    constructor(private readonly chrome: ChromeService) {
-        this.isDevMode = chrome.isDevMode();
+    constructor(private readonly chrome: ChromeService) { }
+
+    ngOnInit(): void {
+        this.isDevMode = this.chrome.isDevMode();
     }
 }
