@@ -21,9 +21,11 @@ import { WindowService } from '../../services/window.service';
     templateUrl: './select-device.html',
     styleUrls: ['./select-device.css']
 })
-export class SelectDeviceComponent implements OnInit {
+export class SelectDeviceComponent {
+    private isLoading: boolean = true;
 
     public readonly strings: Strings = new Strings();
+    public error: string;
 
     constructor(
         private readonly windowService: WindowService,
@@ -33,11 +35,6 @@ export class SelectDeviceComponent implements OnInit {
         private readonly settingsService: SettingsService)
     { }
 
-    public isLoading: boolean = true;
-    public error: string;
-    public devices: ChromeDeviceModel[] = [];
-    public message: string;
-
     /**
      * Sends a URL to a device.
      * @param device The device to send the URL to.
@@ -46,26 +43,6 @@ export class SelectDeviceComponent implements OnInit {
         return this.chromeService.getCurrentTabUrl()
             .then(url => this.deviceService.sendUrl(device.id, url))
             .then(() => this.windowService.close());
-    }
-
-    /**
-     * Sync both the selected device, and the other devices from the server.
-     */
-    public refreshDevices(): Promise<void> {
-        this.isLoading = true;
-        delete this.error;
-
-        return this.deviceService.getDevices()
-            .then(devices => {
-                if(!devices || devices.length == 0) {
-                    this.goToIntroComponent();
-                    return;
-                }
-
-                this.devices = devices;
-                this.isLoading = false;
-            })
-            .catch((error: ErrorModel) => this.handleError(error));
     }
 
     private handleError(error: ErrorModel): Promise<void> {
@@ -87,7 +64,6 @@ export class SelectDeviceComponent implements OnInit {
                 }
 
                 this.onError(this.strings.devices.refreshError);
-                this.isLoading = false;
                 return;
             });
     }
@@ -99,16 +75,15 @@ export class SelectDeviceComponent implements OnInit {
         this.router.navigateByUrl(Route.intro.base);
     }
 
-    private addAnotherDevice(): void {
+    private goToAddAnotherDevice(): void {
         this.router.navigateByUrl(Route.addAnotherDevice);
     }
 
-    private onError(error: string): void {
+    private onLoad(): void {
         this.isLoading = false;
-        this.error = error;
     }
 
-    public ngOnInit(): Promise<void> {
-        return this.refreshDevices();
+    private onError(error: string): void {
+        this.error = error;
     }
 }

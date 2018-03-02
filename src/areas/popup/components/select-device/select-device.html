@@ -1,32 +1,15 @@
 <squid-toolbar showLogo="true"
                showOptions="true"></squid-toolbar>
 
-<div *ngIf="isLoading" class="fade-in loader-center-screen">
-    <div class="loader"></div>
-</div>
-<div *ngIf="!isLoading" class="select-device fade-in text-center">
-    <h4 class="header">{{strings.devices.selectDevice}}</h4>
+<div class="select-device text-center">
+    <h4 *ngIf="!isLoading" class="header">{{strings.devices.selectDevice}}</h4>
+
+    <device-grid (onLoad)="onLoad()"
+                 (onError)="handleError($event)"
+                 (onDeviceClick)="sendUrl($event)"
+                 (onAddDeviceClick)="goToAddAnotherDevice()"></device-grid>
 
     <div *ngIf="error" class="squid-error">
         {{error}}
-    </div>
-
-    <!-- Grid of devices -->
-    <div *ngIf="devices" class="device-grid">
-        <div *ngFor="let device of devices" (click)="sendUrl(device)" class="device" role="button">
-            <i class="material-icons icon">{{device.getIcon()}}</i>
-            <div class="name">{{device.name}}</div>
-        </div>
-
-        <div (click)="addAnotherDevice()" class="device" role="button">
-            <i class="material-icons icon">add_circle</i>
-            <div class="name">{{strings.devices.addDevice}}</div>
-        </div>
-
-        <div *ngIf="devices.length % 2 == 0" class="device empty"></div>
-    </div>
-
-    <div *ngIf="!devices || devices.length == 0" class="row text-center">
-        <button class="btn btn-primary" (click)="refreshDevices()">{{strings.retry}}</button>
     </div>
 </div>
