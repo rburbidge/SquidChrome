@@ -6,10 +6,14 @@ export const Route = {
         registerDevice: 'registerDevice'
     },
 
-    about: 'about',
+    options: {
+        base: 'options',
+        about: 'about',
+        developer: 'developer',
+        list: '',
+        manageDevices: 'manageDevices'
+    },
+    
     addAnotherDevice: 'add-another-device',
-    developer: 'developer',
-    options: 'options',
-    manageDevices: 'manageDevices',
     selectDevice: ''
 }

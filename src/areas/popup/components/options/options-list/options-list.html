@@ -1,0 +1,10 @@
+<!--TODO Use strings for options titles-->
+<div class="option" routerLink="manageDevices" role="button">
+    <h4 class="text">Manage Devices</h4>
+</div>
+<div class="option" routerLink="about" role="button">
+    <h4 class="text">About</h4>
+</div>
+<div *ngIf="isDevMode" class="option last-option" routerLink="developer" role="button">
+    <h4 class="text">Developer Settings</h4>
+</div>

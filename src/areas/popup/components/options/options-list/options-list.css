@@ -1,0 +1,23 @@
+.option {
+    color: white;
+    padding: 0;
+    border-top: 1px solid orange;
+    min-height: 58px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.last-option {
+    border-bottom: 1px solid orange;
+}
+
+.option:hover {
+    background-color: orange;
+    transition: background 0.25s linear;
+}
+
+h4 {
+    margin: 0;
+}

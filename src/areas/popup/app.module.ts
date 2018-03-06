@@ -27,6 +27,7 @@ import { SignedOutComponent } from './components/intro/signed-out/signed-out.com
 import { WindowService } from './services/window.service';
 import { DeviceGridComponent } from './components/common/device-grid/device-grid.component';
 import { ManageDevicesComponent } from './components/options/manage-devices/manage-devices.component';
+import { OptionsListComponent } from './components/options/options-list/options-list.component';
 
 @NgModule({
     imports: [
@@ -37,25 +38,21 @@ import { ManageDevicesComponent } from './components/options/manage-devices/mana
                 path: '',
                 component: SelectDeviceComponent
             },
-            {
-                path: Route.about,
-                component: AboutComponent
-            },
+            
             {
                 path: Route.addAnotherDevice,
                 component: AddAnotherDeviceComponent
             },
+
             {
-                path: Route.developer,
-                component: DeveloperComponent
-            },
-            {
-                path: Route.options,
-                component: OptionsComponent
-            },
-            {
-                path: Route.manageDevices,
-                component: ManageDevicesComponent,
+                path: Route.options.base,
+                component: OptionsComponent,
+                children: [
+                    { path: Route.options.about, component: AboutComponent },
+                    { path: Route.options.developer, component: DeveloperComponent },
+                    { path: Route.options.list, component: OptionsListComponent },
+                    { path: Route.options.manageDevices, component: ManageDevicesComponent }
+                ]
             },
             {
                 path: Route.intro.base,
@@ -63,7 +60,7 @@ import { ManageDevicesComponent } from './components/options/manage-devices/mana
                 children: [
                     { path: Route.intro.description, component: DescriptionComponent },
                     { path: Route.intro.signIn, component: SignedOutComponent },
-                    { path: Route.intro.registerDevice, component: AddDeviceComponent}
+                    { path: Route.intro.registerDevice, component: AddDeviceComponent }
                 ]
             }
         ])
@@ -87,6 +84,9 @@ import { ManageDevicesComponent } from './components/options/manage-devices/mana
         AddDeviceComponent,
         DescriptionComponent,
         SignedOutComponent,
+
+        // Options Components
+        OptionsListComponent,
 
         // Directives
         ChromeExtensionLinkDirective,
