@@ -4,7 +4,8 @@
 <div class="select-device text-center">
     <h4 *ngIf="!isLoading" class="header">{{strings.devices.selectDevice}}</h4>
 
-    <device-grid (onLoad)="onLoad()"
+    <device-grid showAddDevice="true"
+                 (onLoad)="onLoad()"
                  (onError)="handleError($event)"
                  (onDeviceClick)="sendUrl($event)"
                  (onAddDeviceClick)="goToAddAnotherDevice()"></device-grid>

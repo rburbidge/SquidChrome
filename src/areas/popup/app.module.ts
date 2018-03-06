@@ -26,6 +26,7 @@ import { SettingsService } from './services/settings.service';
 import { SignedOutComponent } from './components/intro/signed-out/signed-out.component';
 import { WindowService } from './services/window.service';
 import { DeviceGridComponent } from './components/common/device-grid/device-grid.component';
+import { ManageDevicesComponent } from './components/options/manage-devices/manage-devices.component';
 
 @NgModule({
     imports: [
@@ -53,6 +54,10 @@ import { DeviceGridComponent } from './components/common/device-grid/device-grid
                 component: OptionsComponent
             },
             {
+                path: Route.manageDevices,
+                component: ManageDevicesComponent,
+            },
+            {
                 path: Route.intro.base,
                 component: IntroComponent,
                 children: [
@@ -72,6 +77,7 @@ import { DeviceGridComponent } from './components/common/device-grid/device-grid
         DeveloperComponent,
         DeviceGridComponent,
         OptionsComponent,
+        ManageDevicesComponent,
         SelectDeviceComponent,
         ToolbarComponent,
 

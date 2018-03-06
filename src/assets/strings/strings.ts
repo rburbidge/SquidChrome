@@ -84,6 +84,7 @@ Are you sure you want to delete ${deviceName}?`,
     };
 
     public options = {
-        title: 'Settings'
+        title: 'Settings',
+        manageDevices: 'Manage Devices'
     };
 }

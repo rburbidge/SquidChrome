@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit } from "@angular/core";
+import { Component, EventEmitter, Output, OnInit, Input } from "@angular/core";
 
 import { Strings } from "../../../../../assets/strings/strings";
 import { DeviceService } from "../../../services/device.service";
@@ -15,16 +15,18 @@ import { ErrorModel } from "../../../../../contracts/squid";
 })
 export class DeviceGridComponent implements OnInit {
     public readonly strings: Strings = new Strings();
+    public isLoading: boolean = true;
+    public devices: ChromeDeviceModel[] = [];
 
+    /** Whether or not to show the show add device button. */
+    @Input() showAddDevice: boolean = false;
+    
     @Output() onLoad = new EventEmitter();
     @Output() onError = new EventEmitter<ErrorModel>();
     @Output() onDeviceClick = new EventEmitter<ChromeDeviceModel>();
     @Output() onAddDeviceClick = new EventEmitter();
 
     constructor(private readonly deviceService: DeviceService) { }
-
-    public isLoading: boolean = true;
-    public devices: ChromeDeviceModel[] = [];
 
     /**
      * Sync both the selected device, and the other devices from the server.
@@ -39,6 +41,19 @@ export class DeviceGridComponent implements OnInit {
                 this.onLoad.emit();
             })
             .catch((error: ErrorModel) => this.onError.emit(error));
+    }
+
+    /**
+     * Whether or not to show a filler device in the grid.
+     * 
+     * This is required for the layout to be a proper grid.
+     */
+    public showFillerDevice(): boolean {
+        if(this.devices.length % 2 == 0) {
+            return this.showAddDevice;
+        }
+
+        return !this.showAddDevice;
     }
 
     ngOnInit(): void {

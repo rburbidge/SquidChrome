@@ -9,11 +9,11 @@
             <div class="name">{{device.name}}</div>
         </div>
 
-        <div (click)="onAddDeviceClick.emit()" class="device" role="button">
+        <div *ngIf="showAddDevice" (click)="onAddDeviceClick.emit()" class="device" role="button">
             <i class="material-icons icon">add_circle</i>
             <div class="name">{{strings.devices.addDevice}}</div>
         </div>
 
-        <div *ngIf="devices.length % 2 == 0" class="device empty"></div>
+        <div *ngIf="showFillerDevice()" class="device empty"></div>
     </div>
 </div>
