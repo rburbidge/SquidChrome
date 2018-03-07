@@ -22,9 +22,8 @@ import { WindowService } from '../../services/window.service';
     styleUrls: ['./select-device.css']
 })
 export class SelectDeviceComponent {
-    private isLoading: boolean = true;
-
     public readonly strings: Strings = new Strings();
+    public isLoading: boolean = true;
     public error: string;
 
     constructor(
@@ -45,7 +44,7 @@ export class SelectDeviceComponent {
             .then(() => this.windowService.close());
     }
 
-    private handleError(error: ErrorModel): Promise<void> {
+    public onError(error: ErrorModel): Promise<void> {
         const getSettings = this.settingsService.getSettings();
         const getIsSignedIn = this.chromeService.isSignedIntoChrome();
 
@@ -63,7 +62,7 @@ export class SelectDeviceComponent {
                     return;
                 }
 
-                this.onError(this.strings.devices.refreshError);
+                this.showError(this.strings.devices.refreshError);
                 return;
             });
     }
@@ -79,11 +78,16 @@ export class SelectDeviceComponent {
         this.router.navigateByUrl(Route.addAnotherDevice);
     }
 
-    private onLoad(): void {
+    public onLoad(devices: ChromeDeviceModel[]): void {
         this.isLoading = false;
+
+        if(!devices || devices.length == 0) {
+            this.goToIntroComponent();
+        }
     }
 
-    private onError(error: string): void {
+    private showError(error: string): void {
+        this.isLoading = false;
         this.error = error;
     }
 }

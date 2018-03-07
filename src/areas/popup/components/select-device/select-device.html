@@ -5,8 +5,8 @@
     <h4 *ngIf="!isLoading" class="header">{{strings.devices.selectDevice}}</h4>
 
     <device-grid showAddDevice="true"
-                 (onLoad)="onLoad()"
-                 (onError)="handleError($event)"
+                 (onLoad)="onLoad($event)"
+                 (onError)="onError($event)"
                  (onDeviceClick)="sendUrl($event)"
                  (onAddDeviceClick)="goToAddAnotherDevice()"></device-grid>
 
