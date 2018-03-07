@@ -3,11 +3,11 @@ import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { AboutComponent } from './components/about/about.component';
+import { AboutComponent } from './components/options/about/about.component';
 import { AddAnotherDeviceComponent } from './components/add-another-device/add-another-device.component';
 import { AddDeviceComponent } from './components/intro/add-device/add-device.component';
 import { AppComponent } from './components/app/app.component';
-import { AttributionComponent } from './components/about/attribution/attribution.component';
+import { AttributionComponent } from './components/options/about/attribution/attribution.component';
 import { ChromeExtensionLinkDirective } from '../common/directives/chrome-ext/link/link.directive';
 import { ChromeExtensionSourceDirective } from '../common/directives/chrome-ext-src.directive';
 import { ChromeService } from './services/chrome.service';

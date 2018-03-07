@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 
-import { Strings } from "../../../../assets/strings/strings";
+import { Strings } from "../../../../../assets/strings/strings";
 
 /**
  * Shows about content for the app.

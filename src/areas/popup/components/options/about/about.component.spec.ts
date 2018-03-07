@@ -3,11 +3,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { AboutComponent } from './about.component';
 import { AttributionComponent } from './attribution/attribution.component';
-import { ChromeExtensionLinkDirective } from '../../../common/directives/chrome-ext/link/link.directive';
-import { ChromeService } from '../../services/chrome.service';
-import { loadCss } from '../testing/css-loader';
-import { MockChromeService } from '../../services/testing/chrome.service.mock';
-import { ToolbarComponent } from '../toolbar/toolbar.component';
+import { ChromeExtensionLinkDirective } from '../../../../common/directives/chrome-ext/link/link.directive';
+import { ChromeService } from '../../../services/chrome.service';
+import { loadCss } from '../../testing/css-loader';
+import { MockChromeService } from '../../../services/testing/chrome.service.mock';
+import { ToolbarComponent } from '../../toolbar/toolbar.component';
 
 describe('AboutComponent', () => {
     let chromeService: ChromeService;
