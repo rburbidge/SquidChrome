@@ -21,10 +21,10 @@ export class DeviceGridComponent implements OnInit {
     /** Whether or not to show the show add device button. */
     @Input() showAddDevice: boolean = false;
     
-    @Output() onLoad = new EventEmitter<ChromeDeviceModel[]>();
-    @Output() onError = new EventEmitter<ErrorModel>();
-    @Output() onDeviceClick = new EventEmitter<ChromeDeviceModel>();
-    @Output() onAddDeviceClick = new EventEmitter();
+    @Output() readonly onLoad = new EventEmitter<ChromeDeviceModel[]>();
+    @Output() readonly onError = new EventEmitter<ErrorModel>();
+    @Output() readonly onDeviceClick = new EventEmitter<ChromeDeviceModel>();
+    @Output() readonly onAddDeviceClick = new EventEmitter();
 
     constructor(private readonly deviceService: DeviceService) { }
 
@@ -56,7 +56,7 @@ export class DeviceGridComponent implements OnInit {
         return !this.showAddDevice;
     }
 
-    public ngOnInit(): void {
-        this.refreshDevices();
+    public ngOnInit(): Promise<void> {
+        return this.refreshDevices();
     }
 }
