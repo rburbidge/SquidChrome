@@ -28,6 +28,9 @@ import { WindowService } from './services/window.service';
 import { DeviceGridComponent } from './components/common/device-grid/device-grid.component';
 import { ManageDevicesComponent } from './components/options/manage-devices/manage-devices.component';
 import { OptionsListComponent } from './components/options/options-list/options-list.component';
+import { Strings } from '../../assets/strings/strings';
+
+const strings = new Strings();
 
 @NgModule({
     imports: [
@@ -47,11 +50,12 @@ import { OptionsListComponent } from './components/options/options-list/options-
             {
                 path: Route.options.base,
                 component: OptionsComponent,
+                data: { title: strings.options.title },
                 children: [
-                    { path: Route.options.about, component: AboutComponent },
-                    { path: Route.options.developer, component: DeveloperComponent },
-                    { path: Route.options.list, component: OptionsListComponent },
-                    { path: Route.options.manageDevices, component: ManageDevicesComponent }
+                    { path: Route.options.about, component: AboutComponent, data: { title: strings.about.title } },
+                    { path: Route.options.developer, component: DeveloperComponent, data: { title: strings.developer.title } },
+                    { path: Route.options.list, component: OptionsListComponent, data: { title: strings.options.title } },
+                    { path: Route.options.manageDevices, component: ManageDevicesComponent, data: { title: strings.manageDevices.title } },
                 ]
             },
             {
