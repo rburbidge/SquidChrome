@@ -68,29 +68,32 @@ import { OptionsListComponent } from './components/options/options-list/options-
     declarations: [
         AppComponent,
         
-        AboutComponent,
+        // Components
         AddAnotherDeviceComponent,
-        AttributionComponent,
-        DeveloperComponent,
-        DeviceGridComponent,
-        OptionsComponent,
-        ManageDevicesComponent,
         SelectDeviceComponent,
-        ToolbarComponent,
 
-        // Intro Components
-        IntroComponent,
-        IntroBottomComponent,
+        // Intro components
         AddDeviceComponent,
         DescriptionComponent,
+        IntroComponent,
+        IntroBottomComponent,
         SignedOutComponent,
 
-        // Options Components
+        // Options components
+        AttributionComponent,
+        AboutComponent,
+        DeveloperComponent,
+        ManageDevicesComponent,
+        OptionsComponent,
         OptionsListComponent,
 
         // Directives
         ChromeExtensionLinkDirective,
-        ChromeExtensionSourceDirective
+        ChromeExtensionSourceDirective,
+
+        // Common components
+        DeviceGridComponent,
+        ToolbarComponent,
     ],
     providers: [IsAppInitialized, ChromeService, GcmService, SettingsService, DeviceService, WindowService],
     bootstrap: [AppComponent]
