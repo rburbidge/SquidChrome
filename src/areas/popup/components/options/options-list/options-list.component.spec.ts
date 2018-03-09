@@ -14,7 +14,8 @@ describe('OptionsListComponent', () => {
 
     beforeAll(() => {
         loadCss([
-            'areas/popup/components/options/options-list/options-list.css']);
+            'areas/popup/components/options/options-list/options-list.css'
+        ]);
     });
 
     beforeEach(async(() => {
@@ -33,7 +34,7 @@ describe('OptionsListComponent', () => {
         comp = fixture.debugElement.componentInstance;
 
         chromeService = TestBed.get(ChromeService);
-    })
+    });
 
     it('isDevMode is true', () => {
         spyOn(chromeService, 'isDevMode').and.returnValue(true);

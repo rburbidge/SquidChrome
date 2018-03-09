@@ -3,6 +3,9 @@ import { Component, OnInit } from "@angular/core";
 import { ChromeService } from "../../../services/chrome.service";
 import { Strings } from "../../../../../assets/strings/strings";
 
+/**
+ * Shows the list of options.
+ */
 @Component({
     selector: 'options-list',
     templateUrl: './options-list.html',
