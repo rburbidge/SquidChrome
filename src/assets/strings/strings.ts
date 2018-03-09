@@ -47,6 +47,10 @@ export class Strings {
         line2: 'To add another device, simply install and run Squid on that device!'
     };
 
+    public developer = {
+        title: 'Developer settings'
+    };
+
     /**
      * Strings for the devices flow.
      */
@@ -70,6 +74,10 @@ Are you sure you want to delete ${deviceName}?`,
         signIn: 'Sign in',
     };
 
+    public manageDevices = {
+        title: "Manage devices"
+    };
+
     /**
      * Strings for the send page pop-up action.
      */
@@ -84,6 +92,7 @@ Are you sure you want to delete ${deviceName}?`,
     };
 
     public options = {
-        title: 'Settings'
+        title: 'Settings',
+        manageDevices: 'Manage Devices'
     };
 }

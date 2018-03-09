@@ -1,0 +1,19 @@
+<div *ngIf="isLoading" class="fade-in loader-center-screen">
+    <div class="loader"></div>
+</div>
+
+<div *ngIf="!isLoading" class="select-device fade-in text-center">
+    <div *ngIf="devices" class="device-grid">
+        <div *ngFor="let device of devices" (click)="onDeviceClick.emit(device)" class="device" role="button">
+            <i class="material-icons icon">{{device.getIcon()}}</i>
+            <div class="name">{{device.name}}</div>
+        </div>
+
+        <div *ngIf="showAddDevice" (click)="onAddDeviceClick.emit()" class="device" role="button">
+            <i class="material-icons icon">add_circle</i>
+            <div class="name">{{strings.devices.addDevice}}</div>
+        </div>
+
+        <div *ngIf="showFillerDevice()" class="device empty"></div>
+    </div>
+</div>

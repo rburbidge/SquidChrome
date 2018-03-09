@@ -3,11 +3,11 @@ import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { AboutComponent } from './components/about/about.component';
+import { AboutComponent } from './components/options/about/about.component';
 import { AddAnotherDeviceComponent } from './components/add-another-device/add-another-device.component';
 import { AddDeviceComponent } from './components/intro/add-device/add-device.component';
 import { AppComponent } from './components/app/app.component';
-import { AttributionComponent } from './components/about/attribution/attribution.component';
+import { AttributionComponent } from './components/options/about/attribution/attribution.component';
 import { ChromeExtensionLinkDirective } from '../common/directives/chrome-ext/link/link.directive';
 import { ChromeExtensionSourceDirective } from '../common/directives/chrome-ext-src.directive';
 import { ChromeService } from './services/chrome.service';
@@ -25,6 +25,12 @@ import { SelectDeviceComponent } from './components/select-device/select-device.
 import { SettingsService } from './services/settings.service';
 import { SignedOutComponent } from './components/intro/signed-out/signed-out.component';
 import { WindowService } from './services/window.service';
+import { DeviceGridComponent } from './components/common/device-grid/device-grid.component';
+import { ManageDevicesComponent } from './components/options/manage-devices/manage-devices.component';
+import { OptionsListComponent } from './components/options/options-list/options-list.component';
+import { Strings } from '../../assets/strings/strings';
+
+const strings = new Strings();
 
 @NgModule({
     imports: [
@@ -35,21 +41,22 @@ import { WindowService } from './services/window.service';
                 path: '',
                 component: SelectDeviceComponent
             },
-            {
-                path: Route.about,
-                component: AboutComponent
-            },
+            
             {
                 path: Route.addAnotherDevice,
                 component: AddAnotherDeviceComponent
             },
+
             {
-                path: Route.developer,
-                component: DeveloperComponent
-            },
-            {
-                path: Route.options,
-                component: OptionsComponent
+                path: Route.options.base,
+                component: OptionsComponent,
+                data: { title: strings.options.title },
+                children: [
+                    { path: Route.options.about, component: AboutComponent, data: { title: strings.about.title } },
+                    { path: Route.options.developer, component: DeveloperComponent, data: { title: strings.developer.title } },
+                    { path: Route.options.list, component: OptionsListComponent, data: { title: strings.options.title } },
+                    { path: Route.options.manageDevices, component: ManageDevicesComponent, data: { title: strings.manageDevices.title } },
+                ]
             },
             {
                 path: Route.intro.base,
@@ -57,7 +64,7 @@ import { WindowService } from './services/window.service';
                 children: [
                     { path: Route.intro.description, component: DescriptionComponent },
                     { path: Route.intro.signIn, component: SignedOutComponent },
-                    { path: Route.intro.registerDevice, component: AddDeviceComponent}
+                    { path: Route.intro.registerDevice, component: AddDeviceComponent }
                 ]
             }
         ])
@@ -65,24 +72,32 @@ import { WindowService } from './services/window.service';
     declarations: [
         AppComponent,
         
-        AboutComponent,
+        // Components
         AddAnotherDeviceComponent,
-        AttributionComponent,
-        DeveloperComponent,
-        OptionsComponent,
         SelectDeviceComponent,
-        ToolbarComponent,
 
-        // Intro Components
-        IntroComponent,
-        IntroBottomComponent,
+        // Intro components
         AddDeviceComponent,
         DescriptionComponent,
+        IntroComponent,
+        IntroBottomComponent,
         SignedOutComponent,
+
+        // Options components
+        AttributionComponent,
+        AboutComponent,
+        DeveloperComponent,
+        ManageDevicesComponent,
+        OptionsComponent,
+        OptionsListComponent,
 
         // Directives
         ChromeExtensionLinkDirective,
-        ChromeExtensionSourceDirective
+        ChromeExtensionSourceDirective,
+
+        // Common components
+        DeviceGridComponent,
+        ToolbarComponent,
     ],
     providers: [IsAppInitialized, ChromeService, GcmService, SettingsService, DeviceService, WindowService],
     bootstrap: [AppComponent]

@@ -1,9 +1,4 @@
-<squid-toolbar title="{{strings.options.title}}"
+<squid-toolbar title="{{title}}"
                showBack="true"></squid-toolbar>
 
-<div class="option" routerLink="/about" role="button">
-    <h4 class="text">About</h4>
-</div>
-<div *ngIf="isDevMode" class="option last-option" routerLink="/developer" role="button">
-    <h4 class="text">Developer Settings</h4>
-</div>
+<router-outlet></router-outlet>

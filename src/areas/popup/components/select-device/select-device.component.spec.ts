@@ -17,6 +17,7 @@ import { WindowService } from '../../services/window.service';
 import { ChromeDeviceModel } from '../../services/squid-converter';
 import { Route } from '../../routing/route';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
+import { DeviceGridComponent } from '../common/device-grid/device-grid.component';
 
 describe('SelectDeviceComponent', () => {
     let deviceService: DeviceService;
@@ -38,7 +39,7 @@ describe('SelectDeviceComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DeveloperComponent, SelectDeviceComponent, ToolbarComponent],
+            declarations: [ DeviceGridComponent, SelectDeviceComponent, ToolbarComponent],
             imports: [ RouterTestingModule ],
             providers: [
                 { provide: ChromeService, useValue: new MockChromeService() },
@@ -71,13 +72,11 @@ describe('SelectDeviceComponent', () => {
         it('Has correct default values', function() {
             expect(comp.isLoading).toBeTruthy();
             expect(comp.error).toBeUndefined();
-            expect(comp.devices.length).toBe(0);
-            expect(comp.message).toBeUndefined();
         });
     });
 
     describe('sendUrl()', () => {
-        it('Sends a URL to the device', (done) => {
+        it('Sends a URL to the device and then closes the window', (done) => {
             let sendUrl = spyOn(deviceService, 'sendUrl').and.returnValue(Promise.resolve());
             const url = 'https://www.example.com';
             let getCurrentTabUrl = spyOn(chromeService, 'getCurrentTabUrl').and.returnValue(Promise.resolve(url));
@@ -94,53 +93,41 @@ describe('SelectDeviceComponent', () => {
         });
     });
 
-    describe('refreshDevices()', () => {
-        it('Shows devices on success', (done) => {
-            mockGetDevicesReturns(devices);
-            
-            spyOn(comp, 'ngOnInit').and.returnValue(Promise.resolve()); // Fake ngOnInit() to prevent it from interfering with refreshDevices() results
+    describe('onLoad()', () => {
+        beforeEach(() => {
+            spyOn(router, 'navigateByUrl');
+        })
 
-            comp.isLoading = false; // 1. Begin with loading = false and an error
-            comp.error = 'Some random error';
-            
-            comp.refreshDevices()
-                .then(() => {
-                    fixture.detectChanges();
-                    expect(comp.isLoading).toBeFalsy(); // 3. Expect loading = false once complete
-                    expect(comp.error).toBeUndefined();
-                    expect(comp.devices).toEqual(devices);
-                    done();
-                });
-            expect(comp.isLoading).toBeTruthy(); // 2. Expect loading = true and that the error was cleared
-            expect(comp.error).toBeUndefined();
+        it('Sets isLoading to false', () => {
+            expect(comp.isLoading).toBeTruthy();
+            comp.onLoad(undefined);
+            expect(comp.isLoading).toBeFalsy();
         });
-    
-        it('Shows error if loading fails', (done) => {
-            spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject('An error'));
-            mockIsSignedIntoChromeReturns(true);
 
+        it('Redirects to intro if devices is undefined', () => {
+            comp.onLoad(undefined);
+            expect(router.navigateByUrl).toHaveBeenCalledWith(Route.intro.base);
+        });
+
+        it('Redirects to intro if devices is empty', () => {
+            comp.onLoad([]);
+            expect(router.navigateByUrl).toHaveBeenCalledWith(Route.intro.base);
+        });
+
+        it('Does not navigate to intro if devices.length > 1', () => {
+            comp.onLoad([null]);
+            expect(router.navigateByUrl).not.toHaveBeenCalled();
+        });
+
+        it('Shows header text', () => {
+            comp.onLoad([null]);
             fixture.detectChanges();
-            comp.refreshDevices()
-                .then(() => {
-                    testErrorShown('Oops! An error occurred while retrieving your settings. Try again later.');
-                    done();
-                }).catch(e => {
-                    console.log(e);
-                });
+            let header = fixture.debugElement.query(By.css('.header'));
+            expect(header.nativeElement.textContent).toContain(comp.strings.devices.selectDevice);
         });
+    });
 
-        it('Redirects to intro if undefined devices', (done) => {
-            mockGetDevicesReturns(undefined);
-            testRedirectToIntro()
-                .then(() => done());
-        });
-
-        it('Redirects to intro if empty devices', (done) => {
-            mockGetDevicesReturns([]);
-            testRedirectToIntro()
-                .then(() => done());
-        });
-
+    describe('onError()', () => {
         it('Redirects to intro if app not initialized', (done) => {
             spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject('An error'));
 
@@ -166,36 +153,45 @@ describe('SelectDeviceComponent', () => {
         });
 
         it('Redirects to intro if user not found', (done) => {
-            const errorModel: ErrorModel = {
+            settings.initialized = true;
+            mockIsSignedIntoChromeReturns(true);
+
+            testRedirectToIntro({
                 code: ErrorCode.UserNotFound,
                 codeString: null,
                 message: null
-            };
-            spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject(errorModel));
-
-            settings.initialized = true;
-            let isSignedIntoChrome = mockIsSignedIntoChromeReturns(true);
-
-            testRedirectToIntro()
-                .then(() => done());
+            }).then(() => done());
         });
 
-        function testRedirectToIntro(): Promise<void> {
+        it('Shows error otherwise', (done) => {
+            settings.initialized = true;
+            mockIsSignedIntoChromeReturns(true);
+            
+            comp.onError({
+                code: ErrorCode.Unknown,
+                codeString: null,
+                message: null
+            }).then(() => {
+                expect(comp.isLoading).toBe(false);
+                expect(comp.error).toBe(comp.strings.devices.refreshError);
+                fixture.detectChanges();
+
+                let error = fixture.debugElement.query(By.css('.squid-error'));
+                expect(error).toBeTruthy();
+                expect(error.nativeElement.textContent).toContain(comp.strings.devices.refreshError);
+                done();
+            });
+        })
+
+        function testRedirectToIntro(error?: ErrorModel): Promise<void> {
             let routerNavigateByUrl = spyOn(router, 'navigateByUrl');
 
-            return comp.refreshDevices()
+            return comp.onError(error)
                 .then(() => {
                     expect(routerNavigateByUrl).toHaveBeenCalledWith(Route.intro.base);
                 });
         }
     });
-
-    const devices: ChromeDeviceModel[] = [
-        { id: "id1", name: "Chrome Browser", deviceType: DeviceType.android, getIcon: () => "laptop" },
-        { id: "id1", name: "Nexus 5X", deviceType: DeviceType.android, getIcon: () => "phone_android" },
-        { id: "id3", name: "Pixel", deviceType: DeviceType.android, getIcon: () => "phone_android" },
-        { id: "id2", name: "Samsung Galaxy", deviceType: DeviceType.android, getIcon: () => "phone_android" },
-    ];
 
     function createDevice(): ChromeDeviceModel {
         return {
@@ -206,32 +202,7 @@ describe('SelectDeviceComponent', () => {
         };
     }
 
-    function mockGetDevicesReturns(devices: DeviceModel[]): jasmine.Spy {
-        return spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices))
-    }
-
     function mockIsSignedIntoChromeReturns(isSignedIn: boolean): jasmine.Spy {
         return spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.resolve(isSignedIn));
-    }
-
-    function testErrorShown(expectedError: string) {
-        expect(comp.isLoading).toBe(false);
-        expect(comp.error).toBe(expectedError);
-        fixture.detectChanges();
-        let error = fixture.debugElement.query(By.css('.squid-error'));
-        expect(error).toBeTruthy();
-        expect(error.nativeElement.textContent).toContain(expectedError);
-    }
-
-    function testHeaderTextShown(expectedText) {
-        fixture.detectChanges();
-        let header = fixture.debugElement.query(By.css('.squid-options-header'));
-        expect(header.nativeElement.textContent).toContain(expectedText);
-    }
-
-    function setupCompWithDevices(devices: DeviceModel[]): Promise<void> {
-        mockGetDevicesReturns(devices);
-
-        return comp.ngOnInit();
     }
 });

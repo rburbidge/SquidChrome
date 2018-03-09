@@ -35,19 +35,5 @@ describe('OptionsComponent', () => {
         comp = fixture.debugElement.componentInstance;
 
         chromeService = TestBed.get(ChromeService);
-    })
-
-    it('isDevMode is true', () => {
-        spyOn(chromeService, 'isDevMode').and.returnValue(true);
-
-        fixture.detectChanges();
-        expect(comp.isDevMode).toBeTruthy();
-    });
-
-    it('isDevMode is false', () => {
-        spyOn(chromeService, 'isDevMode').and.returnValue(false);
-
-        fixture.detectChanges();
-        expect(comp.isDevMode).toBeFalsy();
     });
 });

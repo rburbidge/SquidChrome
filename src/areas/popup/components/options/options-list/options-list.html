@@ -1,0 +1,9 @@
+<div class="option" routerLink="manageDevices" role="button">
+    <h4 class="text">{{strings.manageDevices.title}}</h4>
+</div>
+<div class="option" routerLink="about" role="button">
+    <h4 class="text">{{strings.about.title}}</h4>
+</div>
+<div *ngIf="isDevMode" class="option last-option" routerLink="developer" role="button">
+    <h4 class="text">{{strings.developer.title}}</h4>
+</div>
