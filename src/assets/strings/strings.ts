@@ -47,6 +47,10 @@ export class Strings {
         line2: 'To add another device, simply install and run Squid on that device!'
     };
 
+    public developer = {
+        title: 'Developer settings'
+    };
+
     /**
      * Strings for the devices flow.
      */
@@ -68,6 +72,10 @@ Are you sure you want to delete ${deviceName}?`,
         signInLine1: 'Sign in to your Google account!',
         signInLine2: 'Squid provides a secure experience using Google authentication.',
         signIn: 'Sign in',
+    };
+
+    public manageDevices = {
+        title: "Manage devices"
     };
 
     /**

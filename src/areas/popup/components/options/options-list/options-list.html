@@ -1,10 +1,9 @@
-<!--TODO Use strings for options titles-->
 <div class="option" routerLink="manageDevices" role="button">
-    <h4 class="text">Manage Devices</h4>
+    <h4 class="text">{{strings.manageDevices.title}}</h4>
 </div>
 <div class="option" routerLink="about" role="button">
-    <h4 class="text">About</h4>
+    <h4 class="text">{{strings.about.title}}</h4>
 </div>
 <div *ngIf="isDevMode" class="option last-option" routerLink="developer" role="button">
-    <h4 class="text">Developer Settings</h4>
+    <h4 class="text">{{strings.developer.title}}</h4>
 </div>
