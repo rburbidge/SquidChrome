@@ -74,6 +74,18 @@ describe('DeviceGridComponent', () => {
             // 2. Expect loading = true
             expect(comp.isLoading).toBeTruthy(); 
         });
+
+        it('Template: Shows nothing on error', (done) => {
+            const error = "No, I am your father.";
+            spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject(error));
+
+            comp.isLoading = false;
+            comp.refreshDevices()
+                .then(() => {
+                    expect(comp.isLoading).toBeFalsy(); 
+                    done();
+                });
+        });
     
         it('Emits onLoad when loading is complete', (done) => {
             mockGetDevicesReturns(devices);

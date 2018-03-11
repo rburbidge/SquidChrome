@@ -36,11 +36,14 @@ export class DeviceGridComponent implements OnInit {
 
         return this.deviceService.getDevices()
             .then(devices => {
-                this.devices = devices;
                 this.isLoading = false;
+                this.devices = devices;
                 this.onLoad.emit(this.devices);
             })
-            .catch((error: ErrorModel) => this.onError.emit(error));
+            .catch((error: ErrorModel) => {
+                this.isLoading = false;
+                this.onError.emit(error)
+            });
     }
 
     /**
