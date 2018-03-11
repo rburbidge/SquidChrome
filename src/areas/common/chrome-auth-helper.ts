@@ -1,3 +1,6 @@
+import { ErrorCode, ErrorModel } from "../../contracts/squid";
+import { ChromeErrorModel } from "../popup/services/squid-converter";
+
 export class ChromeAuthHelper {
     /**
      * Creates an Authorization header for the user signed-in to Google Chrome.
@@ -8,7 +11,15 @@ export class ChromeAuthHelper {
         return new Promise((resolve, reject) => {
             chrome.identity.getAuthToken({ 'interactive': interactiveSignIn }, (token) => {
                 if (chrome.runtime.lastError) {
-                    reject(chrome.runtime.lastError);
+                    const errorMessage = chrome.runtime.lastError.message;
+                    let error: ErrorCode;
+                    if(errorMessage && errorMessage.indexOf('not signed in') !== -1) {
+                        error = ErrorCode.NotSignedIn;
+                    } else {
+                        error = ErrorCode.Unknown;
+                    }
+
+                    reject(new ChromeErrorModel(error, errorMessage));
                     return;
                 }
 

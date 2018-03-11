@@ -27,3 +27,17 @@ class DeviceModelPlusImpl implements DeviceModelPlus {
 export function convertDeviceModel(device: DeviceModel): ChromeDeviceModel {
     return new DeviceModelPlusImpl(device) as any as ChromeDeviceModel;
 }
+
+export class ChromeErrorModel implements ErrorModel {
+    constructor(code: ErrorCode, message: string, errorsInfo?: any) {
+        this.code = code;
+        this.codeString = ErrorCode[code];
+        this.message = message;
+        this.errorsInfo = errorsInfo;
+    }
+
+    code: ErrorCode;
+    codeString: string;
+    message: string;
+    errorsInfo?: any;
+}

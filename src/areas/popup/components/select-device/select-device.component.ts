@@ -45,26 +45,20 @@ export class SelectDeviceComponent {
     }
 
     public onError(error: ErrorModel): Promise<void> {
-        const getSettings = this.settingsService.getSettings();
-        const getIsSignedIn = this.chromeService.isSignedIntoChrome();
+        if(error.code == ErrorCode.NotSignedIn || error.code == ErrorCode.UserNotFound) {
+            this.goToIntroComponent();
+            return;
+        }
 
-        return Promise.all([getSettings, getIsSignedIn])
-            .then(results => {
-                const isInitialized = results[0].initialized;
-                const isSignedIn = results[1];
+        this.showError(this.strings.devices.refreshError);
+    }
 
-                // Redirect to the intro if not initialized, or user not found on the server, or not signed into Chrome
-                if(!isInitialized
-                    || (error && error.code == ErrorCode.UserNotFound)
-                    || !isSignedIn)
-                {
-                    this.goToIntroComponent();
-                    return;
-                }
+    public onLoad(devices: ChromeDeviceModel[]): void {
+        this.isLoading = false;
 
-                this.showError(this.strings.devices.refreshError);
-                return;
-            });
+        if(!devices || devices.length == 0) {
+            this.goToIntroComponent();
+        }
     }
 
     /**
@@ -76,14 +70,6 @@ export class SelectDeviceComponent {
 
     private goToAddAnotherDevice(): void {
         this.router.navigateByUrl(Route.addAnotherDevice);
-    }
-
-    public onLoad(devices: ChromeDeviceModel[]): void {
-        this.isLoading = false;
-
-        if(!devices || devices.length == 0) {
-            this.goToIntroComponent();
-        }
     }
 
     private showError(error: string): void {
