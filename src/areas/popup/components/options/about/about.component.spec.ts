@@ -18,8 +18,8 @@ describe('AboutComponent', () => {
     beforeAll(() => {
         loadCss([
             'areas/popup/components/toolbar/toolbar.css',
-            'areas/popup/components/about/about.css',
-            'areas/popup/components/about/attribution/attribution.css']);
+            'areas/popup/components/options/about/about.css',
+            'areas/popup/components/options/about/attribution/attribution.css']);
     });
 
     beforeEach(async(() => {
