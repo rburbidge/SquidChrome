@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ChromeService } from '../../services/chrome.service';
-import { ChromeAuthHelper } from '../../../common/chrome-auth-helper';
 import { ChromeDeviceModel } from '../../services/squid-converter';
 import { Config } from '../../../../config/config';
 import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../../contracts/squid';

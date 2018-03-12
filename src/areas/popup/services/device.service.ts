@@ -3,10 +3,10 @@ import { Headers, Http, Response, RequestOptions, RequestOptionsArgs } from '@an
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/toPromise';
 
-import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
 import { Config } from '../../../config/config';
 import { AddDeviceBody, CommandBody, DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { ChromeDeviceModel, convertDeviceModel, ChromeErrorModel } from './squid-converter';
+import { ChromeService } from './chrome.service';
 
 /**
  * The device service.
@@ -16,10 +16,10 @@ export class DeviceService {
     private baseUrl: string = Config.squidEndpoint;
     private static timeoutMillis: number = 3000;
 
-    constructor(private http: Http) { }
+    constructor(private readonly http: Http, private readonly chrome: ChromeService) { }
 
     public addDevice(deviceInfo: AddDeviceBody): Promise<ChromeDeviceModel> {
-        return this.sendAuthorizedRequest('/api/devices',
+        return this.sendRequest('/api/devices',
             {
                 method: 'POST',
                 body: deviceInfo
@@ -27,11 +27,11 @@ export class DeviceService {
     }
 
     public removeDevice(id: string): Promise<any> {
-        return this.sendAuthorizedRequest(`/api/devices/${id}`, { method: 'DELETE' });
+        return this.sendRequest(`/api/devices/${id}`, { method: 'DELETE' });
     }
 
     public getDevices(): Promise<ChromeDeviceModel[]> {
-        return this.sendAuthorizedRequest('/api/devices',
+        return this.sendRequest('/api/devices',
             { method: 'GET' })
             .then(response => (response.json() as DeviceModel[]).map(device => convertDeviceModel(device)));
     }
@@ -40,21 +40,22 @@ export class DeviceService {
         const body: CommandBody = {
             url: url
         };
-        return this.sendAuthorizedRequest(`/api/devices/${id}/commands`,
+        return this.sendRequest(`/api/devices/${id}/commands`,
             {
                 method: 'POST',
                 body: body
             });
     }
 
-    private sendAuthorizedRequest(relativePath: string, options: RequestOptionsArgs): Promise<Response> {
-        return ChromeAuthHelper.createAuthHeader()
-            .then((authHeader: string) => {
-                if (!options.headers) {
-                    options.headers = new Headers();
-                }
+    /**
+     * Helper method to send requests to Squid Service.
+     * @param relativePath The relative path to hit.
+     * @param options The request options.
+     */
+    private sendRequest(relativePath: string, options: RequestOptionsArgs): Promise<Response> {
+        return this.authorize(options)
+            .then(() => {
                 options.headers.append('Cache-Control', 'no-cache');
-                options.headers.append('Authorization', authHeader);
 
                 if(options.body) {
                     options.headers.append('Content-type', 'application/json');
@@ -91,6 +92,26 @@ export class DeviceService {
                 }
 
                 throw error;
+            });
+    }
+
+    /**
+     * Prepares a request for authorization with Squid Service.
+     * @param reqOptions The request options. The Authorization header will be set with an access token.
+     */
+    private authorize(reqOptions: RequestOptionsArgs): Promise<void> {
+        return this.chrome.getAuthToken(false)
+            .then(authToken => {
+                if (!reqOptions.headers) {
+                    reqOptions.headers = new Headers();
+                }
+
+                // Header prefixes are one of the following:
+                // 'Bearer Google OAuth Access Token='
+                // 'Bearer Google OAuth ID Token='
+                // See http://stackoverflow.com/questions/8311836/how-to-identify-a-google-oauth2-user/13016081#13016081
+                // for details on access vs. ID tokens
+                reqOptions.headers.append('Authorization', `Bearer Google OAuth Access Token=${authToken}`);
             });
     }
 };
