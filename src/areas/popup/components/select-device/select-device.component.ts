@@ -45,10 +45,7 @@ export class SelectDeviceComponent {
     public onError(error: ErrorModel): void {
         if(error.code == ErrorCode.NotSignedIn || error.code == ErrorCode.UserNotFound) {
             this.goToIntroComponent();
-            return;
         }
-
-        this.showError(this.strings.devices.refreshError);
     }
 
     public onLoad(devices: ChromeDeviceModel[]): void {
@@ -68,10 +65,5 @@ export class SelectDeviceComponent {
 
     private goToAddAnotherDevice(): void {
         this.router.navigateByUrl(Route.addAnotherDevice);
-    }
-
-    private showError(error: string): void {
-        this.isLoading = false;
-        this.error = error;
     }
 }

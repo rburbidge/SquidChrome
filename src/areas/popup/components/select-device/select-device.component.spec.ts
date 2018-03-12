@@ -136,18 +136,6 @@ describe('SelectDeviceComponent', () => {
             testRedirectToIntro(new ChromeErrorModel(ErrorCode.UserNotFound, ''));
         });
 
-        it('Template: Shows error otherwise', () => {
-            comp.onError(new ChromeErrorModel(ErrorCode.Unknown, ''));
-
-            expect(comp.isLoading).toBe(false);
-            expect(comp.error).toBe(comp.strings.devices.refreshError);
-            fixture.detectChanges();
-
-            let error = fixture.debugElement.query(By.css('.squid-error'));
-            expect(error).toBeTruthy();
-            expect(error.nativeElement.textContent).toContain(comp.strings.devices.refreshError);
-        })
-
         function testRedirectToIntro(error?: ErrorModel): void {
             let routerNavigateByUrl = spyOn(router, 'navigateByUrl');
 
