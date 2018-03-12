@@ -8,7 +8,6 @@ import { Config } from '../../../../config/config';
 import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { Route } from '../../routing/route';
-import { SettingsService } from '../../services/settings.service';
 import { Strings } from '../../../../assets/strings/strings';
 import { UrlHelper } from '../../../common/url-helper';
 import { WindowService } from '../../services/window.service';
@@ -30,8 +29,7 @@ export class SelectDeviceComponent {
         private readonly windowService: WindowService,
         private readonly deviceService: DeviceService,
         private readonly router: Router,
-        private readonly chromeService: ChromeService,
-        private readonly settingsService: SettingsService)
+        private readonly chromeService: ChromeService)
     { }
 
     /**
@@ -44,27 +42,18 @@ export class SelectDeviceComponent {
             .then(() => this.windowService.close());
     }
 
-    public onError(error: ErrorModel): Promise<void> {
-        const getSettings = this.settingsService.getSettings();
-        const getIsSignedIn = this.chromeService.isSignedIntoChrome();
+    public onError(error: ErrorModel): void {
+        if(error.code == ErrorCode.NotSignedIn || error.code == ErrorCode.UserNotFound) {
+            this.goToIntroComponent();
+        }
+    }
 
-        return Promise.all([getSettings, getIsSignedIn])
-            .then(results => {
-                const isInitialized = results[0].initialized;
-                const isSignedIn = results[1];
+    public onLoad(devices: ChromeDeviceModel[]): void {
+        this.isLoading = false;
 
-                // Redirect to the intro if not initialized, or user not found on the server, or not signed into Chrome
-                if(!isInitialized
-                    || (error && error.code == ErrorCode.UserNotFound)
-                    || !isSignedIn)
-                {
-                    this.goToIntroComponent();
-                    return;
-                }
-
-                this.showError(this.strings.devices.refreshError);
-                return;
-            });
+        if(!devices || devices.length == 0) {
+            this.goToIntroComponent();
+        }
     }
 
     /**
@@ -76,18 +65,5 @@ export class SelectDeviceComponent {
 
     private goToAddAnotherDevice(): void {
         this.router.navigateByUrl(Route.addAnotherDevice);
-    }
-
-    public onLoad(devices: ChromeDeviceModel[]): void {
-        this.isLoading = false;
-
-        if(!devices || devices.length == 0) {
-            this.goToIntroComponent();
-        }
-    }
-
-    private showError(error: string): void {
-        this.isLoading = false;
-        this.error = error;
     }
 }

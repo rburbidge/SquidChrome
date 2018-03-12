@@ -2,8 +2,12 @@
     <div class="loader"></div>
 </div>
 
+<div *ngIf="error" class="error">
+    {{error}}
+</div>
+
 <div *ngIf="!isLoading" class="select-device fade-in text-center">
-    <div *ngIf="devices" class="device-grid">
+    <div *ngIf="devices && devices.length != 0" class="device-grid">
         <div *ngFor="let device of devices" (click)="onDeviceClick.emit(device)" class="device" role="button">
             <i class="material-icons icon">{{device.getIcon()}}</i>
             <div class="name">{{device.name}}</div>

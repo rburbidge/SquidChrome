@@ -70,4 +70,7 @@ export enum ErrorCode {
 
     /** The user to be operated upon was not found. */
     UserNotFound = 4,
+
+    /** The user is not signed in. */
+    NotSignedIn = 5,
 }

@@ -14,7 +14,7 @@ import { MockDeviceService } from '../../services/testing/device.service.mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Settings, SettingsService } from '../../services/settings.service';
 import { WindowService } from '../../services/window.service';
-import { ChromeDeviceModel } from '../../services/squid-converter';
+import { ChromeDeviceModel, ChromeErrorModel } from '../../services/squid-converter';
 import { Route } from '../../routing/route';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { DeviceGridComponent } from '../common/device-grid/device-grid.component';
@@ -128,68 +128,19 @@ describe('SelectDeviceComponent', () => {
     });
 
     describe('onError()', () => {
-        it('Redirects to intro if app not initialized', (done) => {
-            spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject('An error'));
-
-            settings.initialized = false;
-            let isSignedIntoChrome = mockIsSignedIntoChromeReturns(true);
-
-            testRedirectToIntro()
-                .then(() => {
-                    expect(getSettings).toHaveBeenCalledTimes(1);
-                    expect(isSignedIntoChrome).toHaveBeenCalledTimes(1);
-                    done();
-                });
+        it('Redirects to intro if user not signed in', () => {
+            testRedirectToIntro(new ChromeErrorModel(ErrorCode.NotSignedIn, ''));
         });
 
-        it('Redirects to intro if user not signed in',  (done) => {
-            spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject('An error'));
-
-            settings.initialized = true;
-            let isSignedIntoChrome = mockIsSignedIntoChromeReturns(false);
-
-            testRedirectToIntro()
-                .then(() => done());
+        it('Redirects to intro if user not found',  () => {
+            testRedirectToIntro(new ChromeErrorModel(ErrorCode.UserNotFound, ''));
         });
 
-        it('Redirects to intro if user not found', (done) => {
-            settings.initialized = true;
-            mockIsSignedIntoChromeReturns(true);
-
-            testRedirectToIntro({
-                code: ErrorCode.UserNotFound,
-                codeString: null,
-                message: null
-            }).then(() => done());
-        });
-
-        it('Shows error otherwise', (done) => {
-            settings.initialized = true;
-            mockIsSignedIntoChromeReturns(true);
-            
-            comp.onError({
-                code: ErrorCode.Unknown,
-                codeString: null,
-                message: null
-            }).then(() => {
-                expect(comp.isLoading).toBe(false);
-                expect(comp.error).toBe(comp.strings.devices.refreshError);
-                fixture.detectChanges();
-
-                let error = fixture.debugElement.query(By.css('.squid-error'));
-                expect(error).toBeTruthy();
-                expect(error.nativeElement.textContent).toContain(comp.strings.devices.refreshError);
-                done();
-            });
-        })
-
-        function testRedirectToIntro(error?: ErrorModel): Promise<void> {
+        function testRedirectToIntro(error?: ErrorModel): void {
             let routerNavigateByUrl = spyOn(router, 'navigateByUrl');
 
-            return comp.onError(error)
-                .then(() => {
-                    expect(routerNavigateByUrl).toHaveBeenCalledWith(Route.intro.base);
-                });
+            comp.onError(error)
+            expect(routerNavigateByUrl).toHaveBeenCalledWith(Route.intro.base);
         }
     });
 

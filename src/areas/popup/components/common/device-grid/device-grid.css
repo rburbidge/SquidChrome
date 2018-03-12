@@ -1,3 +1,7 @@
+.error {
+    color: white;
+}
+
 .device-grid {
     display: flex;
     flex-flow: wrap;

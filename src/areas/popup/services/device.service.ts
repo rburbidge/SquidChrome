@@ -6,7 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
 import { Config } from '../../../config/config';
 import { AddDeviceBody, CommandBody, DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
-import { ChromeDeviceModel, convertDeviceModel } from './squid-converter';
+import { ChromeDeviceModel, convertDeviceModel, ChromeErrorModel } from './squid-converter';
 
 /**
  * The device service.
@@ -63,25 +63,30 @@ export class DeviceService {
             })
             .then(() => this.http.request(this.baseUrl + relativePath, options).toPromise())
             .catch((response: Response) => {
+                if(response instanceof ChromeErrorModel) {
+                    throw response;
+                }
+
                 // Resolve on 302. This indicates that a POST request resulted in no change in storage (e.g. Found)
                 if(response.status === 302) {
                     return response;
                 }
 
                 let error: ErrorModel;
-                if (response && response.json().codeString) {
-                    error = response.json();
+                try {
+                    if(response.json().codeString) {
+                        error = response.json();
+                    }
+                } catch(e) {
+                    console.warn('Exception occurred when parsing error response JSON: ' + e);
                 }
 
                 // If the error is not defined, then construct a default error for the caller
                 if(!error) {
-                    let errorMsg: string = 'Response was contained an unknown error';
-
-                    console.error(errorMsg);
                     error = {
                         code: ErrorCode.Unknown,
                         codeString: ErrorCode[ErrorCode.Unknown],
-                        message: errorMsg
+                        message: 'Response contained an unknown error: ' + response.text()
                     };
                 }
 

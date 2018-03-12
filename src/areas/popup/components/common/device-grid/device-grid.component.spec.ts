@@ -51,7 +51,8 @@ describe('DeviceGridComponent', () => {
     describe('constructor',() => {
         it('Has correct default values', function() {
             expect(comp.isLoading).toBeTruthy();
-            expect(comp.devices.length).toBe(0);
+            expect(comp.devices).toBeUndefined();
+            expect(comp.error).toBeUndefined();
             expect(comp.showAddDevice).toBe(false);
         });
     });
@@ -60,19 +61,40 @@ describe('DeviceGridComponent', () => {
         it('Template: Shows devices on success', (done) => {
             mockGetDevicesReturns(devices);            
 
-            // 1. Begin with loading = false
-            comp.isLoading = false; 
+            // 1. Set values that will be reset
+            comp.isLoading = false;
+            comp.error = `You'd say, "boom de gasa"... den crashded da boss's heyblibber... den banished.`;
+
             comp.refreshDevices()
                 .then(() => {
-                    // 3. Expect loading = false once complete
+                    // 3. Final assertions
                     expect(comp.devices).toEqual(devices);
+                    expect(comp.error).toBeUndefined();
                     expect(comp.isLoading).toBeFalsy(); 
                     
                     done();
                 });
 
-            // 2. Expect loading = true
-            expect(comp.isLoading).toBeTruthy(); 
+            // 2. Test that values are reset
+            expect(comp.isLoading).toBeTruthy();
+            expect(comp.error).toBeUndefined();
+        });
+
+        it('Template: Shows error on error', (done) => {
+            spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject("Meesa lika dis"));
+
+            comp.isLoading = false;
+            comp.refreshDevices()
+                .then(() => {
+                    expect(comp.isLoading).toBeFalsy(); 
+                    expect(comp.error).toBe(comp.strings.devices.refreshError);
+                    fixture.detectChanges();
+                    
+                    const  error = fixture.debugElement.query(By.css('.error'));
+                    expect(error).toBeTruthy();
+                    expect(error.nativeElement.textContent).toContain(comp.strings.devices.refreshError);
+                    done();
+                });
         });
     
         it('Emits onLoad when loading is complete', (done) => {
