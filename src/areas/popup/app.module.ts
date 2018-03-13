@@ -29,6 +29,7 @@ import { DeviceGridComponent } from './components/common/device-grid/device-grid
 import { ManageDevicesComponent } from './components/options/manage-devices/manage-devices.component';
 import { OptionsListComponent } from './components/options/options-list/options-list.component';
 import { Strings } from '../../assets/strings/strings';
+import { DeviceComponent } from './components/options/device/device.component';
 
 const strings = new Strings();
 
@@ -56,6 +57,7 @@ const strings = new Strings();
                     { path: Route.options.developer, component: DeveloperComponent, data: { title: strings.developer.title } },
                     { path: Route.options.list, component: OptionsListComponent, data: { title: strings.options.title } },
                     { path: Route.options.manageDevices, component: ManageDevicesComponent, data: { title: strings.manageDevices.title } },
+                    { path: Route.options.manageDevice, component: DeviceComponent, data: { title: strings.device.title } },
                 ]
             },
             {
@@ -87,6 +89,7 @@ const strings = new Strings();
         AttributionComponent,
         AboutComponent,
         DeveloperComponent,
+        DeviceComponent,
         ManageDevicesComponent,
         OptionsComponent,
         OptionsListComponent,
