@@ -58,8 +58,8 @@ export class ChromeService {
     }
 
     /**
-     * Creates an Authorization header for the user signed-in to Google Chrome.
-     * @param interactiveSignIn If true, prompts the user to sign in, which opens up the Chrome Browser sign-in page
+     * Gets an OAuth2 access token using the client ID and scopes specified in the oauth2 section of manifest.json.
+     * @param interactiveSignIn If true, prompts the user to sign in, which opens up the Chrome Browser sign-in UI
      * and kills the current viewport. If false, throws an error.
      */
     public getAuthToken(interactiveSignIn: boolean = false): Promise<string> {

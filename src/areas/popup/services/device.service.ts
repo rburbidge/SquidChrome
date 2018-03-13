@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/toPromise';
 
@@ -7,7 +7,6 @@ import { Config } from '../../../config/config';
 import { AddDeviceBody, CommandBody, DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { ChromeDeviceModel, convertDeviceModel, ChromeErrorModel } from './squid-converter';
 import { ChromeService } from './chrome.service';
-import { HttpErrorResponse } from '@angular/common/http/src/response';
 
 /**
  * The device service.
@@ -17,7 +16,8 @@ export class DeviceService {
     private baseUrl: string = Config.squidEndpoint;
     private static timeoutMillis: number = 3000;
 
-    constructor(private readonly http: HttpClient, private readonly chrome: ChromeService) { }
+    constructor(private readonly http: HttpClient,
+                private readonly chrome: ChromeService) { }
 
     public addDevice(deviceInfo: AddDeviceBody): Promise<ChromeDeviceModel> {
         return this.sendRequest<ChromeDeviceModel>('POST', '/api/devices', deviceInfo)
@@ -97,8 +97,7 @@ export class DeviceService {
     }
 
     /**
-     * Prepares a request for authorization with Squid Service.
-     * @param reqOptions The request options. The Authorization header will be set with an access token.
+     * Retrieves the Authorization header value containing the auth token.
      */
     private getAuthHeader(): Promise<string> {
         return this.chrome.getAuthToken(false)
