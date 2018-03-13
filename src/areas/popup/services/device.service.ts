@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, Response, RequestOptions, RequestOptionsArgs } from '@angular/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/toPromise';
 
-import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
 import { Config } from '../../../config/config';
-import { AddDeviceBody, CommandBody, DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
+import { AddDeviceBody, CommandBody, DeviceModel, ErrorCode, ErrorModel, AuthHeader, createAuthHeader } from '../../../contracts/squid';
 import { ChromeDeviceModel, convertDeviceModel, ChromeErrorModel } from './squid-converter';
+import { ChromeService } from './chrome.service';
 
 /**
  * The device service.
@@ -16,66 +16,70 @@ export class DeviceService {
     private baseUrl: string = Config.squidEndpoint;
     private static timeoutMillis: number = 3000;
 
-    constructor(private http: Http) { }
+    constructor(private readonly http: HttpClient,
+                private readonly chrome: ChromeService) { }
 
     public addDevice(deviceInfo: AddDeviceBody): Promise<ChromeDeviceModel> {
-        return this.sendAuthorizedRequest('/api/devices',
-            {
-                method: 'POST',
-                body: deviceInfo
-            }).then(response => convertDeviceModel(response.json() as DeviceModel));
+        return this.sendRequest<ChromeDeviceModel>('POST', '/api/devices', deviceInfo)
+            .then(device => convertDeviceModel(device));
     }
 
     public removeDevice(id: string): Promise<any> {
-        return this.sendAuthorizedRequest(`/api/devices/${id}`, { method: 'DELETE' });
+        return this.sendRequest('DELETE', `/api/devices/${id}`);
     }
 
     public getDevices(): Promise<ChromeDeviceModel[]> {
-        return this.sendAuthorizedRequest('/api/devices',
-            { method: 'GET' })
-            .then(response => (response.json() as DeviceModel[]).map(device => convertDeviceModel(device)));
+        return this.sendRequest<ChromeDeviceModel[]>('GET', '/api/devices')
+            .then(devices => devices.map(device => convertDeviceModel(device)));
     }
 
     public sendUrl(id: string, url: string): Promise<any> {
         const body: CommandBody = {
             url: url
         };
-        return this.sendAuthorizedRequest(`/api/devices/${id}/commands`,
-            {
-                method: 'POST',
-                body: body
-            });
+        return this.sendRequest('POST', `/api/devices/${id}/commands`, body);
     }
 
-    private sendAuthorizedRequest(relativePath: string, options: RequestOptionsArgs): Promise<Response> {
-        return ChromeAuthHelper.createAuthHeader()
-            .then((authHeader: string) => {
-                if (!options.headers) {
-                    options.headers = new Headers();
-                }
-                options.headers.append('Cache-Control', 'no-cache');
-                options.headers.append('Authorization', authHeader);
+    /**
+     * Helper method to send requests to Squid Service.
+     * @param method The HTTP request method.
+     * @param relativePath The relative path to hit.
+     * @param options The request options.
+     */
+    private sendRequest<T>(method: string, relativePath: string, body?: any): Promise<T> {
 
-                if(options.body) {
-                    options.headers.append('Content-type', 'application/json');
-                    options.body = JSON.stringify(options.body);
+        return this.getAuthHeader()
+            .then(authHeader => {
+                let headers = {
+                    'Authorization': authHeader,
+                    'Cache-Control': 'no-cache',
+                };
+                if(body) {
+                    headers['Content-type'] = 'application/json';
                 }
+                
+                return headers;
             })
-            .then(() => this.http.request(this.baseUrl + relativePath, options).toPromise())
-            .catch((response: Response) => {
+            .then(headers => this.http.request<T>(method, this.baseUrl + relativePath, {
+                body: body,
+                headers: new HttpHeaders(headers)
+            }).toPromise())
+            .catch((response: any) => {
                 if(response instanceof ChromeErrorModel) {
                     throw response;
                 }
 
+                let httpErrorResponse = response as HttpErrorResponse;
+
                 // Resolve on 302. This indicates that a POST request resulted in no change in storage (e.g. Found)
-                if(response.status === 302) {
+                if(httpErrorResponse.status === 302) {
                     return response;
                 }
 
                 let error: ErrorModel;
                 try {
-                    if(response.json().codeString) {
-                        error = response.json();
+                    if(httpErrorResponse.error.codeString) {
+                        error = response.error;
                     }
                 } catch(e) {
                     console.warn('Exception occurred when parsing error response JSON: ' + e);
@@ -83,14 +87,20 @@ export class DeviceService {
 
                 // If the error is not defined, then construct a default error for the caller
                 if(!error) {
-                    error = {
-                        code: ErrorCode.Unknown,
-                        codeString: ErrorCode[ErrorCode.Unknown],
-                        message: 'Response contained an unknown error: ' + response.text()
-                    };
+                    error = new ChromeErrorModel(
+                        ErrorCode.Unknown,
+                        'Response contained an unknown error: ' + httpErrorResponse.error);
                 }
 
                 throw error;
             });
+    }
+
+    /**
+     * Retrieves the Authorization header value containing the auth token.
+     */
+    private getAuthHeader(): Promise<string> {
+        return this.chrome.getAuthToken(false)
+            .then(authToken => createAuthHeader(AuthHeader.GoogleOAuthAccessToken, authToken));
     }
 };

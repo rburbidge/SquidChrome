@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ChromeAuthHelper } from '../../common/chrome-auth-helper';
 import { optionsPageName } from '../../common/url-helper';
+import { ErrorCode } from '../../../contracts/squid';
+import { ChromeErrorModel } from './squid-converter';
 
 @Injectable()
 export class ChromeService {
@@ -51,9 +52,35 @@ export class ChromeService {
      * @returns True iff the sign in succeeded, or was already signed in.
      */
     public signIntoChrome(): Promise<boolean> {
-        return ChromeAuthHelper.createAuthHeader(true)
-            .then(authHeader => !!authHeader)
+        return this.getAuthToken(true)
+            .then(authToken => !!authToken)
             .catch(reason => false);
+    }
+
+    /**
+     * Gets an OAuth2 access token using the client ID and scopes specified in the oauth2 section of manifest.json.
+     * @param interactiveSignIn If true, prompts the user to sign in, which opens up the Chrome Browser sign-in UI
+     * and kills the current viewport. If false, throws an error.
+     */
+    public getAuthToken(interactiveSignIn: boolean = false): Promise<string> {
+        return new Promise((resolve, reject) => {
+            chrome.identity.getAuthToken({ 'interactive': interactiveSignIn }, (token) => {
+                if (chrome.runtime.lastError) {
+                    const errorMessage = chrome.runtime.lastError.message;
+                    let error: ErrorCode;
+                    if(errorMessage && errorMessage.indexOf('not signed in') !== -1) {
+                        error = ErrorCode.NotSignedIn;
+                    } else {
+                        error = ErrorCode.Unknown;
+                    }
+
+                    reject(new ChromeErrorModel(error, errorMessage));
+                    return;
+                }
+
+                resolve(token);
+            });
+        })
     }
 
     /**
