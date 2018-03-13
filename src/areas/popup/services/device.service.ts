@@ -4,7 +4,7 @@ import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/toPromise';
 
 import { Config } from '../../../config/config';
-import { AddDeviceBody, CommandBody, DeviceModel, ErrorCode, ErrorModel } from '../../../contracts/squid';
+import { AddDeviceBody, CommandBody, DeviceModel, ErrorCode, ErrorModel, AuthHeader, createAuthHeader } from '../../../contracts/squid';
 import { ChromeDeviceModel, convertDeviceModel, ChromeErrorModel } from './squid-converter';
 import { ChromeService } from './chrome.service';
 
@@ -101,13 +101,6 @@ export class DeviceService {
      */
     private getAuthHeader(): Promise<string> {
         return this.chrome.getAuthToken(false)
-            .then(authToken => {
-                // Header prefixes are one of the following:
-                // 'Bearer Google OAuth Access Token='
-                // 'Bearer Google OAuth ID Token='
-                // See http://stackoverflow.com/questions/8311836/how-to-identify-a-google-oauth2-user/13016081#13016081
-                // for details on access vs. ID tokens
-                return `Bearer Google OAuth Access Token=${authToken}`;
-            });
+            .then(authToken => createAuthHeader(AuthHeader.GoogleOAuthAccessToken, authToken));
     }
 };
