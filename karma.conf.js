@@ -39,6 +39,8 @@ module.exports = function(config) {
       'node_modules/zone.js/dist/jasmine-patch.js',
       'node_modules/zone.js/dist/async-test.js',
       'node_modules/zone.js/dist/fake-async-test.js',
+
+      'node_modules/tslib/tslib.js',
       
       // Squid-specific files
       'node_modules/bootstrap/dist/css/bootstrap.min.css',
