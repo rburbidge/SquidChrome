@@ -11,7 +11,8 @@ export const Route = {
         about: 'about',
         developer: 'developer',
         list: '',
-        manageDevices: 'manageDevices'
+        manageDevices: 'manageDevices',
+        manageDevice: 'manageDevices/:deviceId'
     },
     
     addAnotherDevice: 'add-another-device',

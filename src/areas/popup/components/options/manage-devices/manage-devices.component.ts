@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { Strings } from '../../../../../assets/strings/strings';
+import { ChromeDeviceModel } from '../../../services/squid-converter';
+import { Route } from '../../../routing/route';
 
 /**
  * Allows the user to select a device to manage.
@@ -11,6 +14,16 @@ import { Strings } from '../../../../../assets/strings/strings';
     styleUrls: ['./manage-devices.css']
 })
 export class ManageDevicesComponent {
-    // TODO Implement
-    constructor() { }
+    constructor(
+        private readonly route: ActivatedRoute,
+        private readonly router: Router) { }
+
+    public onDeviceSelected(device: ChromeDeviceModel) {
+        this.router.navigate(
+            [
+                './' + device.id,
+                { deviceName: device.name, deviceIcon: device.getIcon() }
+            ],
+            { relativeTo: this.route });
+    }
 }

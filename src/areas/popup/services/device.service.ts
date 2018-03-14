@@ -25,7 +25,7 @@ export class DeviceService {
     }
 
     public removeDevice(id: string): Promise<any> {
-        return this.sendRequest('DELETE', `/api/devices/${id}`);
+        return this.sendRequest('DELETE', `/api/devices/${id}`, undefined, 'text');
     }
 
     public getDevices(): Promise<ChromeDeviceModel[]> {
@@ -44,9 +44,10 @@ export class DeviceService {
      * Helper method to send requests to Squid Service.
      * @param method The HTTP request method.
      * @param relativePath The relative path to hit.
-     * @param options The request options.
+     * @param body The body to send, if any.
+     * @param responseType The response type. Default is 'json'.
      */
-    private sendRequest<T>(method: string, relativePath: string, body?: any): Promise<T> {
+    private sendRequest<T>(method: string, relativePath: string, body?: any, responseType?: string): Promise<T> {
 
         return this.getAuthHeader()
             .then(authHeader => {
@@ -60,10 +61,18 @@ export class DeviceService {
                 
                 return headers;
             })
-            .then(headers => this.http.request<T>(method, this.baseUrl + relativePath, {
-                body: body,
-                headers: new HttpHeaders(headers)
-            }).toPromise())
+            .then(headers => {
+                const options: any = {
+                    headers: new HttpHeaders(headers)
+                };
+                if(body) {
+                    options.body = body;
+                }
+                if(responseType) {
+                    options.responseType = responseType;
+                }
+                return this.http.request<T>(method, this.baseUrl + relativePath, options).toPromise();
+            })
             .catch((response: any) => {
                 if(response instanceof ChromeErrorModel) {
                     throw response;

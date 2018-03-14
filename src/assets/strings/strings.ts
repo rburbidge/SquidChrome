@@ -56,15 +56,17 @@ export class Strings {
      */
     public devices = {
         addDevice: 'Add a device',
-        deleteComplete: (deviceName: string) => `${deviceName} has been deleted`,
-        deleteConfirm: (deviceName: string) => `To use this ${deviceName} again, you will need to register it through the Squid app on your Android device.
-Are you sure you want to delete ${deviceName}?`,
-        deleteError: 'An error occurred while removing the device. Please try again later.',
         noDevicesTitle: 'No devices found',
         noDevicesMessage: 'Install Squid on your Android phone, and then retry!',
         refreshError: 'Oops! An error occurred while retrieving your settings. Try again later.',
-        selectDevice: 'Select a device'
+        selectDevice: 'Select a device',
     };
+
+    public device = {
+        removeConfirm: (deviceName: string) => `To use ${deviceName} again, you will need to re-run Squid on that device.\n\nAre you sure you want to remove ${deviceName}?`,
+        removeDevice: 'Remove this device',
+        trySendingLink: 'Try sending a link'
+    }
 
     public intro = {
         descriptionLine1: 'Welcome to Squid!',
