@@ -18,7 +18,9 @@ import { ChromeDeviceModel } from "../../../services/squid-converter";
 export class DeviceComponent implements OnInit {
     public readonly strings: Strings = new Strings();
 
-    public device: ChromeDeviceModel;
+    public deviceId: string;
+    public deviceName: string;
+    public deviceIcon: string;
 
     constructor(
         private readonly route: ActivatedRoute,
@@ -26,23 +28,22 @@ export class DeviceComponent implements OnInit {
         private readonly deviceService: DeviceService) { }
 
     public sendLink(): Promise<void> {
-        return this.deviceService.sendUrl(this.device.id, 'https://www.google.com');
+        return this.deviceService.sendUrl(this.deviceId, 'https://www.google.com');
     }
 
     public remove(): Promise<void> {
-        if(window.confirm(this.strings.device.removeConfirm(this.device.name))) {
-            return this.deviceService.removeDevice(this.device.id)
+        if(window.confirm(this.strings.device.removeConfirm(this.deviceName))) {
+            return this.deviceService.removeDevice(this.deviceId)
                 .then(() => this.location.back());
         }
 
         return Promise.resolve();
     }
 
-    public ngOnInit(): Promise<void> {
-        const deviceId = this.route.snapshot.params['deviceId'];
-        return this.deviceService.getDevices()
-            .then(devices => {
-                this.device = devices.find(device => device.id == deviceId);
-            });
+    public ngOnInit(): void {
+        const params: any = this.route.snapshot.params;
+        this.deviceId = params.deviceId;
+        this.deviceName = params.deviceName;
+        this.deviceIcon = params.deviceIcon;
     }
 }

@@ -1,2 +1,11 @@
-<button (click)="sendLink()" class="btn btn-primary">{{strings.device.trySendingLink}}</button>
-<button (click)="remove()" class="btn btn-primary">{{strings.device.removeDevice}}</button>
+
+<div class="frame">
+    <div>
+        <div class="device">
+            <i class="material-icons icon">{{deviceIcon}}</i>
+            <div class="name">{{deviceName}}</div>
+        </div>
+    </div>
+    <button (click)="sendLink()" class="btn btn-primary">{{strings.device.trySendingLink}}</button>
+    <button (click)="remove()" class="btn btn-primary">{{strings.device.removeDevice}}</button>
+</div>

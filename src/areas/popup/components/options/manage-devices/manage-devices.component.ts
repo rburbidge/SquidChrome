@@ -19,6 +19,11 @@ export class ManageDevicesComponent {
         private readonly router: Router) { }
 
     public onDeviceSelected(device: ChromeDeviceModel) {
-        this.router.navigate([ './' + device.id ], { relativeTo: this.route });
+        this.router.navigate(
+            [
+                './' + device.id,
+                { deviceName: device.name, deviceIcon: device.getIcon() }
+            ],
+            { relativeTo: this.route });
     }
 }

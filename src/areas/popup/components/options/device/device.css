@@ -1,0 +1,29 @@
+.frame {
+    text-align: center;
+}
+
+.device {
+    color:white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column wrap;
+    height: 150px;
+    width: 150px;
+    
+    border-style: solid;
+    border-width: medium;
+    border-color: orange;
+    border-width: 1px;
+
+    margin-bottom: 20px;
+}
+
+.icon {
+    font-size: 70px;
+}
+
+button {
+    margin-top: 10px;
+    width: 50%;
+}
