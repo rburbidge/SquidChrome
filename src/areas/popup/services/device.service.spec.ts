@@ -30,22 +30,6 @@ describe('DeviceService', () => {
         httpRequestSpy = spyOn(httpClient, 'request')
     });
 
-    describe('Authorization', () => {
-        it('Adds Authorization header to request options', (done) => {
-            const authToken = 'The auth token';
-
-            spyOn(chrome, 'getAuthToken').and.returnValue(Promise.resolve(authToken));
-
-            httpRequestSpy.and.returnValue(asyncData(Promise.resolve([])));
-
-            service.getDevices()
-                .then(() => {
-                    expect(getSentHeader('Authorization')).toBe(`Bearer Google OAuth Access Token=${authToken}`);
-                    done();
-                });
-        });
-    });
-
     /**
      * Create async observable that emits-once and completes after a JS engine turn.
      * Copied from https://angular.io/guide/testing.
