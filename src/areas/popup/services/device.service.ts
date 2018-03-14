@@ -48,31 +48,24 @@ export class DeviceService {
      * @param responseType The response type. Default is 'json'.
      */
     private sendRequest<T>(method: string, relativePath: string, body?: any, responseType?: string): Promise<T> {
+        const headers = {
+            'Cache-Control': 'no-cache',
+        };
+        if(body) {
+            headers['Content-type'] = 'application/json';
+        }
 
-        return this.getAuthHeader()
-            .then(authHeader => {
-                let headers = {
-                    'Authorization': authHeader,
-                    'Cache-Control': 'no-cache',
-                };
-                if(body) {
-                    headers['Content-type'] = 'application/json';
-                }
-                
-                return headers;
-            })
-            .then(headers => {
-                const options: any = {
-                    headers: new HttpHeaders(headers)
-                };
-                if(body) {
-                    options.body = body;
-                }
-                if(responseType) {
-                    options.responseType = responseType;
-                }
-                return this.http.request<T>(method, this.baseUrl + relativePath, options).toPromise();
-            })
+        const options: any = {
+            headers: new HttpHeaders(headers)
+        };
+        if(body) {
+            options.body = body;
+        }
+        if(responseType) {
+            options.responseType = responseType;
+        }
+
+        return this.http.request<T>(method, this.baseUrl + relativePath, options).toPromise()
             .catch((response: any) => {
                 if(response instanceof ChromeErrorModel) {
                     throw response;
@@ -103,13 +96,5 @@ export class DeviceService {
 
                 throw error;
             });
-    }
-
-    /**
-     * Retrieves the Authorization header value containing the auth token.
-     */
-    private getAuthHeader(): Promise<string> {
-        return this.chrome.getAuthToken(false)
-            .then(authToken => createAuthHeader(AuthHeader.GoogleOAuthAccessToken, authToken));
     }
 };

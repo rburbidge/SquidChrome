@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -30,6 +30,7 @@ import { ManageDevicesComponent } from './components/options/manage-devices/mana
 import { OptionsListComponent } from './components/options/options-list/options-list.component';
 import { Strings } from '../../assets/strings/strings';
 import { DeviceComponent } from './components/options/device/device.component';
+import { SquidAuthInterceptor } from './services/squid/squid-auth.interceptor';
 
 const strings = new Strings();
 
@@ -102,7 +103,20 @@ const strings = new Strings();
         DeviceGridComponent,
         ToolbarComponent,
     ],
-    providers: [IsAppInitialized, ChromeService, GcmService, SettingsService, DeviceService, WindowService],
+    providers: [
+        ChromeService,
+        IsAppInitialized,
+        GcmService,
+        SettingsService,
+        DeviceService,
+        WindowService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: SquidAuthInterceptor,
+            multi: true,
+            deps: [ChromeService]
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
