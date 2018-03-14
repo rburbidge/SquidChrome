@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { callRejectOnError } from '../../common/chrome-promise';
 import { DeviceModel } from '../../../contracts/squid';
+import { ChromeDeviceModel, convertDeviceModel } from './squid-converter';
 
 /**
  * The app settings.
@@ -11,6 +11,8 @@ export interface Settings {
      * True iff the app has been initialized before.
      */
     initialized: boolean;
+
+    devices: ChromeDeviceModel[];
 }
 
 /**
@@ -27,7 +29,8 @@ export class SettingsService {
         // NOTE: All object-type fields should be null, not undefined. This is used to retrieve settings from Chrome
         // Storage. If a field is undefined, then it will not be retrieved.
         return {
-            initialized: false
+            initialized: false,
+            devices: null
         }
     };
 
@@ -45,31 +48,21 @@ export class SettingsService {
                         reject(chrome.runtime.lastError);
                     }
 
+                    settings.devices = settings.devices.map(convertDeviceModel);
                     resolve(settings);
                 });
         });
     }
 
-    /**
-     * Sets the selected device.
-     */
-    public setSelectedDevice(device: DeviceModel): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            chrome.storage.sync.set(
-                { device: device },
-                () => callRejectOnError(resolve, reject));
-        });
+    public setDevices(devices: DeviceModel[]): Promise<void> {
+        return this.set({ devices: devices });
     }
 
     /**
      * Set the app as initialized.
      */
     public setInitialized(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            chrome.storage.sync.set(
-                { initialized: true },
-                () => callRejectOnError(resolve, reject));
-        });
+        return this.set({ initialized: true });
     }
 
     /**
@@ -78,8 +71,26 @@ export class SettingsService {
     public reset(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             chrome.storage.sync.clear(
-                () => callRejectOnError(resolve, reject));
+                () => this.callRejectOnError(resolve, reject));
         });
     }
 
+    private set(items: any): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            chrome.storage.sync.set(
+                items,
+                () => this.callRejectOnError(resolve, reject));
+        });
+    }
+
+    /**
+     * Calls reject(chrome.runtime.lastError) if there was an error; calls resolve(); otherwise.
+     */
+    private callRejectOnError(resolve, reject): void {
+        if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+        }
+
+        resolve();
+    }
 }

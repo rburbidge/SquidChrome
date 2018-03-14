@@ -32,21 +32,23 @@ export class DeviceGridComponent implements OnInit {
     /**
      * Sync both the selected device, and the other devices from the server.
      */
-    public refreshDevices(): Promise<void> {
+    public refreshDevices(): any {
         this.isLoading = true;
         this.error = undefined;
         this.devices = undefined;
 
-        return this.deviceService.getDevices()
-            .then(devices => {
-                this.isLoading = false;
-                this.devices = devices;
-                this.onLoad.emit(this.devices);
-            })
-            .catch((error: ErrorModel) => {
-                this.isLoading = false;
-                this.error = this.strings.devices.refreshError;
-                this.onError.emit(error)
+        return this.deviceService.getDevices2()
+            .subscribe({
+                next: (devices) => {
+                    this.isLoading = false;
+                    this.devices = devices;
+                    this.onLoad.emit(this.devices);
+                },
+                error: (error) => {
+                    this.isLoading = false;
+                    this.error = this.strings.devices.refreshError;
+                    this.onError.emit(error)
+                }
             });
     }
 

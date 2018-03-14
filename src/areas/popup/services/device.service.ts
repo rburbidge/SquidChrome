@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/observable/fromPromise';
 
 import { Config } from '../../../config/config';
 import { AddDeviceBody, CommandBody, DeviceModel, ErrorCode, ErrorModel, AuthHeader, createAuthHeader } from '../../../contracts/squid';
 import { ChromeDeviceModel, convertDeviceModel, ChromeErrorModel } from './squid-converter';
 import { ChromeService } from './chrome.service';
+import { SettingsService } from './settings.service';
 
 /**
  * The device service.
@@ -17,7 +20,8 @@ export class DeviceService {
     private static timeoutMillis: number = 3000;
 
     constructor(private readonly http: HttpClient,
-                private readonly chrome: ChromeService) { }
+                private readonly chrome: ChromeService,
+                private readonly settings: SettingsService) { }
 
     public addDevice(deviceInfo: AddDeviceBody): Promise<ChromeDeviceModel> {
         return this.sendRequest<ChromeDeviceModel>('POST', '/api/devices', deviceInfo)
@@ -31,6 +35,33 @@ export class DeviceService {
     public getDevices(): Promise<ChromeDeviceModel[]> {
         return this.sendRequest<ChromeDeviceModel[]>('GET', '/api/devices')
             .then(devices => devices.map(device => convertDeviceModel(device)));
+    }
+
+    public getDevices2(): Observable<ChromeDeviceModel[]> {
+        let cachedDevices: ChromeDeviceModel[];
+
+        return new Observable(observer => {
+            this.settings.getSettings()
+                .then(settings => {
+                    cachedDevices = settings.devices;
+                    if(cachedDevices) {
+                        observer.next(settings.devices);
+                    }
+                })
+                .then(() => this.getDevices())
+                .then(updatedDevices => {
+                    // Emit updated devices only if updated differs from cache
+                    if(JSON.stringify(cachedDevices) != JSON.stringify(updatedDevices)) {
+                        return this.settings.setDevices(updatedDevices)
+                            .then(() => {
+                                observer.next(updatedDevices);
+                                observer.complete();
+                            })
+                    } else {
+                        observer.complete();
+                    }
+                });
+        });
     }
 
     public sendUrl(id: string, url: string): Promise<any> {

@@ -21,5 +21,4 @@ export class SquidAuthInterceptor implements HttpInterceptor {
                 return next.handle(request);
             });
     }
-    
 }
