@@ -57,7 +57,7 @@ const strings = new Strings();
                     { path: Route.options.developer, component: DeveloperComponent, data: { title: strings.developer.title } },
                     { path: Route.options.list, component: OptionsListComponent, data: { title: strings.options.title } },
                     { path: Route.options.manageDevices, component: ManageDevicesComponent, data: { title: strings.manageDevices.title } },
-                    { path: Route.options.manageDevice, component: DeviceComponent, data: { title: strings.device.title } },
+                    { path: Route.options.manageDevice, component: DeviceComponent },
                 ]
             },
             {
