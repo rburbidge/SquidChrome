@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed, ComponentFixtureAutoDetect } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Location } from '@angular/common';
@@ -94,6 +95,13 @@ describe('DeviceComponent', () => {
                 expect(deviceService.removeDevice).toHaveBeenCalledWith(routeParams.deviceId);
                 done();
             });
+        });
+    });
+
+    describe('Template', () => {
+        it('Shows device title and icon', () => {
+            expect(fixture.debugElement.query(By.css('.name')).nativeElement.innerHTML).toBe(routeParams.deviceName);
+            expect(fixture.debugElement.query(By.css('.icon')).nativeElement.innerHTML).toBe(routeParams.deviceIcon);
         });
     });
 });
