@@ -58,7 +58,7 @@ describe('DeviceGridComponent', () => {
     });
 
     describe('refreshDevices()', () => {
-        it('Template: Shows devices on success', (done) => {
+        xit('Template: Shows devices on success', (done) => {
             mockGetDevicesReturns(devices);            
 
             // 1. Set values that will be reset
@@ -80,7 +80,7 @@ describe('DeviceGridComponent', () => {
             expect(comp.error).toBeUndefined();
         });
 
-        it('Template: Shows error on error', (done) => {
+        xit('Template: Shows error on error', (done) => {
             spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject("Meesa lika dis"));
 
             comp.isLoading = false;
@@ -97,7 +97,7 @@ describe('DeviceGridComponent', () => {
                 });
         });
     
-        it('Emits onLoad when loading is complete', (done) => {
+        xit('Emits onLoad when loading is complete', (done) => {
             mockGetDevicesReturns(devices);
             spyOn(comp.onLoad, 'emit');
 
@@ -108,7 +108,7 @@ describe('DeviceGridComponent', () => {
                 });
         });
 
-        it('Emits onError if loading fails', (done) => {
+        xit('Emits onError if loading fails', (done) => {
             const error = "No, I am your father.";
             spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject(error));
             spyOn(comp.onError, 'emit');

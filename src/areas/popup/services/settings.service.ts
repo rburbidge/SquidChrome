@@ -7,11 +7,6 @@ import { ChromeDeviceModel, convertDeviceModel } from './squid-converter';
  * The app settings.
  */
 export interface Settings {
-    /**
-     * True iff the app has been initialized before.
-     */
-    initialized: boolean;
-
     devices: ChromeDeviceModel[];
 }
 
@@ -29,7 +24,6 @@ export class SettingsService {
         // NOTE: All object-type fields should be null, not undefined. This is used to retrieve settings from Chrome
         // Storage. If a field is undefined, then it will not be retrieved.
         return {
-            initialized: false,
             devices: null
         }
     };
