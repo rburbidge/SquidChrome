@@ -4,6 +4,10 @@ import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/throw';
+
 import { ChromeService } from '../../../services/chrome.service';
 import { DeveloperComponent } from '../../developer/developer.component';
 import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../../../contracts/squid';
@@ -97,27 +101,27 @@ describe('DeviceGridComponent', () => {
                 });
         });
     
-        xit('Emits onLoad when loading is complete', (done) => {
+        it('Emits onLoad when loading is complete', (done) => {
             mockGetDevicesReturns(devices);
-            spyOn(comp.onLoad, 'emit');
 
-            comp.refreshDevices()
-                .then(() => {
-                    expect(comp.onLoad.emit).toHaveBeenCalledWith(devices);
+            comp.onLoad.asObservable()
+                .subscribe(calledDevices => {
+                    expect(calledDevices).toBe(devices);
                     done();
                 });
+            comp.refreshDevices();
         });
 
-        xit('Emits onError if loading fails', (done) => {
+        it('Emits onError if loading fails', (done) => {
             const error = "No, I am your father.";
-            spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject(error));
-            spyOn(comp.onError, 'emit');
+            spyOn(deviceService, 'getDevices2').and.returnValue(Observable.throw(error));
 
-            comp.refreshDevices()
-                .then(() => {
-                    expect(comp.onError.emit).toHaveBeenCalledWith(error);
+            comp.onError.asObservable()
+                .subscribe(actualError => {
+                    expect(actualError).toBe(error as any);
                     done();
                 });
+            comp.refreshDevices();
         });
     });
 
@@ -162,7 +166,7 @@ describe('DeviceGridComponent', () => {
     }
 
     function mockGetDevicesReturns(devices: DeviceModel[]): jasmine.Spy {
-        return spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices))
+        return spyOn(deviceService, 'getDevices2').and.returnValue(Observable.of(devices));
     }
 
     function testHeaderTextShown(expectedText) {
