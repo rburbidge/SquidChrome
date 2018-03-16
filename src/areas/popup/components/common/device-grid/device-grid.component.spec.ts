@@ -69,8 +69,8 @@ describe('DeviceGridComponent', () => {
             comp.isLoading = false;
             comp.error = `You'd say, "boom de gasa"... den crashded da boss's heyblibber... den banished.`;
 
-            comp.refreshDevices()
-                .then(() => {
+            comp.onLoad.asObservable()
+                .subscribe(() => {
                     // 3. Final assertions
                     expect(comp.devices).toEqual(devices);
                     expect(comp.error).toBeUndefined();
@@ -78,18 +78,19 @@ describe('DeviceGridComponent', () => {
                     
                     done();
                 });
+            comp.refreshDevices();
 
             // 2. Test that values are reset
             expect(comp.isLoading).toBeTruthy();
             expect(comp.error).toBeUndefined();
         });
 
-        xit('Template: Shows error on error', (done) => {
-            spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject("Meesa lika dis"));
+        it('Template: Shows error on error', (done) => {
+            spyOn(deviceService, 'getDevices2').and.returnValue(Observable.throw("Meesa lika dis"));
 
             comp.isLoading = false;
-            comp.refreshDevices()
-                .then(() => {
+            comp.onError.asObservable()
+                .subscribe(actualError => {
                     expect(comp.isLoading).toBeFalsy(); 
                     expect(comp.error).toBe(comp.strings.devices.refreshError);
                     fixture.detectChanges();
@@ -99,6 +100,7 @@ describe('DeviceGridComponent', () => {
                     expect(error.nativeElement.textContent).toContain(comp.strings.devices.refreshError);
                     done();
                 });
+            comp.refreshDevices();
         });
     
         it('Emits onLoad when loading is complete', (done) => {
@@ -172,11 +174,5 @@ describe('DeviceGridComponent', () => {
     function testHeaderTextShown(expectedText) {
         let header = fixture.debugElement.query(By.css('.squid-options-header'));
         expect(header.nativeElement.textContent).toContain(expectedText);
-    }
-
-    function setupCompWithDevices(devices: DeviceModel[]): Promise<void> {
-        mockGetDevicesReturns(devices);
-
-        return comp.ngOnInit();
     }
 });

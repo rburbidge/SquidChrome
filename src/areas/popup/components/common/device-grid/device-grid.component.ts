@@ -32,12 +32,12 @@ export class DeviceGridComponent implements OnInit {
     /**
      * Sync both the selected device, and the other devices from the server.
      */
-    public refreshDevices(): any {
+    public refreshDevices(): void {
         this.isLoading = true;
         this.error = undefined;
         this.devices = undefined;
 
-        return this.deviceService.getDevices2()
+        this.deviceService.getDevices2()
             .subscribe({
                 next: (devices) => {
                     this.isLoading = false;
@@ -65,7 +65,7 @@ export class DeviceGridComponent implements OnInit {
         return !this.showAddDevice;
     }
 
-    public ngOnInit(): Promise<void> {
-        return this.refreshDevices();
+    public ngOnInit(): void {
+        this.refreshDevices();
     }
 }
