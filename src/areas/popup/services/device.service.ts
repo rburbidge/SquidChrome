@@ -32,12 +32,21 @@ export class DeviceService {
         return this.sendRequest('DELETE', `/api/devices/${id}`, undefined, 'text');
     }
 
+    /**
+     * Returns the user's devices. The devices are always refreshed, never cached.
+     */
     public getDevices(): Promise<ChromeDeviceModel[]> {
         return this.sendRequest<ChromeDeviceModel[]>('GET', '/api/devices')
             .then(devices => devices.map(device => convertDeviceModel(device)));
     }
 
-    public getDevices2(): Observable<ChromeDeviceModel[]> {
+    /**
+     * Returns the user's cached devices, if any. If the devices on the server differ, then emits again with the updated
+     * devices.
+     * 
+     * Emits complete when finished.
+     */
+    public getDevicesCached(): Observable<ChromeDeviceModel[]> {
         let cachedDevices: ChromeDeviceModel[];
 
         return new Observable(observer => {

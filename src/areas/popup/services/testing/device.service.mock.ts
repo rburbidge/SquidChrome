@@ -11,7 +11,7 @@ export class MockDeviceService extends DeviceService {
         return Promise.resolve(undefined);
     }
 
-    public getDevices2(): Observable<ChromeDeviceModel[]> {
+    public getDevicesCached(): Observable<ChromeDeviceModel[]> {
         return Observable.of(undefined);
     }
 };

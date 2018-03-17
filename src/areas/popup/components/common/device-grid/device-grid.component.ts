@@ -37,7 +37,7 @@ export class DeviceGridComponent implements OnInit {
         this.error = undefined;
         this.devices = undefined;
 
-        this.deviceService.getDevices2()
+        this.deviceService.getDevicesCached()
             .subscribe({
                 next: (devices) => {
                     this.isLoading = false;

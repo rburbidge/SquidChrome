@@ -85,7 +85,7 @@ describe('DeviceGridComponent', () => {
         });
 
         it('Template: Shows error on error', (done) => {
-            spyOn(deviceService, 'getDevices2').and.returnValue(Observable.throw("Meesa lika dis"));
+            spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.throw("Meesa lika dis"));
 
             comp.isLoading = false;
             comp.onError.asObservable()
@@ -116,7 +116,7 @@ describe('DeviceGridComponent', () => {
 
         it('Emits onError if loading fails', (done) => {
             const error = "No, I am your father.";
-            spyOn(deviceService, 'getDevices2').and.returnValue(Observable.throw(error));
+            spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.throw(error));
 
             comp.onError.asObservable()
                 .subscribe(actualError => {
@@ -168,7 +168,7 @@ describe('DeviceGridComponent', () => {
     }
 
     function mockGetDevicesReturns(devices: DeviceModel[]): jasmine.Spy {
-        return spyOn(deviceService, 'getDevices2').and.returnValue(Observable.of(devices));
+        return spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.of(devices));
     }
 
     function testHeaderTextShown(expectedText) {
