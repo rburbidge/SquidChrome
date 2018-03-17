@@ -16,7 +16,7 @@ import { ErrorModel } from "../../../../../contracts/squid";
 export class DeviceGridComponent implements OnInit {
     public readonly strings: Strings = new Strings();
     public isLoading: boolean = true;
-    public devices: ChromeDeviceModel[] = [];
+    public devices: ChromeDeviceModel[];
     public error: string;
 
     /** Whether or not to show the show add device button. */
@@ -30,23 +30,25 @@ export class DeviceGridComponent implements OnInit {
     constructor(private readonly deviceService: DeviceService) { }
 
     /**
-     * Sync both the selected device, and the other devices from the server.
+     * Sync the devices from the server.
      */
-    public refreshDevices(): Promise<void> {
+    public refreshDevices(): void {
         this.isLoading = true;
         this.error = undefined;
         this.devices = undefined;
 
-        return this.deviceService.getDevices()
-            .then(devices => {
-                this.isLoading = false;
-                this.devices = devices;
-                this.onLoad.emit(this.devices);
-            })
-            .catch((error: ErrorModel) => {
-                this.isLoading = false;
-                this.error = this.strings.devices.refreshError;
-                this.onError.emit(error)
+        this.deviceService.getDevicesCached()
+            .subscribe({
+                next: (devices) => {
+                    this.isLoading = false;
+                    this.devices = devices;
+                    this.onLoad.emit(this.devices);
+                },
+                error: (error) => {
+                    this.isLoading = false;
+                    this.error = this.strings.devices.refreshError;
+                    this.onError.emit(error)
+                }
             });
     }
 
@@ -63,7 +65,7 @@ export class DeviceGridComponent implements OnInit {
         return !this.showAddDevice;
     }
 
-    public ngOnInit(): Promise<void> {
-        return this.refreshDevices();
+    public ngOnInit(): void {
+        this.refreshDevices();
     }
 }

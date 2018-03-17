@@ -12,7 +12,6 @@ import { SelectDeviceComponent } from './select-device.component';
 import { MockChromeService } from '../../services/testing/chrome.service.mock';
 import { MockDeviceService } from '../../services/testing/device.service.mock';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Settings, SettingsService } from '../../services/settings.service';
 import { WindowService } from '../../services/window.service';
 import { ChromeDeviceModel, ChromeErrorModel } from '../../services/squid-converter';
 import { Route } from '../../routing/route';
@@ -22,8 +21,6 @@ import { DeviceGridComponent } from '../common/device-grid/device-grid.component
 describe('SelectDeviceComponent', () => {
     let deviceService: DeviceService;
     let chromeService: ChromeService;
-    let settings: Settings;
-    let settingsService: SettingsService;
     let router: Router;
     let windowService: WindowService;
 
@@ -43,7 +40,6 @@ describe('SelectDeviceComponent', () => {
             imports: [ RouterTestingModule ],
             providers: [
                 { provide: ChromeService, useValue: new MockChromeService() },
-                { provide: SettingsService, useValue: new SettingsService() },
                 { provide: DeviceService, useValue: new MockDeviceService() },
                 { provide: WindowService, useValue: new WindowService() }
             ]
@@ -57,15 +53,8 @@ describe('SelectDeviceComponent', () => {
 
         deviceService = TestBed.get(DeviceService);
         chromeService = TestBed.get(ChromeService);
-        settingsService = TestBed.get(SettingsService);
         router = TestBed.get(Router);
         windowService = TestBed.get(WindowService);
-
-        // Mock the settings object. If a test wants to override settings, it can modify this object
-        settings = {
-            initialized: true
-        };
-        getSettings = spyOn(settingsService, 'getSettings').and.returnValue(Promise.resolve(settings));
     })
 
     describe('constructor',() => {

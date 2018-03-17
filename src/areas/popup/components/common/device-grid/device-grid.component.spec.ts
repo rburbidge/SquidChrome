@@ -4,6 +4,10 @@ import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/throw';
+
 import { ChromeService } from '../../../services/chrome.service';
 import { DeveloperComponent } from '../../developer/developer.component';
 import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../../../contracts/squid';
@@ -50,6 +54,7 @@ describe('DeviceGridComponent', () => {
 
     describe('constructor',() => {
         it('Has correct default values', function() {
+            let comp = new DeviceGridComponent(null);
             expect(comp.isLoading).toBeTruthy();
             expect(comp.devices).toBeUndefined();
             expect(comp.error).toBeUndefined();
@@ -61,63 +66,64 @@ describe('DeviceGridComponent', () => {
         it('Template: Shows devices on success', (done) => {
             mockGetDevicesReturns(devices);            
 
-            // 1. Set values that will be reset
             comp.isLoading = false;
             comp.error = `You'd say, "boom de gasa"... den crashded da boss's heyblibber... den banished.`;
 
-            comp.refreshDevices()
-                .then(() => {
-                    // 3. Final assertions
+            comp.onLoad.asObservable()
+                .subscribe(() => {
                     expect(comp.devices).toEqual(devices);
                     expect(comp.error).toBeUndefined();
-                    expect(comp.isLoading).toBeFalsy(); 
-                    
+                    expect(comp.isLoading).toBeFalsy();
+
+                    fixture.detectChanges();
+                    const devicesElements = fixture.debugElement.queryAll(By.css('.device'));
+                    expect(devicesElements.length).toBe(devices.length);
+
                     done();
                 });
-
-            // 2. Test that values are reset
-            expect(comp.isLoading).toBeTruthy();
-            expect(comp.error).toBeUndefined();
+            comp.refreshDevices();
         });
 
         it('Template: Shows error on error', (done) => {
-            spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject("Meesa lika dis"));
+            spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.throw("Meesa lika dis"));
 
             comp.isLoading = false;
-            comp.refreshDevices()
-                .then(() => {
+            comp.onError.asObservable()
+                .subscribe(actualError => {
                     expect(comp.isLoading).toBeFalsy(); 
                     expect(comp.error).toBe(comp.strings.devices.refreshError);
+
                     fixture.detectChanges();
-                    
                     const  error = fixture.debugElement.query(By.css('.error'));
                     expect(error).toBeTruthy();
                     expect(error.nativeElement.textContent).toContain(comp.strings.devices.refreshError);
+                    
                     done();
                 });
+            comp.refreshDevices();
         });
     
         it('Emits onLoad when loading is complete', (done) => {
             mockGetDevicesReturns(devices);
-            spyOn(comp.onLoad, 'emit');
 
-            comp.refreshDevices()
-                .then(() => {
-                    expect(comp.onLoad.emit).toHaveBeenCalledWith(devices);
+            comp.onLoad.asObservable()
+                .subscribe(calledDevices => {
+                    expect(calledDevices).toBe(devices);
                     done();
                 });
+            comp.refreshDevices();
         });
 
         it('Emits onError if loading fails', (done) => {
             const error = "No, I am your father.";
-            spyOn(deviceService, 'getDevices').and.returnValue(Promise.reject(error));
-            spyOn(comp.onError, 'emit');
+            spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.throw(error));
 
-            comp.refreshDevices()
-                .then(() => {
-                    expect(comp.onError.emit).toHaveBeenCalledWith(error);
+            comp.onError.asObservable()
+                .subscribe(actualError => {
+                    expect(actualError).toBe(error as any);
                     done();
                 });
+            comp.refreshDevices();
         });
     });
 
@@ -162,17 +168,11 @@ describe('DeviceGridComponent', () => {
     }
 
     function mockGetDevicesReturns(devices: DeviceModel[]): jasmine.Spy {
-        return spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices))
+        return spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.of(devices));
     }
 
     function testHeaderTextShown(expectedText) {
         let header = fixture.debugElement.query(By.css('.squid-options-header'));
         expect(header.nativeElement.textContent).toContain(expectedText);
-    }
-
-    function setupCompWithDevices(devices: DeviceModel[]): Promise<void> {
-        mockGetDevicesReturns(devices);
-
-        return comp.ngOnInit();
     }
 });

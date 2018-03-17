@@ -14,7 +14,6 @@ import { ChromeService } from './services/chrome.service';
 import { DescriptionComponent } from './components/intro/description/description.component';
 import { IntroBottomComponent } from './components/intro/intro-bottom/intro-bottom.component';
 import { IntroComponent } from './components/intro/intro.component';
-import { IsAppInitialized } from './routing/is-app-initialized';
 import { DeveloperComponent } from './components/developer/developer.component';
 import { DeviceService } from './services/device.service';
 import { GcmService } from './services/gcm.service';
@@ -105,7 +104,6 @@ const strings = new Strings();
     ],
     providers: [
         ChromeService,
-        IsAppInitialized,
         GcmService,
         SettingsService,
         DeviceService,
