@@ -20,7 +20,6 @@ export class DeviceService {
     private static timeoutMillis: number = 3000;
 
     constructor(private readonly http: HttpClient,
-                private readonly chrome: ChromeService,
                 private readonly settings: SettingsService) { }
 
     public addDevice(deviceInfo: AddDeviceBody): Promise<ChromeDeviceModel> {

@@ -30,7 +30,7 @@ export class DeviceGridComponent implements OnInit {
     constructor(private readonly deviceService: DeviceService) { }
 
     /**
-     * Sync both the selected device, and the other devices from the server.
+     * Sync the devices from the server.
      */
     public refreshDevices(): void {
         this.isLoading = true;

@@ -7,6 +7,7 @@ import { ChromeDeviceModel, convertDeviceModel } from './squid-converter';
  * The app settings.
  */
 export interface Settings {
+    /** The user's current set of devices, including this device. */
     devices: ChromeDeviceModel[];
 }
 
