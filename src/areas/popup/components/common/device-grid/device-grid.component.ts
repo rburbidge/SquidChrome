@@ -16,7 +16,7 @@ import { ErrorModel } from "../../../../../contracts/squid";
 export class DeviceGridComponent implements OnInit {
     public readonly strings: Strings = new Strings();
     public isLoading: boolean = true;
-    public devices: ChromeDeviceModel[] = [];
+    public devices: ChromeDeviceModel[];
     public error: string;
 
     /** Whether or not to show the show add device button. */
