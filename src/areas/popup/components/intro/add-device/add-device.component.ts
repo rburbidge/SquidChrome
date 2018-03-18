@@ -37,9 +37,13 @@ export class AddDeviceComponent {
             name = this.strings.addDevice.defaultDeviceName;
         }
 
+        let newGcmToken: string;
         return this.gcmService.register([Config.gcmSenderId])
-            .then(gcmToken => this.deviceService.addDevice({name: name, gcmToken: gcmToken, deviceType: DeviceType.chrome}))
-            .then(() => this.settingsService.setInitialized())
+            .then(gcmToken => {
+                newGcmToken = gcmToken;
+                return this.deviceService.addDevice({name: name, gcmToken: newGcmToken, deviceType: DeviceType.chrome});
+            })
+            .then(newDevice => this.settingsService.setThisDevice(newDevice.id, newGcmToken))
             .then(() => this.deviceService.getDevices())
             .then(devices => {
                 // Send user to SelectDeviceComponent if they had other devices; AddOtherDeviceComponent otherwise

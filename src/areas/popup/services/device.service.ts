@@ -46,20 +46,15 @@ export class DeviceService {
      * Emits complete when finished.
      */
     public getDevicesCached(): Observable<ChromeDeviceModel[]> {
-        let cachedDevices: ChromeDeviceModel[];
-
         return new Observable(observer => {
-            this.settings.getSettings()
-                .then(settings => {
-                    cachedDevices = settings.devices;
-                    if(cachedDevices) {
-                        observer.next(settings.devices);
-                    }
-                })
-                .then(() => this.getDevices())
+            if(this.settings.settings.devices) {
+                observer.next(this.settings.settings.devices);
+            }
+
+            this.getDevices()
                 .then(updatedDevices => {
                     // Emit updated devices only if updated differs from cache
-                    if(JSON.stringify(cachedDevices) != JSON.stringify(updatedDevices)) {
+                    if(JSON.stringify(this.settings.settings.devices) != JSON.stringify(updatedDevices)) {
                         return this.settings.setDevices(updatedDevices)
                             .then(() => {
                                 observer.next(updatedDevices);
@@ -114,7 +109,7 @@ export class DeviceService {
 
                 // Resolve on 302. This indicates that a POST request resulted in no change in storage (e.g. Found)
                 if(httpErrorResponse.status === 302) {
-                    return response;
+                    return response.error;
                 }
 
                 let error: ErrorModel;

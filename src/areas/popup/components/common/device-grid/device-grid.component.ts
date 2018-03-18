@@ -4,6 +4,7 @@ import { Strings } from "../../../../../assets/strings/strings";
 import { DeviceService } from "../../../services/device.service";
 import { ChromeDeviceModel } from "../../../services/squid-converter";
 import { ErrorModel } from "../../../../../contracts/squid";
+import { SettingsService } from "../../../services/settings.service";
 
 /**
  * Shows a grid of the user's devices.
@@ -19,6 +20,9 @@ export class DeviceGridComponent implements OnInit {
     public devices: ChromeDeviceModel[];
     public error: string;
 
+    /** Whether or not to show this device. */
+    @Input() showThisDevice: boolean = true;
+
     /** Whether or not to show the show add device button. */
     @Input() showAddDevice: boolean = false;
     
@@ -27,7 +31,9 @@ export class DeviceGridComponent implements OnInit {
     @Output() readonly onDeviceClick = new EventEmitter<ChromeDeviceModel>();
     @Output() readonly onAddDeviceClick = new EventEmitter();
 
-    constructor(private readonly deviceService: DeviceService) { }
+    constructor(
+        private readonly deviceService: DeviceService,
+        private readonly settingsService: SettingsService) { }
 
     /**
      * Sync the devices from the server.
@@ -41,7 +47,13 @@ export class DeviceGridComponent implements OnInit {
             .subscribe({
                 next: (devices) => {
                     this.isLoading = false;
+
                     this.devices = devices;
+                    if(!this.showThisDevice) { // Filter out the current device
+                        const thisDeviceId = this.settingsService.settings.thisDevice && this.settingsService.settings.thisDevice.id;
+                        this.devices = this.devices.filter(device => device.id != thisDeviceId);
+                    }
+
                     this.onLoad.emit(this.devices);
                 },
                 error: (error) => {

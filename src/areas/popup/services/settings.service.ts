@@ -7,17 +7,32 @@ import { ChromeDeviceModel, convertDeviceModel } from './squid-converter';
  * The app settings.
  */
 export interface Settings {
-    /** The user's current set of devices, including this device. */
-    devices: ChromeDeviceModel[];
+    /** The user's current set of devices, including this device. Defined when the user has loaded their devices before. */
+    devices?: ChromeDeviceModel[];
+
+    /** This device's information. Defined when the user has registered this device. */
+    thisDevice?: {
+        gcmToken: string;
+        id: string;
+    };
 }
 
 /**
  * Abstraction for settings, stored in chrome.storage.sync.
+ * 
+ * To use SettingsService, create an instance and call init(). Settings can then be retrieved synchronously from the 'settings'
+ * field. This field will be updated whenever settings are updated.
+ * 
  * @see https://developer.chrome.com/apps/storage
  */
 @Injectable()
 export class SettingsService {
     
+    /**
+     * The settings. Use after init() is called.
+     */
+    public settings: Settings = SettingsService.createDefault();
+
     /**
      * Creates the default settings. Used by production and test code.
      */
@@ -25,17 +40,17 @@ export class SettingsService {
         // NOTE: All object-type fields should be null, not undefined. This is used to retrieve settings from Chrome
         // Storage. If a field is undefined, then it will not be retrieved.
         return {
-            devices: null
+            devices: null,
+            thisDevice: null
         }
     };
 
     /**
-     * Gets the settings from chrome storage.
-     * 
-     * This can be split into separate APIs in the future if the app ends up having a large amount of settings.
+     * Initialize the SettingsService. Called once on app startup, after which settings will be defined.
      */
-    public getSettings(): Promise<Settings> {
-        return new Promise<Settings>((resolve, reject) => {
+    public init(): Promise<void> {
+        let start = new Date().getTime();
+        return new Promise<void>((resolve, reject) => {
             chrome.storage.sync.get(
                 SettingsService.createDefault(),
                 (settings: Settings) => {
@@ -43,21 +58,32 @@ export class SettingsService {
                         reject(chrome.runtime.lastError);
                     }
 
-                    settings.devices = settings.devices.map(convertDeviceModel);
-                    resolve(settings);
+                    settings.devices = settings.devices && settings.devices.map(convertDeviceModel);
+                    Object.assign(this.settings, settings);
+                    console.log(new Date().getTime() - start);
+                    resolve();
                 });
         });
     }
 
-    public setDevices(devices: DeviceModel[]): Promise<void> {
+    /**
+     * Sets the cached devices.
+     * @param devices The new set of cached devices.
+     */
+    public setDevices(devices: ChromeDeviceModel[]): Promise<void> {
         return this.set({ devices: devices });
     }
 
     /**
-     * Set the app as initialized.
+     * Set the current device information.
      */
-    public setInitialized(): Promise<void> {
-        return this.set({ initialized: true });
+    public setThisDevice(deviceId: string, gcmToken: string): Promise<void> {
+        return this.set({
+            thisDevice: {
+                id: deviceId,
+                gcmToken: gcmToken
+            }
+        });
     }
 
     /**
@@ -70,11 +96,19 @@ export class SettingsService {
         });
     }
 
-    private set(items: any): Promise<void> {
+    private set(items: Settings): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             chrome.storage.sync.set(
                 items,
-                () => this.callRejectOnError(resolve, reject));
+                () => {
+                    if(chrome.runtime.lastError) {
+                        reject(chrome.runtime.lastError);
+                    } else {
+                        // Update the settings object with the new value
+                        Object.assign(this.settings, items);
+                        resolve();
+                    }
+                });
         });
     }
 
