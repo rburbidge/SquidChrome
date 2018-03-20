@@ -17,12 +17,16 @@ import { ChromeDeviceModel, ChromeErrorModel } from '../../services/squid-conver
 import { Route } from '../../routing/route';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { DeviceGridComponent } from '../common/device-grid/device-grid.component';
+import { SettingsService } from '../../services/settings.service';
+import { createDevice } from '../../../../test/squid-helpers';
+import { Observable } from 'rxjs/Observable';
 
 describe('SelectDeviceComponent', () => {
     let deviceService: DeviceService;
     let chromeService: ChromeService;
     let router: Router;
     let windowService: WindowService;
+    let settingsService: SettingsService;
 
     let comp: SelectDeviceComponent;
     let fixture: ComponentFixture<SelectDeviceComponent>;
@@ -39,6 +43,7 @@ describe('SelectDeviceComponent', () => {
             declarations: [ DeviceGridComponent, SelectDeviceComponent, ToolbarComponent],
             imports: [ RouterTestingModule ],
             providers: [
+                SettingsService,
                 { provide: ChromeService, useValue: new MockChromeService() },
                 { provide: DeviceService, useValue: new MockDeviceService() },
                 { provide: WindowService, useValue: new WindowService() }
@@ -55,6 +60,7 @@ describe('SelectDeviceComponent', () => {
         chromeService = TestBed.get(ChromeService);
         router = TestBed.get(Router);
         windowService = TestBed.get(WindowService);
+        settingsService = TestBed.get(SettingsService);
     })
 
     describe('constructor',() => {
@@ -108,8 +114,9 @@ describe('SelectDeviceComponent', () => {
             expect(router.navigateByUrl).not.toHaveBeenCalled();
         });
 
-        it('Shows header text', () => {
-            comp.onLoad([null]);
+        it('Template: Shows header text', () => {
+            spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.of([createDevice()]));
+            comp.onLoad([createDevice()]);
             fixture.detectChanges();
             let header = fixture.debugElement.query(By.css('.header'));
             expect(header.nativeElement.textContent).toContain(comp.strings.devices.selectDevice);
@@ -132,15 +139,6 @@ describe('SelectDeviceComponent', () => {
             expect(routerNavigateByUrl).toHaveBeenCalledWith(Route.intro.base);
         }
     });
-
-    function createDevice(): ChromeDeviceModel {
-        return {
-            id: "id1",
-            name: "Nexus 5X",
-            deviceType: DeviceType.android,
-            getIcon: () => 'Icon'
-        };
-    }
 
     function mockIsSignedIntoChromeReturns(isSignedIn: boolean): jasmine.Spy {
         return spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.resolve(isSignedIn));

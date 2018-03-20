@@ -57,6 +57,6 @@ export class AddDeviceComponent {
             })
             .catch(error => {
                 // TODO Show some error message. Figure out how to do this in a uniform way
-            })
+            });
     }
 }

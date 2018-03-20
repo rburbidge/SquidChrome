@@ -4,13 +4,15 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { AddDeviceComponent } from './add-device.component';
 import { DeviceService } from '../../../services/device.service';
-import { DeviceType, DeviceModel } from '../../../../../contracts/squid';
+import { DeviceType, DeviceModel, ErrorCode } from '../../../../../contracts/squid';
 import { GcmService } from '../../../services/gcm.service';
 import { IntroBottomComponent } from '../intro-bottom/intro-bottom.component';
 import { loadCss } from '../../testing/css-loader';
 import { MockDeviceService } from '../../../services/testing/device.service.mock';
 import { Route } from '../../../routing/route';
 import { SettingsService } from '../../../services/settings.service';
+import { ChromeDeviceModel, convertDeviceModel } from '../../../services/squid-converter';
+import { createDevice } from '../../../../../test/squid-helpers';
 
 describe('AddDeviceComponent', () => {
     let deviceService: DeviceService;
@@ -21,10 +23,7 @@ describe('AddDeviceComponent', () => {
     let comp: AddDeviceComponent;
     let fixture: ComponentFixture<AddDeviceComponent>;
 
-    let gcmRegisterSpy: jasmine.Spy;
-    let addDeviceSpy: jasmine.Spy;
-    let navigateSpy: jasmine.Spy;
-    let setInitalizedSpy: jasmine.Spy;
+    let device: ChromeDeviceModel;
 
     beforeAll(() => {
         loadCss();
@@ -35,9 +34,9 @@ describe('AddDeviceComponent', () => {
             declarations: [ IntroBottomComponent, AddDeviceComponent ],
             imports: [ RouterTestingModule ],
             providers: [
+                SettingsService,
                 { provide: DeviceService, useValue: new MockDeviceService() },
                 { provide: GcmService, useValue: new GcmService() },
-                { provide: SettingsService, useValue: new SettingsService() }
             ]
         })
         .compileComponents();
@@ -51,22 +50,29 @@ describe('AddDeviceComponent', () => {
         gcmService = TestBed.get(GcmService);
         settingsService = TestBed.get(SettingsService);
         router = TestBed.get(Router);
+
+        device = createDevice();
     })
 
     describe('addDevice()', () => {
+        beforeEach(() => {
+            spyOn(settingsService, 'setThisDevice').and.returnValue(Promise.resolve());
+        });
+
         it('Base success case: Makes correct calls', (done) => {
             setupGetDevicesReturns([null, null]);
             setupMocks();
 
-            comp.addDevice(null)
-                .then(device => {
-                    expect(gcmRegisterSpy).toHaveBeenCalledTimes(1);
-                    expect(addDeviceSpy).toHaveBeenCalledTimes(1);
-                    expect(addDeviceSpy).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: 'GCM token', deviceType: DeviceType.chrome});
-                    expect(setInitalizedSpy).toHaveBeenCalledTimes(1);
+            comp.addDevice(device.name)
+                .then(() => {
+                    expect(gcmService.register).toHaveBeenCalledTimes(1);
+                    expect(deviceService.addDevice).toHaveBeenCalledTimes(1);
+                    expect(deviceService.addDevice).toHaveBeenCalledWith({ name: device.name, gcmToken: 'GCM token', deviceType: DeviceType.chrome});
+                    expect(settingsService.setThisDevice).toHaveBeenCalledTimes(1);
+                    expect(settingsService.setThisDevice).toHaveBeenCalledWith(device.id, 'GCM token');
                     expect(deviceService.getDevices).toHaveBeenCalledTimes(1);
-                    expect(navigateSpy).toHaveBeenCalledTimes(1);
-                    expect(navigateSpy).toHaveBeenCalledWith(Route.selectDevice);
+                    expect(router.navigateByUrl).toHaveBeenCalledTimes(1);
+                    expect(router.navigateByUrl).toHaveBeenCalledWith(Route.selectDevice);
                     done();
                 })
         });
@@ -76,7 +82,7 @@ describe('AddDeviceComponent', () => {
             comp.addDevice(null)
                 .then(device => {
                     // "Chrome Browser" is the default device name
-                    expect(addDeviceSpy).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: 'GCM token', deviceType: DeviceType.chrome});
+                    expect(deviceService.addDevice).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: 'GCM token', deviceType: DeviceType.chrome});
                     done();
                 })
         });
@@ -86,7 +92,7 @@ describe('AddDeviceComponent', () => {
             setupMocks();
             comp.addDevice(deviceName)
                 .then(device => {
-                    expect(addDeviceSpy).toHaveBeenCalledWith({ name: deviceName, gcmToken: 'GCM token', deviceType: DeviceType.chrome});
+                    expect(deviceService.addDevice).toHaveBeenCalledWith({ name: deviceName, gcmToken: 'GCM token', deviceType: DeviceType.chrome});
                     done();
                 })
         });
@@ -97,7 +103,7 @@ describe('AddDeviceComponent', () => {
             comp.addDevice(null)
                 .then(device => {
                     // "Chrome Browser" is the default device name
-                    expect(addDeviceSpy).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: gcmToken, deviceType: DeviceType.chrome});
+                    expect(deviceService.addDevice).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: gcmToken, deviceType: DeviceType.chrome});
                     done();
                 })
         });
@@ -130,10 +136,9 @@ describe('AddDeviceComponent', () => {
     }
 
     function setupMocks(gcmToken: string = "GCM token") {
-        gcmRegisterSpy = spyOn(gcmService, "register").and.returnValue(Promise.resolve(gcmToken));
-        addDeviceSpy = spyOn(deviceService, "addDevice").and.returnValue(Promise.resolve());
-        navigateSpy = spyOn(router, "navigateByUrl").and.returnValue(Promise.resolve());
+        spyOn(gcmService, "register").and.returnValue(Promise.resolve(gcmToken));
+        spyOn(deviceService, "addDevice").and.returnValue(Promise.resolve(device));
+        spyOn(router, "navigateByUrl").and.returnValue(Promise.resolve());
         spyOn(router, 'navigate').and.returnValue(Promise.resolve());
-        setInitalizedSpy = spyOn(settingsService, "setInitialized").and.returnValue(Promise.resolve());
     }
 });

@@ -38,6 +38,7 @@ describe('DeviceGridComponent', () => {
             declarations: [ DeveloperComponent, DeviceGridComponent, ToolbarComponent],
             imports: [ RouterTestingModule ],
             providers: [
+                SettingsService,
                 { provide: ComponentFixtureAutoDetect, useValue: true },
                 { provide: DeviceService, useValue: new MockDeviceService() },
             ]
@@ -54,7 +55,7 @@ describe('DeviceGridComponent', () => {
 
     describe('constructor',() => {
         it('Has correct default values', function() {
-            let comp = new DeviceGridComponent(null);
+            let comp = new DeviceGridComponent(null, null);
             expect(comp.isLoading).toBeTruthy();
             expect(comp.devices).toBeUndefined();
             expect(comp.error).toBeUndefined();
