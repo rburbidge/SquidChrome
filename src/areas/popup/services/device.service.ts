@@ -59,7 +59,7 @@ export class DeviceService {
                             .then(() => {
                                 observer.next(updatedDevices);
                                 observer.complete();
-                            })
+                            });
                     } else {
                         observer.complete();
                     }
