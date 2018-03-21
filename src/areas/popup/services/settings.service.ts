@@ -49,19 +49,22 @@ export class SettingsService {
      * Initialize the SettingsService. Called once on app startup, after which settings will be defined.
      */
     public init(): Promise<void> {
-        let start = new Date().getTime();
-        return new Promise<void>((resolve, reject) => {
+        return this.getSettings()
+            .then((settings) => {
+                Object.assign(this.settings, settings);
+            });
+    }
+
+    public getSettings(): Promise<{[key: string]: any}> {
+        return new Promise<{[key: string]: any}>((resolve, reject) => {
             chrome.storage.sync.get(
                 SettingsService.createDefault(),
-                (settings: Settings) => {
+                (settings) => {
                     if (chrome.runtime.lastError) {
                         reject(chrome.runtime.lastError);
+                    } else {
+                        resolve(settings);
                     }
-
-                    settings.devices = settings.devices && settings.devices.map(convertDeviceModel);
-                    Object.assign(this.settings, settings);
-                    console.log(new Date().getTime() - start);
-                    resolve();
                 });
         });
     }
