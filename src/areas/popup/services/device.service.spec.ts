@@ -5,11 +5,14 @@ import { defer } from "rxjs/observable/defer";
 
 import { DeviceService } from "./device.service";
 import { ChromeService } from "./chrome.service";
+import { SettingsService, Settings } from "./settings.service";
+import { createDevices } from "../../../test/squid-helpers";
 
 describe('DeviceService', () => {
     let service: DeviceService;
     let httpClient: HttpClient;
     let chrome: ChromeService;
+    let settingsService: SettingsService;
     let httpRequestSpy: jasmine.Spy;
 
     beforeEach(async(() => {
@@ -17,6 +20,7 @@ describe('DeviceService', () => {
             imports: [HttpClientTestingModule],
             providers: [
                 DeviceService,
+                SettingsService,
                 { provide: ChromeService, useValue: new ChromeService() }
             ]
         });
@@ -26,8 +30,38 @@ describe('DeviceService', () => {
         service = TestBed.get(DeviceService);
         httpClient = TestBed.get(HttpClient);
         chrome = TestBed.get(ChromeService);
+        settingsService = TestBed.get(SettingsService);
+        httpRequestSpy = spyOn(httpClient, 'request');
 
-        httpRequestSpy = spyOn(httpClient, 'request')
+        spyOn(settingsService, 'setDevices').and.returnValue(Promise.resolve());
+    });
+
+    describe('getDevicesCached()', () => {
+        it('Returns cached devices', (done) => {
+            const devices = createDevices();
+            spyOn(service, 'getDevices').and.returnValue(Promise.resolve(devices));
+            settingsService.settings.devices = devices;
+            service.getDevicesCached().subscribe(
+                (devices) => {
+                    expect(devices).toEqual(settingsService.settings.devices);
+                    done();
+                });
+        });
+
+        it('Returns server`s devices if not cached', (done) => {
+            spyOn(service, 'getDevices').and.returnValue(Promise.resolve([]));
+            
+            settingsService.settings.devices = null;
+            service.getDevicesCached().subscribe(
+                (devices) => {
+                    expect(devices).toEqual([]);
+                    expect(service.getDevices).toHaveBeenCalledTimes(1);
+
+                    // Verify that latest devices were cached
+                    expect(settingsService.setDevices).toHaveBeenCalledWith([]);
+                    done();
+                });
+        });
     });
 
     /**

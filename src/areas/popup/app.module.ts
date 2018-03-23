@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { enableProdMode, NgModule, APP_INITIALIZER } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { AboutComponent } from './components/options/about/about.component';
@@ -14,6 +14,7 @@ import { ChromeService } from './services/chrome.service';
 import { DescriptionComponent } from './components/intro/description/description.component';
 import { IntroBottomComponent } from './components/intro/intro-bottom/intro-bottom.component';
 import { IntroComponent } from './components/intro/intro.component';
+import { IsAppInitialized } from './routing/is-app-initialized';
 import { DeveloperComponent } from './components/developer/developer.component';
 import { DeviceService } from './services/device.service';
 import { GcmService } from './services/gcm.service';
@@ -33,6 +34,8 @@ import { SquidAuthInterceptor } from './services/squid/squid-auth.interceptor';
 
 const strings = new Strings();
 
+enableProdMode();
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -40,7 +43,8 @@ const strings = new Strings();
         RouterModule.forRoot([
             {
                 path: '',
-                component: SelectDeviceComponent
+                component: SelectDeviceComponent,
+                canActivate: [IsAppInitialized]
             },
             
             {
@@ -103,16 +107,28 @@ const strings = new Strings();
         ToolbarComponent,
     ],
     providers: [
+        // Guards
+        IsAppInitialized,
+
+        // Services
         ChromeService,
         GcmService,
-        SettingsService,
         DeviceService,
+        SettingsService,
         WindowService,
+
         {
             provide: HTTP_INTERCEPTORS,
             useClass: SquidAuthInterceptor,
             multi: true,
             deps: [ChromeService]
+        },
+
+        {
+            provide: APP_INITIALIZER,
+            useFactory: (settingsService) => () => settingsService.init(),
+            multi: true,
+            deps: [SettingsService]
         }
     ],
     bootstrap: [AppComponent]

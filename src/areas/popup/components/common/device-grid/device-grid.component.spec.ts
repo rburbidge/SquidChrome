@@ -21,9 +21,11 @@ import { WindowService } from '../../../services/window.service';
 import { ChromeDeviceModel } from '../../../services/squid-converter';
 import { Route } from '../../../routing/route';
 import { ToolbarComponent } from '../../toolbar/toolbar.component';
+import { createDevices } from '../../../../../test/squid-helpers';
 
 describe('DeviceGridComponent', () => {
     let deviceService: DeviceService;
+    let settingsService: SettingsService;
 
     let comp: DeviceGridComponent;
     let fixture: ComponentFixture<DeviceGridComponent>;
@@ -38,6 +40,7 @@ describe('DeviceGridComponent', () => {
             declarations: [ DeveloperComponent, DeviceGridComponent, ToolbarComponent],
             imports: [ RouterTestingModule ],
             providers: [
+                SettingsService,
                 { provide: ComponentFixtureAutoDetect, useValue: true },
                 { provide: DeviceService, useValue: new MockDeviceService() },
             ]
@@ -50,11 +53,12 @@ describe('DeviceGridComponent', () => {
         comp = fixture.debugElement.componentInstance;
 
         deviceService = TestBed.get(DeviceService);
+        settingsService = TestBed.get(SettingsService);
     })
 
     describe('constructor',() => {
         it('Has correct default values', function() {
-            let comp = new DeviceGridComponent(null);
+            let comp = new DeviceGridComponent(null, null);
             expect(comp.isLoading).toBeTruthy();
             expect(comp.devices).toBeUndefined();
             expect(comp.error).toBeUndefined();
@@ -127,6 +131,45 @@ describe('DeviceGridComponent', () => {
         });
     });
 
+    describe('showThisDevice', () => {
+        it('If showThisDevice=false, do nothing when thisDevice is unset', (done) => {
+            const devices = createDevices();
+            testShowThisDevice(false, devices, devices, done);
+        });
+
+        it('If showThisDevice=false, do not show thisDevice', (done) => {
+            const devices = createDevices();
+            settingsService.settings.thisDevice = {
+                id: devices[2].id,
+                gcmToken: 'n/a'
+            };
+            const expectedDevices = devices.slice();
+            expectedDevices.splice(2, 1);
+            testShowThisDevice(false, devices, expectedDevices, done);
+        });
+
+        it('If showThisDevice=true, then show this device', (done) => {
+            const devices = createDevices();
+            settingsService.settings.thisDevice = {
+                id: devices[2].id,
+                gcmToken: 'n/a'
+            };
+            testShowThisDevice(true, devices, devices, done);
+        });
+
+        function testShowThisDevice(showThisDevice: boolean, devices: ChromeDeviceModel[], expectedDevices: ChromeDeviceModel[], done: Function) {
+            spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.of(devices));
+            comp.showThisDevice = showThisDevice;
+            
+            comp.onLoad.asObservable()
+                .subscribe(() => {
+                    expect(comp.devices).toEqual(expectedDevices);
+                    done();
+                });
+            comp.refreshDevices();
+        }
+    });
+
     describe('showFillerDevice()', () => {
         it('Returns false with even number of devices', () => {
             testShowFillerItem([], false, false);
@@ -157,15 +200,6 @@ describe('DeviceGridComponent', () => {
         { id: "id3", name: "Pixel", deviceType: DeviceType.android, getIcon: () => "phone_android" },
         { id: "id2", name: "Samsung Galaxy", deviceType: DeviceType.android, getIcon: () => "phone_android" },
     ];
-
-    function createDevice(): ChromeDeviceModel {
-        return {
-            id: "id1",
-            name: "Nexus 5X",
-            deviceType: DeviceType.android,
-            getIcon: () => 'Icon'
-        };
-    }
 
     function mockGetDevicesReturns(devices: DeviceModel[]): jasmine.Spy {
         return spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.of(devices));
