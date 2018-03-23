@@ -91,7 +91,7 @@ describe('SelectDeviceComponent', () => {
     describe('onLoad()', () => {
         beforeEach(() => {
             spyOn(router, 'navigateByUrl');
-        })
+        });
 
         it('Sets isLoading to false', () => {
             expect(comp.isLoading).toBeTruthy();
@@ -99,14 +99,14 @@ describe('SelectDeviceComponent', () => {
             expect(comp.isLoading).toBeFalsy();
         });
 
-        it('Redirects to intro if devices is undefined', () => {
+        it('Redirects to add another device if devices is undefined', () => {
             comp.onLoad(undefined);
-            expect(router.navigateByUrl).toHaveBeenCalledWith(Route.intro.base);
+            expect(router.navigateByUrl).toHaveBeenCalledWith(Route.addAnotherDevice);
         });
 
         it('Redirects to intro if devices is empty', () => {
             comp.onLoad([]);
-            expect(router.navigateByUrl).toHaveBeenCalledWith(Route.intro.base);
+            expect(router.navigateByUrl).toHaveBeenCalledWith(Route.addAnotherDevice);
         });
 
         it('Does not navigate to intro if devices.length > 1', () => {

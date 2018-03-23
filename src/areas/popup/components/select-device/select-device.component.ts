@@ -47,11 +47,11 @@ export class SelectDeviceComponent {
         }
     }
 
-    public onLoad(devices: ChromeDeviceModel[]): void {
+    public onLoad(otherDevices: ChromeDeviceModel[]): void {
         this.isLoading = false;
 
-        if(!devices || devices.length == 0) {
-            this.goToIntroComponent();
+        if(!otherDevices || otherDevices.length == 0) {
+            this.goToAddAnotherDevice();
         }
     }
 
