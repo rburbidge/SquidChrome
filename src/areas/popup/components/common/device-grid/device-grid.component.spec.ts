@@ -26,6 +26,8 @@ import { createDevices } from '../../../../../test/squid-helpers';
 describe('DeviceGridComponent', () => {
     let deviceService: DeviceService;
     let settingsService: SettingsService;
+    
+    let devices: ChromeDeviceModel[];
 
     let comp: DeviceGridComponent;
     let fixture: ComponentFixture<DeviceGridComponent>;
@@ -54,6 +56,8 @@ describe('DeviceGridComponent', () => {
 
         deviceService = TestBed.get(DeviceService);
         settingsService = TestBed.get(SettingsService);
+
+        devices = createDevices();
     })
 
     describe('constructor',() => {
@@ -192,14 +196,7 @@ describe('DeviceGridComponent', () => {
             comp.showAddDevice = showAddDevice;
             expect(comp.showFillerDevice()).toBe(expected);
         }
-    })
-
-    const devices: ChromeDeviceModel[] = [
-        { id: "id1", name: "Chrome Browser", deviceType: DeviceType.android, getIcon: () => "laptop" },
-        { id: "id1", name: "Nexus 5X", deviceType: DeviceType.android, getIcon: () => "phone_android" },
-        { id: "id3", name: "Pixel", deviceType: DeviceType.android, getIcon: () => "phone_android" },
-        { id: "id2", name: "Samsung Galaxy", deviceType: DeviceType.android, getIcon: () => "phone_android" },
-    ];
+    });
 
     function mockGetDevicesReturns(devices: DeviceModel[]): jasmine.Spy {
         return spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.of(devices));

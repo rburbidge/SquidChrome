@@ -2,17 +2,20 @@ import $ from 'jquery';
 
 import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../contracts/squid';
 
-export interface ChromeDeviceModel extends DeviceModel, DeviceModelPlus { }
+/** Client side device representation. */
+export class ChromeDeviceModel implements DeviceModel {
 
-export interface DeviceModelPlus {
-    getIcon(): string;
-}
+    /* See interface for field docs */
 
-class DeviceModelPlusImpl implements DeviceModelPlus {
+    id: string;
+    name: string;
+    deviceType: DeviceType;
+
     constructor(private readonly device: DeviceModel) {
         $.extend(this, device);
     }
 
+    /** Gets the Google material design icon name for the device. */
     public getIcon(): string {
         switch(this.device.deviceType) {
             case DeviceType.chrome:
@@ -25,7 +28,7 @@ class DeviceModelPlusImpl implements DeviceModelPlus {
 }
 
 export function convertDeviceModel(device: DeviceModel): ChromeDeviceModel {
-    return new DeviceModelPlusImpl(device) as any as ChromeDeviceModel;
+    return new ChromeDeviceModel(device) as any as ChromeDeviceModel;
 }
 
 export class ChromeErrorModel implements ErrorModel {
