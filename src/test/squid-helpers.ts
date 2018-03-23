@@ -1,5 +1,5 @@
 import { convertDeviceModel, ChromeDeviceModel } from "../areas/popup/services/squid-converter";
-import { DeviceType } from "../contracts/squid";
+import { DeviceType, DeviceModel } from "../contracts/squid";
 
 export function createDevice(): ChromeDeviceModel {
     return convertDeviceModel({
@@ -9,7 +9,7 @@ export function createDevice(): ChromeDeviceModel {
     });
 }
 
-export function createDevices(): ChromeDeviceModel[] {
+export function createDeviceModels(): DeviceModel[] {
     return [
         {
             name: 'Pixel 2 XL',
@@ -31,5 +31,9 @@ export function createDevices(): ChromeDeviceModel[] {
             id: 'Device ID 4',
             deviceType: DeviceType.android
         }
-    ].map(convertDeviceModel);
+    ];
+}
+
+export function createDevices(): ChromeDeviceModel[] {
+    return createDeviceModels().map(convertDeviceModel);
 }

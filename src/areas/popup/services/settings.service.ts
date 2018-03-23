@@ -52,6 +52,8 @@ export class SettingsService {
         return this.getSettings()
             .then((settings) => {
                 Object.assign(this.settings, settings);
+
+                this.settings.devices = this.settings.devices && this.settings.devices.map(convertDeviceModel);
             });
     }
 

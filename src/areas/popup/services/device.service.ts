@@ -71,7 +71,7 @@ export class DeviceService {
         const body: CommandBody = {
             url: url
         };
-        return this.sendRequest('POST', `/api/devices/${id}/commands`, body);
+        return this.sendRequest('POST', `/api/devices/${id}/commands`, body, 'text');
     }
 
     /**
