@@ -21,7 +21,7 @@ import { WindowService } from '../../../services/window.service';
 import { ChromeDeviceModel } from '../../../services/squid-converter';
 import { Route } from '../../../routing/route';
 import { ToolbarComponent } from '../../toolbar/toolbar.component';
-import { createDevices } from '../../../../../test/squid-helpers';
+import { createDevices, createDevice } from '../../../../../test/squid-helpers';
 
 describe('DeviceGridComponent', () => {
     let deviceService: DeviceService;
@@ -129,6 +129,34 @@ describe('DeviceGridComponent', () => {
             comp.onError.asObservable()
                 .subscribe(actualError => {
                     expect(actualError).toBe(error as any);
+                    done();
+                });
+            comp.refreshDevices();
+        });
+
+        it('isLoading=true when there are no devices to show', (done) => {
+            mockGetDevicesReturns(undefined);            
+
+            comp.onLoad.asObservable()
+                .subscribe(() => {
+                    expect(comp.isLoading).toBe(true);
+                    done();
+                });
+            comp.refreshDevices();
+        });
+
+        it('isLoading=true when there are no devices to show because they were filtered out', (done) => {
+            const device = createDevice();
+            settingsService.settings.thisDevice = {
+                id: device.id,
+                gcmToken: 'foo'
+            };
+
+            mockGetDevicesReturns([device]);
+            comp.showThisDevice = false;
+            comp.onLoad.asObservable()
+                .subscribe(() => {
+                    expect(comp.isLoading).toBe(true);
                     done();
                 });
             comp.refreshDevices();
