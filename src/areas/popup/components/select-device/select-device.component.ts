@@ -10,6 +10,7 @@ import { Route } from '../../routing/route';
 import { Strings } from '../../../../assets/strings/strings';
 import { UrlHelper } from '../../../common/url-helper';
 import { WindowService } from '../../services/window.service';
+import { SettingsService } from '../../services/settings.service';
 
 /**
  * Shows the user's devices. Selecting a device sends the current tab's URL to that device.
@@ -19,7 +20,7 @@ import { WindowService } from '../../services/window.service';
     templateUrl: './select-device.html',
     styleUrls: ['./select-device.css']
 })
-export class SelectDeviceComponent {
+export class SelectDeviceComponent implements OnInit {
     public readonly strings: Strings = new Strings();
     public isLoading: boolean = true;
     public error: string;
@@ -28,7 +29,8 @@ export class SelectDeviceComponent {
         private readonly windowService: WindowService,
         private readonly deviceService: DeviceService,
         private readonly router: Router,
-        private readonly chromeService: ChromeService)
+        private readonly chromeService: ChromeService,
+        private readonly settingsService: SettingsService)
     { }
 
     /**
@@ -48,11 +50,8 @@ export class SelectDeviceComponent {
     }
 
     public onLoad(otherDevices: ChromeDeviceModel[]): void {
-        this.isLoading = false;
-
-        if(!otherDevices || otherDevices.length == 0) {
-            this.goToAddAnotherDevice();
-        }
+        // Continue showing loading indicator if there are no other devices
+        this.isLoading = !otherDevices || otherDevices.length == 0;
     }
 
     /**
@@ -64,5 +63,29 @@ export class SelectDeviceComponent {
 
     private goToAddAnotherDevice(): void {
         this.router.navigateByUrl(Route.addAnotherDevice);
+    }
+
+    /**
+     * Check local and service settings to determine if the app is properly initialized.
+     * 
+     * These checks are performed here because it requires calling Squid service.
+     */
+    public ngOnInit(): Promise<void> {
+        const thisDevice = this.settingsService.settings.thisDevice;
+        if(!thisDevice) {
+            this.goToIntroComponent();
+            return Promise.resolve();
+        }
+
+        return this.deviceService.getDevices()
+            .then(devices => {
+                // If the current device is not registered, go to intro component
+                if(!devices || !devices.find(device => device.id == thisDevice.id)) {
+                    this.goToIntroComponent();
+                // Otherwise if no other device is registered (one without current ID), got to add another device component
+                } else if(devices.every(device => device.id == thisDevice.id)) {
+                    this.goToAddAnotherDevice();
+                }
+            });
     }
 }
