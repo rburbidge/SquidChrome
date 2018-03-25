@@ -161,6 +161,24 @@ describe('DeviceGridComponent', () => {
                 });
             comp.refreshDevices();
         });
+
+        it('Sorts the devices', (done) => {
+            mockGetDevicesReturns(createDevices());
+
+            comp.onLoad.asObservable()
+                .subscribe(() => {
+                    // Verify that a new unsorted set of the devices does not equal the component's
+                    const devices = createDevices();
+                    expect(comp.devices).not.toEqual(devices);
+
+                    // Verify that the component's devices are sorted
+                    const expectedDevices = devices.slice();
+                    ChromeDeviceModel.sort(expectedDevices);
+                    expect(comp.devices).toEqual(expectedDevices);
+                    done();
+                });
+            comp.refreshDevices();
+        });
     });
 
     describe('showThisDevice', () => {
