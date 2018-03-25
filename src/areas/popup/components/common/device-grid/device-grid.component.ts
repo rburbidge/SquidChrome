@@ -46,16 +46,18 @@ export class DeviceGridComponent implements OnInit {
         this.deviceService.getDevicesCached()
             .subscribe({
                 next: (devices) => {
-                    this.devices = devices;
-                    if(!this.showThisDevice) { // Filter out the current device
-                        const thisDeviceId = this.settingsService.settings.thisDevice && this.settingsService.settings.thisDevice.id;
-                        this.devices = this.devices.filter(device => device.id != thisDeviceId);
+                    const thisDeviceId = this.settingsService.settings.thisDevice && this.settingsService.settings.thisDevice.id;
+                    if(!this.showThisDevice && thisDeviceId) { // Filter out the current device                        
+                        devices = devices.filter(device => device.id != thisDeviceId);
                     }
+                    ChromeDeviceModel.sort(devices, thisDeviceId);
 
                     // Do not change loading state if there are no devices to show. Loading will be hidden either on
                     // the next emit, or in complete handler
-                    this.isLoading = !this.devices || this.devices.length == 0;
-                    this.onLoad.emit(this.devices);
+                    this.isLoading = !devices || devices.length == 0;
+                    this.devices = devices;
+
+                    this.onLoad.emit(devices);
                 },
                 error: (error) => {
                     this.isLoading = false;

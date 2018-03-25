@@ -177,6 +177,7 @@ describe('DeviceGridComponent', () => {
             };
             const expectedDevices = devices.slice();
             expectedDevices.splice(2, 1);
+            ChromeDeviceModel.sort(expectedDevices);
             testShowThisDevice(false, devices, expectedDevices, done);
         });
 
