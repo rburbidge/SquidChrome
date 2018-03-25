@@ -18,7 +18,7 @@ import { Route } from '../../routing/route';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { DeviceGridComponent } from '../common/device-grid/device-grid.component';
 import { SettingsService } from '../../services/settings.service';
-import { createDevice } from '../../../../test/squid-helpers';
+import { createDevice, createDevices } from '../../../../test/squid-helpers';
 import { Observable } from 'rxjs/Observable';
 
 describe('SelectDeviceComponent', () => {
@@ -89,29 +89,22 @@ describe('SelectDeviceComponent', () => {
     });
 
     describe('onLoad()', () => {
-        beforeEach(() => {
-            spyOn(router, 'navigateByUrl');
-        });
-
-        it('Sets isLoading to false', () => {
-            expect(comp.isLoading).toBeTruthy();
+        it('Sets isLoading to true of devices is undefined', () => {
+            comp.isLoading = false;
             comp.onLoad(undefined);
-            expect(comp.isLoading).toBeFalsy();
+            expect(comp.isLoading).toBe(true);
         });
 
-        it('Redirects to add another device if devices is undefined', () => {
-            comp.onLoad(undefined);
-            expect(router.navigateByUrl).toHaveBeenCalledWith(Route.addAnotherDevice);
-        });
-
-        it('Redirects to intro if devices is empty', () => {
+        it('Sets isLoading to true of devices is empty', () => {
+            comp.isLoading = false;
             comp.onLoad([]);
-            expect(router.navigateByUrl).toHaveBeenCalledWith(Route.addAnotherDevice);
+            expect(comp.isLoading).toBe(true);
         });
 
-        it('Does not navigate to intro if devices.length > 1', () => {
+        it('Sets isLoading to false of devices is non-empty', () => {
+            comp.isLoading = true;
             comp.onLoad([null]);
-            expect(router.navigateByUrl).not.toHaveBeenCalled();
+            expect(comp.isLoading).toBe(false);
         });
 
         it('Template: Shows header text', () => {
@@ -140,7 +133,51 @@ describe('SelectDeviceComponent', () => {
         }
     });
 
-    function mockIsSignedIntoChromeReturns(isSignedIn: boolean): jasmine.Spy {
-        return spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.resolve(isSignedIn));
-    }
+    describe('ngOnInit()', () => {
+        it('Redirects to intro if settings.thisDevice is undefined', (done) => {
+            testRedirection(undefined, createDevices(), Route.intro.base, done);
+        });
+
+        it('Redirects to intro if devices is undefined', (done) => {
+            testRedirection('device ID', undefined, Route.intro.base, done);
+        });
+
+        it('Redirects to add another device if settings.thisDevice is the only one registered', (done) => {
+            const device = createDevice();
+            testRedirection(device.id, [device], Route.addAnotherDevice, done);
+        });
+
+        it('Redirects to intro if settings.thisDevice is not registered with the service', (done) => {
+            testRedirection('device ID not registered', createDevices(), Route.intro.base, done);
+        });
+
+        it('Does nothing if this device and others are registered with the service', (done) => {
+            const devices = createDevices();
+            callNgOnInit(devices[0].id, devices).then(() => {
+                expect(router.navigateByUrl).not.toHaveBeenCalled();
+                done();
+            });
+        });
+
+        function testRedirection(thisDeviceId: string, devices: ChromeDeviceModel[], expectedRoute: string, done: Function) {
+            callNgOnInit(thisDeviceId, devices).then(() => {
+                expect(router.navigateByUrl).toHaveBeenCalledWith(expectedRoute);
+                expect(router.navigateByUrl).toHaveBeenCalledTimes(1);
+                done();
+            });
+        }
+
+        function callNgOnInit(thisDeviceId: string, devices: ChromeDeviceModel[]) {
+            if(thisDeviceId) {
+                settingsService.settings.thisDevice = {
+                    id: thisDeviceId,
+                    gcmToken: 'bar'
+                };
+            }
+            spyOn(router, 'navigateByUrl');
+            spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices));
+
+            return comp.ngOnInit();
+        }
+    });
 });

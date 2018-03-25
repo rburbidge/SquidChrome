@@ -10,6 +10,7 @@ import { Route } from '../../routing/route';
 import { Strings } from '../../../../assets/strings/strings';
 import { UrlHelper } from '../../../common/url-helper';
 import { WindowService } from '../../services/window.service';
+import { SettingsService } from '../../services/settings.service';
 
 /**
  * Shows the user's devices. Selecting a device sends the current tab's URL to that device.
@@ -19,7 +20,7 @@ import { WindowService } from '../../services/window.service';
     templateUrl: './select-device.html',
     styleUrls: ['./select-device.css']
 })
-export class SelectDeviceComponent {
+export class SelectDeviceComponent implements OnInit {
     public readonly strings: Strings = new Strings();
     public isLoading: boolean = true;
     public error: string;
@@ -28,7 +29,8 @@ export class SelectDeviceComponent {
         private readonly windowService: WindowService,
         private readonly deviceService: DeviceService,
         private readonly router: Router,
-        private readonly chromeService: ChromeService)
+        private readonly chromeService: ChromeService,
+        private readonly settingsService: SettingsService)
     { }
 
     /**
@@ -43,26 +45,43 @@ export class SelectDeviceComponent {
 
     public onError(error: ErrorModel): void {
         if(error.code == ErrorCode.NotSignedIn || error.code == ErrorCode.UserNotFound) {
-            this.goToIntroComponent();
+            this.goToIntro();
         }
     }
 
     public onLoad(otherDevices: ChromeDeviceModel[]): void {
-        this.isLoading = false;
-
-        if(!otherDevices || otherDevices.length == 0) {
-            this.goToAddAnotherDevice();
-        }
+        // Continue showing loading indicator if there are no other devices
+        this.isLoading = !otherDevices || otherDevices.length == 0;
     }
 
-    /**
-     * Navigates to the intro component.
-     */
-    private goToIntroComponent() {
+    private goToIntro() {
         this.router.navigateByUrl(Route.intro.base);
     }
 
     private goToAddAnotherDevice(): void {
         this.router.navigateByUrl(Route.addAnotherDevice);
+    }
+
+    /**
+     * Redirect to appropriate page if the app is not initialized. This is done here asynchronously because it requires
+     * calling Squid service, and we want to show the UI before that happens.
+     */
+    public ngOnInit(): Promise<void> {
+        const thisDevice = this.settingsService.settings.thisDevice;
+        if(!thisDevice) {
+            this.goToIntro();
+            return Promise.resolve();
+        }
+
+        return this.deviceService.getDevices()
+            .then(devices => {
+                // If the current device is not registered, go to intro component
+                if(!devices || !devices.find(device => device.id == thisDevice.id)) {
+                    this.goToIntro();
+                // Otherwise if no other device is registered (one without current ID), got to add another device component
+                } else if(devices.every(device => device.id == thisDevice.id)) {
+                    this.goToAddAnotherDevice();
+                }
+            });
     }
 }
