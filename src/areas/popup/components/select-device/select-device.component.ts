@@ -54,9 +54,6 @@ export class SelectDeviceComponent implements OnInit {
         this.isLoading = !otherDevices || otherDevices.length == 0;
     }
 
-    /**
-     * Navigates to the intro component.
-     */
     private goToIntroComponent() {
         this.router.navigateByUrl(Route.intro.base);
     }
@@ -66,9 +63,8 @@ export class SelectDeviceComponent implements OnInit {
     }
 
     /**
-     * Check local and service settings to determine if the app is properly initialized.
-     * 
-     * These checks are performed here because it requires calling Squid service.
+     * Redirect to appropriate page if the app is not initialized. This is done here asynchronously because it requires
+     * calling Squid service, and we want to show the UI before that happens.
      */
     public ngOnInit(): Promise<void> {
         const thisDevice = this.settingsService.settings.thisDevice;

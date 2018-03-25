@@ -12,6 +12,9 @@ import { SettingsService } from "../../services/settings.service";
 export class IntroComponent implements OnInit {
     constructor(private readonly settingsService: SettingsService) { }
 
+    /**
+     * Reset the app settings when the intro component is hit.
+     */
     ngOnInit(): Promise<void> {
         return this.settingsService.reset();
     }
