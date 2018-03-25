@@ -60,6 +60,7 @@ export class Strings {
         noDevicesMessage: 'Install Squid on your Android phone, and then retry!',
         refreshError: 'Oops! An error occurred while retrieving your settings. Try again later.',
         selectDevice: 'Select a device',
+        thisDevice: 'This device'
     };
 
     public device = {

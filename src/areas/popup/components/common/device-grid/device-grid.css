@@ -17,11 +17,13 @@
     flex-flow: column wrap;
     height: 150px;
     width: 150px;
-    
+
     border-style: solid;
     border-width: medium;
     border-color: orange;
     border-width: 1px;
+
+    position: relative; /* Required for this-device to align to bottom */
 }
 
 .device:hover {
@@ -37,6 +39,17 @@
 .device.empty:hover {
     border: none;
     background-color:transparent;
+}
+
+.this-device {
+    color: orange;
+    position: absolute;
+    bottom: 0;
+    font-weight: bold;
+}
+
+.device:hover .this-device {
+    color: white;
 }
 
 .icon {
