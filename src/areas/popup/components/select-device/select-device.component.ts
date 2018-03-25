@@ -45,7 +45,7 @@ export class SelectDeviceComponent implements OnInit {
 
     public onError(error: ErrorModel): void {
         if(error.code == ErrorCode.NotSignedIn || error.code == ErrorCode.UserNotFound) {
-            this.goToIntroComponent();
+            this.goToIntro();
         }
     }
 
@@ -54,7 +54,7 @@ export class SelectDeviceComponent implements OnInit {
         this.isLoading = !otherDevices || otherDevices.length == 0;
     }
 
-    private goToIntroComponent() {
+    private goToIntro() {
         this.router.navigateByUrl(Route.intro.base);
     }
 
@@ -69,7 +69,7 @@ export class SelectDeviceComponent implements OnInit {
     public ngOnInit(): Promise<void> {
         const thisDevice = this.settingsService.settings.thisDevice;
         if(!thisDevice) {
-            this.goToIntroComponent();
+            this.goToIntro();
             return Promise.resolve();
         }
 
@@ -77,7 +77,7 @@ export class SelectDeviceComponent implements OnInit {
             .then(devices => {
                 // If the current device is not registered, go to intro component
                 if(!devices || !devices.find(device => device.id == thisDevice.id)) {
-                    this.goToIntroComponent();
+                    this.goToIntro();
                 // Otherwise if no other device is registered (one without current ID), got to add another device component
                 } else if(devices.every(device => device.id == thisDevice.id)) {
                     this.goToAddAnotherDevice();
