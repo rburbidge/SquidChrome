@@ -1,5 +1,6 @@
 import { convertDeviceModel, ChromeDeviceModel } from "./squid-converter";
 import { DeviceModel, DeviceType } from "../../../contracts/squid";
+import { createDevice, createDeviceModels, createDeviceModel } from "../../../test/squid-helpers";
 
 describe('SquidConverter', () => {
     describe('convertDeviceModel()', () => {
@@ -27,19 +28,61 @@ describe('SquidConverter', () => {
             });
     
             function testIcon(deviceType: DeviceType, expected: string): void {
-                const device = createDevice();
+                const device = createDeviceModel();
                 device.deviceType = deviceType;
                 const actual: ChromeDeviceModel = convertDeviceModel(device);
                 expect(actual.getIcon()).toBe(expected);
             }
         });
-    });
 
-    function createDevice(): DeviceModel {
-        return {
-            id: 'id',
-            name: 'name',
-            deviceType: DeviceType.chrome
-        };
-    }
+        describe('sort()', () => {
+            it('Does nothing when devices is falsy', () => {
+                ChromeDeviceModel.sort(undefined);
+            });
+
+            it('Does nothing when devices is empty', () => {
+                const devices = [];
+                ChromeDeviceModel.sort(devices);
+                expect(devices).toEqual([]);
+            })
+
+            it('Sorts devices when this thisDeviceId is undefined', () => {
+                const deviceA = createDeviceWithName('DEF');
+                const deviceB = createDeviceWithName('ABC');
+                const deviceC = createDeviceWithName('AAC');
+
+                const devices = [deviceA, deviceB, deviceC];
+                ChromeDeviceModel.sort(devices);
+                expect(devices).toEqual([deviceC, deviceB, deviceA]);
+            });
+
+            it('Sorts devices with thisDevice at the start', () => {
+                const deviceA = createDeviceWithName('DEF');
+                const deviceB = createDeviceWithName('ABC');
+                deviceB.id = 'foo';
+                const deviceC = createDeviceWithName('AAC');
+
+                const devices = [deviceA, deviceB, deviceC];
+                ChromeDeviceModel.sort(devices, deviceB.id);
+                expect(devices).toEqual([deviceB, deviceC, deviceA]);
+            });
+
+            it('Sorts devices when this thisDeviceId when the device is not in the list', () => {
+                const deviceA = createDeviceWithName('DEF');
+                const deviceB = createDeviceWithName('ABC');
+                deviceB.id = 'foo';
+                const deviceC = createDeviceWithName('AAC');
+
+                const devices = [deviceA, deviceB, deviceC];
+                ChromeDeviceModel.sort(devices, 'foo, not in the set of devices');
+                expect(devices).toEqual([deviceC, deviceB, deviceA]);
+            });
+
+            function createDeviceWithName(name: string): ChromeDeviceModel {
+                const device = createDevice();
+                device.name = name;
+                return device;
+            }
+        });
+    });
 });

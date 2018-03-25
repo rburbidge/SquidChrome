@@ -11,13 +11,13 @@ export class ChromeDeviceModel implements DeviceModel {
     name: string;
     deviceType: DeviceType;
 
-    constructor(private readonly device: DeviceModel) {
+    constructor(device: DeviceModel) {
         $.extend(this, device);
     }
 
     /** Gets the Google material design icon name for the device. */
     public getIcon(): string {
-        switch(this.device.deviceType) {
+        switch(this.deviceType) {
             case DeviceType.chrome:
                 return 'laptop';
             case DeviceType.android:
