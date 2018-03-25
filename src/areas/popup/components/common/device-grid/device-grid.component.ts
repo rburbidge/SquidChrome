@@ -79,6 +79,16 @@ export class DeviceGridComponent implements OnInit {
         return !this.showAddDevice;
     }
 
+    /**
+     * Returns true if the input device is the current device.
+     * @return false if the current device is not defined.
+     */
+    public isThisDevice(device: ChromeDeviceModel): boolean {
+        const thisDevice = this.settingsService.settings.thisDevice;
+        if(!thisDevice) return false;
+        return thisDevice.id == device.id;
+    }
+
     public ngOnInit(): void {
         this.refreshDevices();
     }
