@@ -37,8 +37,9 @@ gulp.task('copyResources', ['clean'], function() {
         'manifest.json',
         'system.config.js',
         'systemjs-angular-loader.js',
-        'bootstrap/**/*',
-        'icons/**/*',
+        '*/**/bootstrap.js',
+        'src/**/*.png',
+        'src/**/*.svg',
         'src/**/*.css',
         'src/**/*.html'];
     return gulp.src(files, { base: '.' })
@@ -50,6 +51,7 @@ gulp.task('copyNodeModules', ['clean'], function() {
     var files = [
         '@angular/compiler/bundles/compiler.umd.js',
         '@angular/common/bundles/common.umd.js',
+        '@angular/common/bundles/common-http.umd.js',
         '@angular/core/bundles/core.umd.js',
         '@angular/http/bundles/http.umd.js',
         '@angular/platform-browser/bundles/platform-browser.umd.js',
@@ -61,6 +63,7 @@ gulp.task('copyNodeModules', ['clean'], function() {
         'jquery/dist/jquery.min.js',
         'reflect-metadata/Reflect.js',
         'systemjs/dist/system.src.js',
+        'tslib/tslib.js',
         'zone.js/dist/zone.js'];
     return gulp.src(files, { cwd: '**/node_modules/'})
         .pipe(gulp.dest('build'));
