@@ -58,7 +58,15 @@ gulp.task('copyManifest', ['clean'], function() {
     return gulp.src('./manifest.json')
         .pipe(jeditor(function(json) {
             json.version = '1.2.3.4';
+            
+            // Key is not needed when app is deployed to store
             delete json.key;
+
+            // Localhost permission is not needed in store version
+            var localhostIndex = json.permissions.indexOf('http://localhost/');
+            if(localhostIndex !== -1) {
+                json.permissions.splice(localhostIndex, 1);
+            }
 
             return json;
         }))
