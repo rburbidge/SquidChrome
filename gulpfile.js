@@ -1,19 +1,27 @@
-var gulp = require('gulp'),
+var clean = require('gulp-clean'),
+    gulp = require('gulp'),
+    jeditor = require("gulp-json-editor"),
     ts = require("gulp-typescript"),
     tsProject = ts.createProject("tsconfig.json"),
     zip = require('gulp-zip');
-
+    
 var exec = require('child_process').exec;
 
-gulp.task('default', ['copyResources', 'copyCompiledFiles', 'copyNodeModules', 'copyRxjs', 'transpile']);
+gulp.task('default', ['copyResources', 'copyCompiledFiles', 'copyManifest', 'copyNodeModules', 'transpile']);
 
 // Clean everything except the node_modules
-gulp.task('clean', function(cb) {
+gulp.task('clean', ['cleanBuild'], function(cb) {
     exec('git clean -fxd -e node_modules', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         cb(err);
     });
+});
+
+// Clean the build folder
+gulp.task('cleanBuild', function() {
+    return gulp.src('./build')
+        .pipe(clean());
 });
 
 // Build TypeScript
@@ -34,7 +42,6 @@ gulp.task('copyCompiledFiles', ['clean', 'transpile'], function() {
 gulp.task('copyResources', ['clean'], function() {
     var files = [
         '*.html',
-        'manifest.json',
         'system.config.js',
         'systemjs-angular-loader.js',
         '*/**/bootstrap.js',
@@ -46,8 +53,20 @@ gulp.task('copyResources', ['clean'], function() {
         .pipe(gulp.dest('./build'));
 });
 
+// Copies manifest.json and sets a version number
+gulp.task('copyManifest', ['clean'], function() {
+    return gulp.src('./manifest.json')
+        .pipe(jeditor(function(json) {
+            json.version = '1.2.3.4';
+            delete json.key;
+
+            return json;
+        }))
+        .pipe(gulp.dest('./build'));
+});
+
 // Copies node modules
-gulp.task('copyNodeModules', ['clean'], function() {
+gulp.task('copyNodeModules', ['copyRxjs', 'clean'], function() {
     var files = [
         '@angular/compiler/bundles/compiler.umd.js',
         '@angular/common/bundles/common.umd.js',
