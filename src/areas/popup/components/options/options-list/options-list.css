@@ -1,7 +1,7 @@
 .option {
     color: white;
     padding: 0;
-    border-top: 1px solid orange;
+    border-top: 3px solid orange;
     min-height: 58px;
 
     display: flex;
@@ -10,7 +10,7 @@
 }
 
 .last-option {
-    border-bottom: 1px solid orange;
+    border-bottom: 3px solid orange;
 }
 
 .option:hover {
