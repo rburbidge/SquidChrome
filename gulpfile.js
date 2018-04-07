@@ -8,6 +8,8 @@ var clean = require('gulp-clean'),
     
 var exec = require('child_process').exec;
 
+// Set the version to be built. Defaults to 1.0.0.0 if there is no version
+// e.g. --version 1.2.3.4
 function getVersion() {
     var version = gutil.env.version;
     if(!version) {
