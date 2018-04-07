@@ -38,8 +38,14 @@ export class SelectDeviceComponent implements OnInit {
      */
     public sendUrl(device: ChromeDeviceModel): Promise<void> {
         return this.chromeService.getCurrentTabUrl()
-            .then(url => this.deviceService.sendUrl(device.id, url))
-            .then(() => this.windowService.close());
+            .then(url => {
+                if(url && url.startsWith('http://') || url.startsWith('https://')) {
+                    return this.deviceService.sendUrl(device.id, url)
+                        .then(() => this.windowService.close());
+                } else {
+                    alert(this.strings.devices.pageCannotBeSent);
+                }
+            });
     }
 
     public onError(error: ErrorModel): void {
