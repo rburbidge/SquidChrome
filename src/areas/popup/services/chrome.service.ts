@@ -1,17 +1,9 @@
 import { Injectable } from '@angular/core';
-import { optionsPageName } from '../../common/url-helper';
 import { ErrorCode } from '../../../contracts/squid';
 import { ChromeErrorModel } from './squid-converter';
 
 @Injectable()
 export class ChromeService {
-    /**
-     * Returns the options URL of the app.
-     */
-    public getOptionsUrl(): string {
-        return chrome.runtime.getURL(optionsPageName);
-    }
-
     /**
      * Returns the current tab URL.
      */

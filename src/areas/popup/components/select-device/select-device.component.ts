@@ -8,7 +8,6 @@ import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../../cont
 import { DeviceService } from '../../services/device.service';
 import { Route } from '../../routing/route';
 import { Strings } from '../../../../assets/strings/strings';
-import { UrlHelper } from '../../../common/url-helper';
 import { WindowService } from '../../services/window.service';
 import { SettingsService } from '../../services/settings.service';
 
@@ -39,8 +38,14 @@ export class SelectDeviceComponent implements OnInit {
      */
     public sendUrl(device: ChromeDeviceModel): Promise<void> {
         return this.chromeService.getCurrentTabUrl()
-            .then(url => this.deviceService.sendUrl(device.id, url))
-            .then(() => this.windowService.close());
+            .then(url => {
+                if(url && url.startsWith('http://') || url.startsWith('https://')) {
+                    return this.deviceService.sendUrl(device.id, url)
+                        .then(() => this.windowService.close());
+                } else {
+                    alert(this.strings.devices.pageCannotBeSent);
+                }
+            });
     }
 
     public onError(error: ErrorModel): void {

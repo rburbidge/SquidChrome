@@ -20,6 +20,7 @@ import { DeviceGridComponent } from '../common/device-grid/device-grid.component
 import { SettingsService } from '../../services/settings.service';
 import { createDevice, createDevices } from '../../../../test/squid-helpers';
 import { Observable } from 'rxjs/Observable';
+import { Strings } from '../../../../assets/strings/strings';
 
 describe('SelectDeviceComponent', () => {
     let deviceService: DeviceService;
@@ -32,6 +33,8 @@ describe('SelectDeviceComponent', () => {
     let fixture: ComponentFixture<SelectDeviceComponent>;
 
     let getSettings: jasmine.Spy;
+
+    const strings = new Strings();
 
     beforeAll(() => {
         loadCss(['areas/popup/components/select-device/select-device.css',
@@ -71,9 +74,35 @@ describe('SelectDeviceComponent', () => {
     });
 
     describe('sendUrl()', () => {
-        it('Sends a URL to the device and then closes the window', (done) => {
+        it('Sends a https:// URL to the device and then closes the window', (done) => {
+            testSendUrl('https://www.example.com', done);
+        });
+
+        it('Sends a http:// URL to the device and then closes the window', (done) => {
+            testSendUrl('https://www.example.com', done);
+        });
+
+        it('Shows alert if URL starts with chrome://', (done) => {
+            spyOn(window, 'alert');
+            spyOn(windowService, 'close');
+            spyOn(deviceService, 'sendUrl');
+            spyOn(chromeService, 'getCurrentTabUrl').and.returnValue(Promise.resolve('chrome://'));
+            
+
+            const device = createDevice();
+            comp.sendUrl(device)
+                .then(() => {
+                    expect(window.alert).toHaveBeenCalledWith(strings.devices.pageCannotBeSent);
+
+                    // Page is not sent, window is not closed
+                    expect(deviceService.sendUrl).not.toHaveBeenCalled();
+                    expect(windowService.close).not.toHaveBeenCalled();
+                    done();
+                })
+        });
+
+        function testSendUrl(url: string, done: Function): void {
             let sendUrl = spyOn(deviceService, 'sendUrl').and.returnValue(Promise.resolve());
-            const url = 'https://www.example.com';
             let getCurrentTabUrl = spyOn(chromeService, 'getCurrentTabUrl').and.returnValue(Promise.resolve(url));
             let windowClose = spyOn(windowService, 'close');
 
@@ -84,8 +113,8 @@ describe('SelectDeviceComponent', () => {
                     expect(sendUrl).toHaveBeenCalledWith(device.id, url);
                     expect(windowClose).toHaveBeenCalledTimes(1);
                     done();
-                })
-        });
+                });
+        }
     });
 
     describe('onLoad()', () => {
