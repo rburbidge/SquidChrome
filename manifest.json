@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
 
-  "name": "squid",
-  "description": "Allows you to open web pages on your Android device",
-  "version": "1.1.0.2",
+  "name": "Squid",
+  "description": "Helps you share web pages between your Android and Chrome Browser devices!",
+  "version": "1.0.0",
 
   "icons": {
     "16": "src/assets/icons/icon16.png",
@@ -35,7 +35,7 @@
   "browser_action": {
     "default_icon": "src/assets/icons/icon16.png",
     "default_popup": "popup.html",
-    "default_title": "Send to Squid"
+    "default_title": "Squid\nShare this page!"
   },
 
   "background": {
