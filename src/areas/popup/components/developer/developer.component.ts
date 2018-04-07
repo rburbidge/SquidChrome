@@ -7,7 +7,6 @@ import { DeviceType } from '../../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { Route } from '../../routing/route';
 import { SettingsService } from '../../services/settings.service';
-import { UrlHelper } from '../../../common/url-helper';
 import { WindowService } from '../../services/window.service';
 
 /**
