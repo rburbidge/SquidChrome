@@ -1,11 +1,23 @@
 var clean = require('gulp-clean'),
     gulp = require('gulp'),
+    gutil = require('gulp-util'),
     jeditor = require("gulp-json-editor"),
     ts = require("gulp-typescript"),
     tsProject = ts.createProject("tsconfig.json"),
     zip = require('gulp-zip');
     
 var exec = require('child_process').exec;
+
+function getVersion() {
+    var version = gutil.env.version;
+    if(!version) {
+        version = '1.0.0.0';
+        console.warn('--version not passed. Using default version');
+    }
+    console.log(`Building version ${version}`);
+    return version;
+}
+var version = getVersion();
 
 gulp.task('default', ['copyResources', 'copyCompiledFiles', 'copyManifest', 'copyNodeModules', 'transpile']);
 
@@ -57,7 +69,7 @@ gulp.task('copyResources', ['clean'], function() {
 gulp.task('copyManifest', ['clean'], function() {
     return gulp.src('./manifest.json')
         .pipe(jeditor(function(json) {
-            json.version = '1.2.3.4';
+            json.version = version;
             
             // Key is not needed when app is deployed to store
             delete json.key;
@@ -115,13 +127,7 @@ gulp.task('copyRxjs', ['clean'], function() {
 });
 
 gulp.task('zip', ['default'], function() {
-    return gulp.src('build/**/*')
-        .pipe(zip('archive.zip'))
-        .pipe(gulp.dest('build'));
-});
-
-gulp.task('ziponly', function() {
     return gulp.src('./build/**/*')
-        .pipe(zip('archive.zip'))
-        .pipe(gulp.dest('build'));
+        .pipe(zip(`squid-${version}.zip`))
+        .pipe(gulp.dest('.'));
 });
