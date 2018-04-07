@@ -18,7 +18,7 @@ export interface Settings {
 }
 
 /**
- * Abstraction for settings, stored in chrome.storage.sync.
+ * Abstraction for settings, stored in chrome.storage.local.
  * 
  * To use SettingsService, create an instance and call init(). Settings can then be retrieved synchronously from the 'settings'
  * field. This field will be updated whenever settings are updated.
@@ -59,7 +59,7 @@ export class SettingsService {
 
     public getSettings(): Promise<{[key: string]: any}> {
         return new Promise<{[key: string]: any}>((resolve, reject) => {
-            chrome.storage.sync.get(
+            chrome.storage.local.get(
                 SettingsService.createDefault(),
                 (settings) => {
                     if (chrome.runtime.lastError) {
@@ -96,14 +96,14 @@ export class SettingsService {
      */
     public reset(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            chrome.storage.sync.clear(
+            chrome.storage.local.clear(
                 () => this.callRejectOnError(resolve, reject));
         });
     }
 
     private set(items: Settings): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            chrome.storage.sync.set(
+            chrome.storage.local.set(
                 items,
                 () => {
                     if(chrome.runtime.lastError) {
