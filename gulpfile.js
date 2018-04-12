@@ -4,6 +4,7 @@ var clean = require('gulp-clean'),
     jeditor = require("gulp-json-editor"),
     ts = require("gulp-typescript"),
     tsProject = ts.createProject("tsconfig.json"),
+    webpack = require('webpack-stream'),
     zip = require('gulp-zip');
     
 var exec = require('child_process').exec;
@@ -132,4 +133,10 @@ gulp.task('zip', ['default'], function() {
     return gulp.src('./build/**/*')
         .pipe(zip(`squid-${version}.zip`))
         .pipe(gulp.dest('.'));
+});
+
+gulp.task('webpack', function() {
+    return gulp.src('./src/areas/popup/main.js')
+        .pipe(webpack(require('./webpack.config.js')))
+        .pipe(gulp.dest('dist/'));
 });

@@ -31,6 +31,7 @@ import { OptionsListComponent } from './components/options/options-list/options-
 import { Strings } from '../../assets/strings/strings';
 import { DeviceComponent } from './components/options/device/device.component';
 import { SquidAuthInterceptor } from './services/squid/squid-auth.interceptor';
+import { APP_BASE_HREF } from '@angular/common';
 
 const strings = new Strings();
 
@@ -42,7 +43,7 @@ enableProdMode();
         HttpClientModule,
         RouterModule.forRoot([
             {
-                path: '',
+                path: 'popup.html',
                 component: SelectDeviceComponent,
                 canActivate: [IsAppInitialized]
             },
@@ -129,6 +130,11 @@ enableProdMode();
             useFactory: (settingsService) => () => settingsService.init(),
             multi: true,
             deps: [SettingsService]
+        },
+
+        {
+            provide: APP_BASE_HREF,
+            useValue: '/'
         }
     ],
     bootstrap: [AppComponent]

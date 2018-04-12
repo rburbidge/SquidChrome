@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import * as $ from 'jquery';
 
 /**
  * Add styles to the page so that we can see what each test would look like in production.
