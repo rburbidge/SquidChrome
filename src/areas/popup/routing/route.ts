@@ -10,6 +10,7 @@ export const Route = {
         base: 'options',
         about: 'about',
         developer: 'developer',
+        instructions: 'instructions',
         list: '',
         manageDevices: 'manageDevices',
         manageDevice: 'manageDevices/:deviceId'
