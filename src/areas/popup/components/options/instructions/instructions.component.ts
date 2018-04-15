@@ -39,6 +39,11 @@ export class InstructionsComponent implements OnInit {
     }
 
     private static createInstructionsUrl(): string {
-        return Config.squidEndpoint + "/squid/instructions.html?client=chrome-ext&origin=chrome-extension%3A%2F%2Fgipmiglmamlkehhbcicejmfloehgeklk";
+        const baseInstructionsUrl = Config.squidEndpoint + "/squid/instructions.html";
+        return baseInstructionsUrl + '?' + $.param(
+            {
+                client: 'chrome-ext',
+                origin: window.location.origin
+            });
     }
 }
