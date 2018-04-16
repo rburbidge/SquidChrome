@@ -73,6 +73,9 @@ export enum ErrorCode {
 
     /** The user is not signed in. */
     NotSignedIn = 5,
+
+    /** The device to be operated upon was not found. */
+    DeviceNotFound = 6,
 }
 
 /**
@@ -92,4 +95,21 @@ export enum AuthHeader {
 /** Creates the value of an auth header. */
 export function createAuthHeader(headerType: AuthHeader, authToken: string) {
     return headerType + "=" + authToken;
+}
+
+/**
+ * The type of a SquidMessage.
+ */
+type MessageType =
+/** An iframe is requesting for its height to be set. */
+'heightChanged';
+
+/**
+ * The type of MessageEvent.data that can be published by on a Squid page.
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/MessageEvent
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+ */
+export interface SquidMessage {
+    type: MessageType;
+    data: any;
 }

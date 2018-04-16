@@ -5,13 +5,7 @@ import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { SettingsService } from "../../../services/settings.service";
 import { Config } from "../../../../../config/config";
 import $ from 'jquery';
-
-type MessageType = 'height';
-
-interface Message {
-    type: MessageType;
-    data: any;
-}
+import { SquidMessage } from "../../../../../contracts/squid";
 
 /**
  * Shows instructions content for the app.
@@ -30,9 +24,9 @@ export class InstructionsComponent implements OnInit {
         this.instructionsUrl = this.sanitizer.bypassSecurityTrustResourceUrl(InstructionsComponent.createInstructionsUrl());
 
         window.onmessage = (ev: MessageEvent) => {
-            const message: Message = ev.data;
-            if(message.type == 'height') {
-                let iframe = $('iframe')[0] as HTMLIFrameElement;
+            const message: SquidMessage = ev.data;
+            if(message.type == 'heightChanged') {
+                const iframe = $('iframe')[0] as HTMLIFrameElement;
                 iframe.height = message.data;
             }
         };
