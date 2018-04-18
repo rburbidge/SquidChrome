@@ -1,4 +1,4 @@
-import { Component, OnInit, Sanitizer } from "@angular/core";
+import { Component, OnInit, Sanitizer, HostListener } from "@angular/core";
 
 import { Strings } from "../../../../../assets/strings/strings";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
@@ -16,20 +16,22 @@ import { SquidMessage } from "../../../../../contracts/squid";
     styleUrls: [ './instructions.css' ]
 })
 export class InstructionsComponent implements OnInit {
-    public instructionsUrl: SafeUrl;
+    public contentUrl: SafeUrl;
+    public contentHeight: string = "0";
 
     constructor(private readonly sanitizer: DomSanitizer) { }
 
-    ngOnInit(): void {
-        this.instructionsUrl = this.sanitizer.bypassSecurityTrustResourceUrl(InstructionsComponent.createInstructionsUrl());
+    @HostListener('window:message', ['$event'])
+    public onWindowMessage(ev: MessageEvent): void {
+        const message: SquidMessage = ev.data;
+        if(message.type == 'heightChanged') {
+            this.contentHeight = message.data;
+        }
+    }
 
-        window.onmessage = (ev: MessageEvent) => {
-            const message: SquidMessage = ev.data;
-            if(message.type == 'heightChanged') {
-                const iframe = $('iframe')[0] as HTMLIFrameElement;
-                iframe.height = message.data;
-            }
-        };
+    ngOnInit(): void {
+        this.contentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            InstructionsComponent.createInstructionsUrl());
     }
 
     private static createInstructionsUrl(): string {
