@@ -1,11 +1,12 @@
 import { Component, OnInit, Sanitizer, HostListener } from "@angular/core";
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
 import { Strings } from "../../../../../assets/strings/strings";
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { SettingsService } from "../../../services/settings.service";
 import { Config } from "../../../../../config/config";
 import $ from 'jquery';
 import { SquidMessage } from "../../../../../contracts/squid";
+import { WindowService } from "../../../services/window.service";
 
 /**
  * Shows instructions content for the app.
@@ -19,7 +20,7 @@ export class InstructionsComponent implements OnInit {
     public contentUrl: SafeUrl;
     public contentHeight: string = "0";
 
-    constructor(private readonly sanitizer: DomSanitizer) { }
+    constructor(private readonly window: WindowService, private readonly sanitizer: DomSanitizer) { }
 
     @HostListener('window:message', ['$event'])
     public onWindowMessage(ev: MessageEvent): void {
@@ -30,16 +31,15 @@ export class InstructionsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.contentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-            InstructionsComponent.createInstructionsUrl());
+        this.contentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.createInstructionsUrl());
     }
 
-    private static createInstructionsUrl(): string {
+    private createInstructionsUrl(): string {
         const baseInstructionsUrl = Config.squidEndpoint + "/squid/instructions.html";
         return baseInstructionsUrl + '?' + $.param(
             {
                 client: 'chrome-ext',
-                origin: window.location.origin
+                origin: this.window.getOrigin()
             });
     }
 }
