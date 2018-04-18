@@ -70,6 +70,10 @@ export class Strings {
         trySendingLink: 'Try sending a link'
     }
 
+    public instructions = {
+        title: 'How to use Squid'
+    };
+
     public intro = {
         descriptionLine1: 'Welcome to Squid!',
         descriptionLine2: 'Squid lets you send web pages between your devices!',

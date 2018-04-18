@@ -31,6 +31,7 @@ import { OptionsListComponent } from './components/options/options-list/options-
 import { Strings } from '../../assets/strings/strings';
 import { DeviceComponent } from './components/options/device/device.component';
 import { SquidAuthInterceptor } from './services/squid/squid-auth.interceptor';
+import { InstructionsComponent } from './components/options/instructions/instructions.component';
 
 const strings = new Strings();
 
@@ -59,6 +60,7 @@ enableProdMode();
                 children: [
                     { path: Route.options.about, component: AboutComponent, data: { title: strings.about.title } },
                     { path: Route.options.developer, component: DeveloperComponent, data: { title: strings.developer.title } },
+                    { path: Route.options.instructions, component: InstructionsComponent, data: { title: strings.instructions.title } },
                     { path: Route.options.list, component: OptionsListComponent, data: { title: strings.options.title } },
                     { path: Route.options.manageDevices, component: ManageDevicesComponent, data: { title: strings.manageDevices.title } },
                     { path: Route.options.manageDevice, component: DeviceComponent },
@@ -94,6 +96,7 @@ enableProdMode();
         AboutComponent,
         DeveloperComponent,
         DeviceComponent,
+        InstructionsComponent,
         ManageDevicesComponent,
         OptionsComponent,
         OptionsListComponent,

@@ -10,6 +10,13 @@ export class WindowService {
     }
 
     /**
+     * Gets the location origin.
+     */
+    public getOrigin(): string {
+        return window.location.origin;
+    }
+
+    /**
      * Closes the window.
      */
     public close(): void {
