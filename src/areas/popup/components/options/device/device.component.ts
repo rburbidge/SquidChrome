@@ -6,6 +6,7 @@ import { Strings } from "../../../../../assets/strings/strings";
 import { DeviceService } from "../../../services/device.service";
 import { DeviceModel } from "../../../../../contracts/squid";
 import { ChromeDeviceModel } from "../../../services/squid-converter";
+import { Config } from "../../../../../config/config";
 
 /**
  * Shows options for a device.
@@ -28,7 +29,7 @@ export class DeviceComponent implements OnInit {
         private readonly deviceService: DeviceService) { }
 
     public sendLink(): Promise<void> {
-        return this.deviceService.sendUrl(this.deviceId, 'https://www.google.com');
+        return this.deviceService.sendUrl(this.deviceId, Config.squidEndpoint + '/squid/test');
     }
 
     public remove(): Promise<void> {
