@@ -11,6 +11,7 @@ import { loadCss } from '../../testing/css-loader';
 import { MockDeviceService } from '../../../services/testing/device.service.mock';
 import { Settings, SettingsService } from '../../../services/settings.service';
 import { DeviceComponent } from './device.component';
+import { Config } from '../../../../../config/config';
 
 describe('DeviceComponent', () => {
     const routeParams = {
@@ -66,7 +67,7 @@ describe('DeviceComponent', () => {
         it('Sends a link', (done) => {
             spyOn(deviceService, 'sendUrl').and.returnValue(Promise.resolve());
             comp.sendLink().then(() => {
-                expect(deviceService.sendUrl).toHaveBeenCalledWith(routeParams.deviceId, 'https://www.google.com');
+                expect(deviceService.sendUrl).toHaveBeenCalledWith(routeParams.deviceId, Config.squidEndpoint + '/squid/test');
                 done();
             });
         });
