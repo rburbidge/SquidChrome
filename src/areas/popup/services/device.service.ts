@@ -63,7 +63,8 @@ export class DeviceService {
                     } else {
                         observer.complete();
                     }
-                });
+                })
+                .catch(error => observer.error(error));
         });
     }
 

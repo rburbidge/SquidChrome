@@ -7,6 +7,7 @@ import { DeviceService } from "../../../services/device.service";
 import { DeviceModel } from "../../../../../contracts/squid";
 import { ChromeDeviceModel } from "../../../services/squid-converter";
 import { Config } from "../../../../../config/config";
+import { NotificationsService } from "angular2-notifications";
 
 /**
  * Shows options for a device.
@@ -26,16 +27,23 @@ export class DeviceComponent implements OnInit {
     constructor(
         private readonly route: ActivatedRoute,
         private readonly location: Location,
-        private readonly deviceService: DeviceService) { }
+        private readonly deviceService: DeviceService,
+        private readonly notifications: NotificationsService) { }
 
     public sendLink(): Promise<void> {
-        return this.deviceService.sendUrl(this.deviceId, Config.squidEndpoint + '/squid/test');
+        return this.deviceService.sendUrl(this.deviceId, Config.squidEndpoint + '/squid/test')
+            .catch(() => {
+                this.notifications.error('Error', 'An error occurred. Please try again later.');
+            });
     }
 
     public remove(): Promise<void> {
         if(window.confirm(this.strings.device.removeConfirm(this.deviceName))) {
             return this.deviceService.removeDevice(this.deviceId)
-                .then(() => this.location.back());
+                .then(() => this.location.back())
+                .catch(() => {
+                    this.notifications.error('Error', 'An error occurred. Please try again later.');
+                });
         }
 
         return Promise.resolve();
