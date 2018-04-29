@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NotificationsService } from 'angular2-notifications';
 
 import { DeviceType } from '../../../../../contracts/squid';
 import { Config } from '../../../../../config/config';
@@ -26,7 +27,8 @@ export class AddDeviceComponent {
         private readonly gcmService: GcmService,
         private readonly deviceService: DeviceService,
         private readonly router: Router,
-        private readonly settingsService: SettingsService) { }
+        private readonly settingsService: SettingsService,
+        private readonly notifications: NotificationsService ) { }
 
     public addDevice(name: string): Promise<any> {
         this.isLoading = true;
@@ -55,7 +57,7 @@ export class AddDeviceComponent {
                 }
             })
             .catch(error => {
-                // TODO Show some error message. Figure out how to do this in a uniform way
+                this.notifications.error('Oops!', this.strings.addDevice.error);
             });
     }
 }

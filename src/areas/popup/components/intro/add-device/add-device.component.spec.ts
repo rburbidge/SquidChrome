@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifications';
 
 import { AddDeviceComponent } from './add-device.component';
 import { DeviceService } from '../../../services/device.service';
@@ -32,11 +33,12 @@ describe('AddDeviceComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ IntroBottomComponent, AddDeviceComponent ],
-            imports: [ RouterTestingModule ],
+            imports: [ RouterTestingModule, SimpleNotificationsModule ],
             providers: [
                 SettingsService,
                 { provide: DeviceService, useValue: new MockDeviceService() },
                 { provide: GcmService, useValue: new GcmService() },
+                { provide: NotificationsService, useValue: new NotificationsService({})}
             ]
         })
         .compileComponents();

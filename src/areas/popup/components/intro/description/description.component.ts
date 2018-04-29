@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ChromeService } from "../../../services/chrome.service";
 import { Route } from "../../../routing/route";
 import { Strings } from "../../../../../assets/strings/strings";
+import { NotificationsService } from "angular2-notifications";
 
 /**
  * Shows a description of the app.

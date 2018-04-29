@@ -40,6 +40,7 @@ export class Strings {
         addDevice: 'Add device',
         addingDevice: 'Registering your device...',
         defaultDeviceName: 'Chrome Browser',
+        error: 'An error occurred while registering your device!'
     };
 
     public addAnotherDevice = {

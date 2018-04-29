@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { enableProdMode, NgModule, APP_INITIALIZER } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -33,6 +34,8 @@ import { DeviceComponent } from './components/options/device/device.component';
 import { SquidAuthInterceptor } from './services/squid/squid-auth.interceptor';
 import { InstructionsComponent } from './components/options/instructions/instructions.component';
 
+import { SimpleNotificationsModule } from 'angular2-notifications';
+
 const strings = new Strings();
 
 enableProdMode();
@@ -40,7 +43,9 @@ enableProdMode();
 @NgModule({
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         HttpClientModule,
+        SimpleNotificationsModule.forRoot(),
         RouterModule.forRoot([
             {
                 path: '',
