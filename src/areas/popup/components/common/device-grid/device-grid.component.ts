@@ -5,6 +5,7 @@ import { DeviceService } from "../../../services/device.service";
 import { ChromeDeviceModel } from "../../../services/squid-converter";
 import { ErrorModel } from "../../../../../contracts/squid";
 import { SettingsService } from "../../../services/settings.service";
+import { NotificationsService } from "angular2-notifications";
 
 /**
  * Shows a grid of the user's devices.
@@ -18,7 +19,6 @@ export class DeviceGridComponent implements OnInit {
     public readonly strings: Strings = new Strings();
     public isLoading: boolean = true;
     public devices: ChromeDeviceModel[];
-    public error: string;
 
     /** Whether or not to show this device. */
     @Input() showThisDevice: boolean = true;
@@ -33,14 +33,14 @@ export class DeviceGridComponent implements OnInit {
 
     constructor(
         private readonly deviceService: DeviceService,
-        private readonly settingsService: SettingsService) { }
+        private readonly settingsService: SettingsService,
+        private readonly notifications: NotificationsService) { }
 
     /**
      * Sync the devices from the server.
      */
     public refreshDevices(): void {
         this.isLoading = true;
-        this.error = undefined;
         this.devices = undefined;
 
         this.deviceService.getDevicesCached()
@@ -61,8 +61,8 @@ export class DeviceGridComponent implements OnInit {
                 },
                 error: (error) => {
                     this.isLoading = false;
-                    this.error = this.strings.devices.refreshError;
-                    this.onError.emit(error)
+                    this.notifications.error(null, this.strings.devices.error.refreshFailed);
+                    this.onError.emit(error);
                 },
                 complete: () => this.isLoading = false
             });

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifications';
 
 import { AddDeviceComponent } from './add-device.component';
 import { DeviceService } from '../../../services/device.service';
@@ -13,12 +14,15 @@ import { Route } from '../../../routing/route';
 import { SettingsService } from '../../../services/settings.service';
 import { ChromeDeviceModel, convertDeviceModel } from '../../../services/squid-converter';
 import { createDevice } from '../../../../../test/squid-helpers';
+import { Strings } from '../../../../../assets/strings/strings';
 
 describe('AddDeviceComponent', () => {
+    const strings = new Strings();
     let deviceService: DeviceService;
     let gcmService: GcmService;
     let router: Router;
     let settingsService: SettingsService;
+    let notificationService: NotificationsService;
 
     let comp: AddDeviceComponent;
     let fixture: ComponentFixture<AddDeviceComponent>;
@@ -32,11 +36,12 @@ describe('AddDeviceComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ IntroBottomComponent, AddDeviceComponent ],
-            imports: [ RouterTestingModule ],
+            imports: [ RouterTestingModule, SimpleNotificationsModule ],
             providers: [
                 SettingsService,
                 { provide: DeviceService, useValue: new MockDeviceService() },
                 { provide: GcmService, useValue: new GcmService() },
+                { provide: NotificationsService, useValue: new NotificationsService({})}
             ]
         })
         .compileComponents();
@@ -50,6 +55,7 @@ describe('AddDeviceComponent', () => {
         gcmService = TestBed.get(GcmService);
         settingsService = TestBed.get(SettingsService);
         router = TestBed.get(Router);
+        notificationService = TestBed.get(NotificationsService);
 
         device = createDevice();
     })
@@ -126,6 +132,16 @@ describe('AddDeviceComponent', () => {
                     expect(router.navigate).toHaveBeenCalledWith(
                         [Route.addAnotherDevice],
                         { queryParams: { returnUrl: Route.selectDevice }});
+                    done();
+                });
+        });
+
+        it("Shows error on error", (done) => {
+            spyOn(notificationService, 'error');
+            spyOn(gcmService, 'register').and.returnValue(Promise.reject('Captain'))
+            comp.addDevice(null)
+                .then(() => {
+                    expect(notificationService.error).toHaveBeenCalledWith(null, strings.addDevice.error);
                     done();
                 });
         });

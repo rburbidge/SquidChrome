@@ -40,6 +40,7 @@ export class Strings {
         addDevice: 'Add device',
         addingDevice: 'Registering your device...',
         defaultDeviceName: 'Chrome Browser',
+        error: 'An error occurred while registering your device! Please try again later.'
     };
 
     public addAnotherDevice = {
@@ -56,18 +57,25 @@ export class Strings {
      */
     public devices = {
         addDevice: 'Add a device',
-        noDevicesTitle: 'No devices found',
-        noDevicesMessage: 'Install Squid on your Android phone, and then retry!',
-        pageCannotBeSent: 'This page cannot be sent. Please try a different tab.',
-        refreshError: 'Oops! An error occurred while retrieving your settings. Try again later.',
+        noDevicesTitle: 'No devices found',        
         selectDevice: 'Select a device',
         thisDevice: 'This device',
+        error: {
+            pageCannotBeSent: 'This page cannot be sent. Please try a different tab.',
+            pageSendFailed: 'Page cannot be sent. Please try again later',
+            refreshFailed: `We couldn't refresh your devices. Please try again later.`
+        }
     };
 
     public device = {
         removeConfirm: (deviceName: string) => `To use ${deviceName} again, you will need to re-run Squid on that device.\n\nAre you sure you want to remove ${deviceName}?`,
         removeDevice: 'Remove this device',
-        trySendingLink: 'Try sending a link'
+        trySendingLink: 'Try sending a link',
+        linkSent: 'Link sent. Check your other device!',
+        error: {
+            sendLink: 'Sending the link failed. Please try again later.',
+            remove: `We couldn't remove your device. Please try again later.`
+        }
     }
 
     public instructions = {

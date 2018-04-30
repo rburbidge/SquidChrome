@@ -17,7 +17,6 @@ import { SettingsService } from './settings.service';
 @Injectable()
 export class DeviceService {
     private baseUrl: string = Config.squidEndpoint;
-    private static timeoutMillis: number = 3000;
 
     constructor(private readonly http: HttpClient,
                 private readonly settings: SettingsService) { }
@@ -63,7 +62,8 @@ export class DeviceService {
                     } else {
                         observer.complete();
                     }
-                });
+                })
+                .catch(error => observer.error(error));
         });
     }
 
