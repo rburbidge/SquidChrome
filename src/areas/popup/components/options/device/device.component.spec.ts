@@ -12,6 +12,7 @@ import { MockDeviceService } from '../../../services/testing/device.service.mock
 import { Settings, SettingsService } from '../../../services/settings.service';
 import { DeviceComponent } from './device.component';
 import { Config } from '../../../../../config/config';
+import { NotificationsService } from 'angular2-notifications';
 
 describe('DeviceComponent', () => {
     const routeParams = {
@@ -40,7 +41,8 @@ describe('DeviceComponent', () => {
                 { 
                     provide: ActivatedRoute,
                     useValue: { snapshot: { params: routeParams }}
-                }
+                },
+                { provide: NotificationsService, useValue: new NotificationsService({})}
             ]
         })
         .compileComponents();

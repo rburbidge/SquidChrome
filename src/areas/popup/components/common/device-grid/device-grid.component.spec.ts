@@ -3,6 +3,7 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NotificationsService } from 'angular2-notifications';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -22,10 +23,13 @@ import { ChromeDeviceModel } from '../../../services/squid-converter';
 import { Route } from '../../../routing/route';
 import { ToolbarComponent } from '../../toolbar/toolbar.component';
 import { createDevices, createDevice } from '../../../../../test/squid-helpers';
+import { Strings } from '../../../../../assets/strings/strings';
 
 describe('DeviceGridComponent', () => {
+    const strings = new Strings();
     let deviceService: DeviceService;
     let settingsService: SettingsService;
+    let notificationsService: NotificationsService;
     
     let devices: ChromeDeviceModel[];
 
@@ -45,6 +49,7 @@ describe('DeviceGridComponent', () => {
                 SettingsService,
                 { provide: ComponentFixtureAutoDetect, useValue: true },
                 { provide: DeviceService, useValue: new MockDeviceService() },
+                { provide: NotificationsService, useValue: new NotificationsService({})}
             ]
         })
         .compileComponents();
@@ -56,16 +61,16 @@ describe('DeviceGridComponent', () => {
 
         deviceService = TestBed.get(DeviceService);
         settingsService = TestBed.get(SettingsService);
+        notificationsService = TestBed.get(NotificationsService);
 
         devices = createDevices();
     })
 
     describe('constructor',() => {
         it('Has correct default values', function() {
-            let comp = new DeviceGridComponent(null, null);
+            let comp = new DeviceGridComponent(null, null, null);
             expect(comp.isLoading).toBeTruthy();
             expect(comp.devices).toBeUndefined();
-            expect(comp.error).toBeUndefined();
             expect(comp.showAddDevice).toBe(false);
         });
     });
@@ -75,12 +80,10 @@ describe('DeviceGridComponent', () => {
             mockGetDevicesReturns(devices);            
 
             comp.isLoading = false;
-            comp.error = `You'd say, "boom de gasa"... den crashded da boss's heyblibber... den banished.`;
 
             comp.onLoad.asObservable()
                 .subscribe(() => {
                     expect(comp.devices).toEqual(devices);
-                    expect(comp.error).toBeUndefined();
                     expect(comp.isLoading).toBeFalsy();
 
                     fixture.detectChanges();
@@ -92,20 +95,15 @@ describe('DeviceGridComponent', () => {
             comp.refreshDevices();
         });
 
-        it('Template: Shows error on error', (done) => {
+        it('Shows error on error', (done) => {
             spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.throw("Meesa lika dis"));
+            spyOn(notificationsService, 'error');
 
             comp.isLoading = false;
             comp.onError.asObservable()
                 .subscribe(actualError => {
                     expect(comp.isLoading).toBeFalsy(); 
-                    expect(comp.error).toBe(comp.strings.devices.refreshError);
-
-                    fixture.detectChanges();
-                    const  error = fixture.debugElement.query(By.css('.error'));
-                    expect(error).toBeTruthy();
-                    expect(error.nativeElement.textContent).toContain(comp.strings.devices.refreshError);
-                    
+                    expect(notificationsService.error).toHaveBeenCalledWith(null, strings.devices.error.refreshFailed, { timeOut: 4000 });
                     done();
                 });
             comp.refreshDevices();

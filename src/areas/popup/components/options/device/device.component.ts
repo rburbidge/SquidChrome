@@ -33,7 +33,7 @@ export class DeviceComponent implements OnInit {
     public sendLink(): Promise<void> {
         return this.deviceService.sendUrl(this.deviceId, Config.squidEndpoint + '/squid/test')
             .catch(() => {
-                this.notifications.error('Error', 'An error occurred. Please try again later.');
+                this.notifications.error(null, this.strings.device.error.sendLink, { timeOut: 3000 });
             });
     }
 
@@ -42,7 +42,7 @@ export class DeviceComponent implements OnInit {
             return this.deviceService.removeDevice(this.deviceId)
                 .then(() => this.location.back())
                 .catch(() => {
-                    this.notifications.error('Error', 'An error occurred. Please try again later.');
+                    this.notifications.error(null, this.strings.device.error.remove, { timeOut: 3000 });
                 });
         }
 

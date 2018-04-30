@@ -19,7 +19,6 @@ export class DeviceGridComponent implements OnInit {
     public readonly strings: Strings = new Strings();
     public isLoading: boolean = true;
     public devices: ChromeDeviceModel[];
-    public error: string;
 
     /** Whether or not to show this device. */
     @Input() showThisDevice: boolean = true;
@@ -62,8 +61,8 @@ export class DeviceGridComponent implements OnInit {
                 },
                 error: (error) => {
                     this.isLoading = false;
-                    this.onError.emit(error);
                     this.notifications.error(null, this.strings.devices.error.refreshFailed, { timeOut: 4000 });
+                    this.onError.emit(error);
                 },
                 complete: () => this.isLoading = false
             });
