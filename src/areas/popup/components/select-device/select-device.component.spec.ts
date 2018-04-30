@@ -91,7 +91,6 @@ describe('SelectDeviceComponent', () => {
             spyOn(windowService, 'close');
             spyOn(deviceService, 'sendUrl');
             spyOn(chromeService, 'getCurrentTabUrl').and.returnValue(Promise.resolve('chrome://'));
-            
 
             const device = createDevice();
             comp.sendUrl(device)
@@ -102,7 +101,20 @@ describe('SelectDeviceComponent', () => {
                     expect(deviceService.sendUrl).not.toHaveBeenCalled();
                     expect(windowService.close).not.toHaveBeenCalled();
                     done();
-                })
+                });
+        });
+
+        it('Shows error on error', (done) => {
+            spyOn(notificationService, 'error');
+            spyOn(deviceService, 'sendUrl').and.returnValue(Promise.reject('You will be returned to your people, I promise.'));
+            spyOn(chromeService, 'getCurrentTabUrl').and.returnValue(Promise.resolve('https://www.example.com'));
+
+            const device = createDevice();
+            comp.sendUrl(device)
+                .then(() => {
+                    expect(notificationService.error).toHaveBeenCalledWith(null, strings.devices.error.pageSendFailed);
+                    done();
+                });
         });
 
         function testSendUrl(url: string, done: Function): void {

@@ -14,12 +14,15 @@ import { Route } from '../../../routing/route';
 import { SettingsService } from '../../../services/settings.service';
 import { ChromeDeviceModel, convertDeviceModel } from '../../../services/squid-converter';
 import { createDevice } from '../../../../../test/squid-helpers';
+import { Strings } from '../../../../../assets/strings/strings';
 
 describe('AddDeviceComponent', () => {
+    const strings = new Strings();
     let deviceService: DeviceService;
     let gcmService: GcmService;
     let router: Router;
     let settingsService: SettingsService;
+    let notificationService: NotificationsService;
 
     let comp: AddDeviceComponent;
     let fixture: ComponentFixture<AddDeviceComponent>;
@@ -52,6 +55,7 @@ describe('AddDeviceComponent', () => {
         gcmService = TestBed.get(GcmService);
         settingsService = TestBed.get(SettingsService);
         router = TestBed.get(Router);
+        notificationService = TestBed.get(NotificationsService);
 
         device = createDevice();
     })
@@ -128,6 +132,16 @@ describe('AddDeviceComponent', () => {
                     expect(router.navigate).toHaveBeenCalledWith(
                         [Route.addAnotherDevice],
                         { queryParams: { returnUrl: Route.selectDevice }});
+                    done();
+                });
+        });
+
+        it("Shows error on error", (done) => {
+            spyOn(notificationService, 'error');
+            spyOn(gcmService, 'register').and.returnValue(Promise.reject('Captain'))
+            comp.addDevice(null)
+                .then(() => {
+                    expect(notificationService.error).toHaveBeenCalledWith(null, strings.addDevice.error);
                     done();
                 });
         });
