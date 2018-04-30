@@ -57,7 +57,7 @@ export class AddDeviceComponent {
                 }
             })
             .catch(error => {
-                this.notifications.error('Oops!', this.strings.addDevice.error);
+                this.notifications.error(null, this.strings.addDevice.error);
             });
     }
 }

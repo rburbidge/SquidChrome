@@ -49,7 +49,7 @@ export class SelectDeviceComponent implements OnInit {
                 }
             })
             .catch(() => {
-                this.notifications.error(null, this.strings.devices.error.pageSendFailed, { timeOut: 3000 });
+                this.notifications.error(null, this.strings.devices.error.pageSendFailed);
             });
     }
 

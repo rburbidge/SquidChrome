@@ -45,7 +45,12 @@ enableProdMode();
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
-        SimpleNotificationsModule.forRoot(),
+        SimpleNotificationsModule.forRoot({
+            clickToClose: true,
+            position: ['bottom', 'center'],
+            animate: 'fromBottom',
+            timeOut: 3000
+        }),
         RouterModule.forRoot([
             {
                 path: '',

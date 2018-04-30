@@ -103,7 +103,7 @@ describe('DeviceGridComponent', () => {
             comp.onError.asObservable()
                 .subscribe(actualError => {
                     expect(comp.isLoading).toBeFalsy(); 
-                    expect(notificationsService.error).toHaveBeenCalledWith(null, strings.devices.error.refreshFailed, { timeOut: 4000 });
+                    expect(notificationsService.error).toHaveBeenCalledWith(null, strings.devices.error.refreshFailed);
                     done();
                 });
             comp.refreshDevices();

@@ -61,7 +61,7 @@ export class DeviceGridComponent implements OnInit {
                 },
                 error: (error) => {
                     this.isLoading = false;
-                    this.notifications.error(null, this.strings.devices.error.refreshFailed, { timeOut: 4000 });
+                    this.notifications.error(null, this.strings.devices.error.refreshFailed);
                     this.onError.emit(error);
                 },
                 complete: () => this.isLoading = false

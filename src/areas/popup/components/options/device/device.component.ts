@@ -33,10 +33,10 @@ export class DeviceComponent implements OnInit {
     public sendLink(): Promise<void> {
         return this.deviceService.sendUrl(this.deviceId, Config.squidEndpoint + '/squid/test')
             .then(() => {
-                this.notifications.info(null, this.strings.device.linkSent, { timeOut: 3000 });
+                this.notifications.info(null, this.strings.device.linkSent);
             })
             .catch(() => {
-                this.notifications.error(null, this.strings.device.error.sendLink, { timeOut: 3000 });
+                this.notifications.error(null, this.strings.device.error.sendLink);
             });
     }
 
@@ -45,7 +45,7 @@ export class DeviceComponent implements OnInit {
             return this.deviceService.removeDevice(this.deviceId)
                 .then(() => this.location.back())
                 .catch(() => {
-                    this.notifications.error(null, this.strings.device.error.remove, { timeOut: 3000 });
+                    this.notifications.error(null, this.strings.device.error.remove);
                 });
         }
 
