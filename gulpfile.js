@@ -90,14 +90,19 @@ gulp.task('copyManifest', ['clean'], function() {
 // Copies node modules
 gulp.task('copyNodeModules', ['copyRxjs', 'clean'], function() {
     var files = [
-        '@angular/compiler/bundles/compiler.umd.js',
+        '@angular/core/bundles/core.umd.js',
         '@angular/common/bundles/common.umd.js',
         '@angular/common/bundles/common-http.umd.js',
-        '@angular/core/bundles/core.umd.js',
-        '@angular/http/bundles/http.umd.js',
+        '@angular/compiler/bundles/compiler.umd.js',
         '@angular/platform-browser/bundles/platform-browser.umd.js',
         '@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
         '@angular/router/bundles/router.umd.js',
+        '@angular/forms/bundles/forms.umd.js',
+        '@angular/upgrade/bundles/upgrade.umd.js',
+        '@angular/animations/bundles/animations.umd.js',
+        '@angular/animations/bundles/animations-browser.umd.js',
+        '@angular/platform-browser/bundles/platform-browser-animations.umd.js',
+        'angular2-notifications/angular2-notifications.umd.js',
         'angular2-uuid/index.js',
         'bootstrap/dist/css/bootstrap.min.css',
         'core-js/client/shim.min.js',
