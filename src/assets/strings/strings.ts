@@ -71,6 +71,7 @@ export class Strings {
         removeConfirm: (deviceName: string) => `To use ${deviceName} again, you will need to re-run Squid on that device.\n\nAre you sure you want to remove ${deviceName}?`,
         removeDevice: 'Remove this device',
         trySendingLink: 'Try sending a link',
+        linkSent: 'Link sent. Check your other device!',
         error: {
             sendLink: 'Sending the link failed. Please try again later.',
             remove: `We couldn't remove your device. Please try again later.`

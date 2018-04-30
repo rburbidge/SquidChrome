@@ -32,6 +32,9 @@ export class DeviceComponent implements OnInit {
 
     public sendLink(): Promise<void> {
         return this.deviceService.sendUrl(this.deviceId, Config.squidEndpoint + '/squid/test')
+            .then(() => {
+                this.notifications.info(null, this.strings.device.linkSent, { timeOut: 3000 });
+            })
             .catch(() => {
                 this.notifications.error(null, this.strings.device.error.sendLink, { timeOut: 3000 });
             });
