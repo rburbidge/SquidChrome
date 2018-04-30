@@ -43,7 +43,10 @@ export class SelectDeviceComponent implements OnInit {
             .then(url => {
                 if(url && url.startsWith('http://') || url.startsWith('https://')) {
                     return this.deviceService.sendUrl(device.id, url)
-                        .then(() => this.windowService.close());
+                        .then(() => {
+                            this.notifications.info(null, this.strings.device.linkSent);        
+                            setTimeout(() => this.windowService.close(), 3000);
+                        });
                 } else {
                     this.notifications.warn(null, this.strings.devices.error.pageCannotBeSent);
                 }
