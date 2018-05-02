@@ -16,7 +16,7 @@ export class GlobalErrorHandler implements ErrorHandler {
             error,
             GlobalErrorHandler.name + '.handleError()',
             {
-                location: window.getLocationHref()
+                url: window.getLocationHref()
             });
         
         // Do not re-throw the error, so as to hopefully still allow the application to function

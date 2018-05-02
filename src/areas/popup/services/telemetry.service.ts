@@ -27,8 +27,8 @@ export class TelemetryService {
         this.appInsights = init.loadAppInsights();
     }
 
-    public trackPageView(name: string): void {
-        this.appInsights.trackPageView(name);
+    public trackPageView(url: string): void {
+        this.appInsights.trackPageView(url);
     }
 
     /**
@@ -48,5 +48,5 @@ export class TelemetryService {
  */
 export interface ExceptionProperties {
     /** The complete URL at the time of the exception. */
-    location: string;
+    url: string;
 }
