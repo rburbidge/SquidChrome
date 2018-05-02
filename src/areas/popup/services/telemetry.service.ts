@@ -16,22 +16,23 @@ export class TelemetryService {
     private appInsights: Microsoft.ApplicationInsights.IAppInsights;
 
     public init(): void {
+        // Initialize the App Insights client
         const config = new Config();
-        var snippet = {
+        const init = new (Microsoft.ApplicationInsights as any).Initialization({
             config: {   
                 instrumentationKey: config.insightsKey
             }   
-        };   
-        
-        var init = new (Microsoft.ApplicationInsights as any).Initialization(snippet);
+        });
         this.appInsights = init.loadAppInsights();
     }
 
+    /** Tracks a page view at the given URL. */
     public trackPageView(url: string): void {
         this.appInsights.trackPageView(url);
     }
 
     /**
+     * Tracks an uncaught exception.
      * @param error The Error object or string being tracked.
      * @param location Name of the component/method where the exception is being tracked.
      * @param properties A set of key value pairs associated with the exception.

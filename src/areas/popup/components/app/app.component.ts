@@ -18,12 +18,17 @@ export class AppComponent {
         private readonly router: Router)
     {
         router.events.forEach((event) => {
-            // Log at NavigationEnd in order to get the correct URL 
             if(event instanceof NavigationEnd) {
-                const url = window.getLocationHref();
-                console.log(url);
-                this.telemetry.trackPageView(url);
+                this.onNavigationEnd();
             }
         })
+    }
+
+    private onNavigationEnd(): void {
+        // Log at NavigationEnd in order to get the correct URL 
+        const url = this.window.getLocationHref();
+        
+        console.log(url);
+        this.telemetry.trackPageView(url);
     }
 }

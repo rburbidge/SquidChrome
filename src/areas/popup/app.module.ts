@@ -3,6 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { enableProdMode, NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 import { AboutComponent } from './components/options/about/about.component';
 import { AddAnotherDeviceComponent } from './components/add-another-device/add-another-device.component';
@@ -33,8 +34,6 @@ import { Strings } from '../../assets/strings/strings';
 import { DeviceComponent } from './components/options/device/device.component';
 import { SquidAuthInterceptor } from './services/squid/squid-auth.interceptor';
 import { InstructionsComponent } from './components/options/instructions/instructions.component';
-
-import { SimpleNotificationsModule } from 'angular2-notifications';
 import { GlobalErrorHandler } from './global-error-handler';
 import { TelemetryService } from './services/telemetry.service';
 
