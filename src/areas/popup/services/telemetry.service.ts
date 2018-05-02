@@ -7,6 +7,9 @@ import { AppInsights } from "applicationinsights-js";
  * This uses the non-module (global) version of applicationinsights-js. This is because the module version requires
  * loading from a dynamic CDN endpoint. We do not load from the CDN because the Chrome extension's content security
  * policy (see manifest.json) includes a whitelist of sources to load from and will block any dynamic CDN.
+ * 
+ * See https://blogs.msdn.microsoft.com/premier_developer/2017/05/11/add-application-insights-to-an-angular-spa/. ai.js
+ * is the file normally downloaded from the CDN, but it is included statically in this app (e.g. popup.html).
  */
 export class TelemetryService {
 
