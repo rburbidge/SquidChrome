@@ -22,6 +22,7 @@
     "@types/jquery": "^3.2.10",
     "angular2-notifications": "^1.0.1",
     "angular2-uuid": "^1.1.0",
+    "applicationinsights-js": "^1.0.16",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "es6-shim": "^0.35.3",
@@ -32,6 +33,7 @@
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
+    "@types/applicationinsights-js": "^1.0.5",
     "@types/chrome": "0.0.35",
     "@types/core-js": "^0.9.34",
     "@types/jasmine": "^2.5.38",
