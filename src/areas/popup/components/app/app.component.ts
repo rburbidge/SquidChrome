@@ -6,9 +6,7 @@ import { Router, NavigationStart, NavigationEnd } from '@angular/router';
 @Component({
     selector: 'my-app',
     template: `
-        <router-outlet>
-            (activate)="onActivate($event)"
-        </router-outlet>
+        <router-outlet></router-outlet>
         <simple-notifications></simple-notifications>
     `
 })
