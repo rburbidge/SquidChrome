@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { enableProdMode, NgModule, APP_INITIALIZER } from '@angular/core';
+import { enableProdMode, NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { AboutComponent } from './components/options/about/about.component';
@@ -35,6 +35,8 @@ import { SquidAuthInterceptor } from './services/squid/squid-auth.interceptor';
 import { InstructionsComponent } from './components/options/instructions/instructions.component';
 
 import { SimpleNotificationsModule } from 'angular2-notifications';
+import { GlobalErrorHandler } from './global-error-handler';
+import { TelemetryService } from './services/telemetry.service';
 
 const strings = new Strings();
 
@@ -128,20 +130,30 @@ enableProdMode();
         GcmService,
         DeviceService,
         SettingsService,
+        TelemetryService,
         WindowService,
 
+        {
+            provide: ErrorHandler,
+            useClass: GlobalErrorHandler
+        },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: SquidAuthInterceptor,
             multi: true,
             deps: [ChromeService]
         },
-
         {
             provide: APP_INITIALIZER,
             useFactory: (settingsService) => () => settingsService.init(),
             multi: true,
             deps: [SettingsService]
+        },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: (telemetryService) => () => telemetryService.init(),
+            multi: true,
+            deps: [TelemetryService]
         }
     ],
     bootstrap: [AppComponent]

@@ -10,4 +10,6 @@ export class Config {
 
     public chromeWebStore: string = 'https://chrome.google.com/webstore/detail/squid/gipmiglmamlkehhbcicejmfloehgeklk';
     public googlePlayStore: string = 'https://play.google.com/store/apps/details?id=com.sirnommington.squid';
+
+    public insightsKey: string = '13e57570-d486-41c9-8add-deae10259197';
 }
