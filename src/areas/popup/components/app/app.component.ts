@@ -24,10 +24,15 @@ export class AppComponent {
         })
     }
 
+    /**
+     * Track page views.
+     * 
+     * Do this on end navigation end event because this retrieves the correct resulting URL.
+     */
     private onNavigationEnd(): void {
-        // Log at NavigationEnd in order to get the correct URL 
+        // Log at NavigationEnd in order to get the correct URL
         const url = this.window.getLocationHref();
-        
+
         console.log(url);
         this.telemetry.trackPageView(url);
     }
