@@ -17,7 +17,7 @@ export class WindowService {
     }
 
     /**
-     * Gets the window.location.origin.
+     * Gets window.location.origin.
      */
     public getOrigin(): string {
         return window.location.origin;
