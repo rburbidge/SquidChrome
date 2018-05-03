@@ -104,6 +104,7 @@ gulp.task('copyNodeModules', ['copyRxjs', 'clean'], function() {
         '@angular/platform-browser/bundles/platform-browser-animations.umd.js',
         'angular2-notifications/angular2-notifications.umd.js',
         'angular2-uuid/index.js',
+        'applicationinsights-js/dist/ai.js',
         'bootstrap/dist/css/bootstrap.min.css',
         'core-js/client/shim.min.js',
         'jquery/dist/jquery.min.js',
