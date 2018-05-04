@@ -8,7 +8,12 @@
     <script src="node_modules/core-js/client/shim.min.js"></script>
     <script src="node_modules/zone.js/dist/zone.js"></script>
     <script src="node_modules/reflect-metadata/Reflect.js"></script>
+
+    <!-- Include applicationinsights-js globally. See TelemetryService for more details on why this is included here. -->
+    <script src="node_modules/applicationinsights-js/dist/ai.js"></script>
+
     <script src="dist/bundle.js"></script>
+    <script src="src/areas/popup/bootstrap.js"></script>
   </head>
   <body class="squid-body">
     <my-app>

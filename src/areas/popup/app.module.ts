@@ -1,7 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { enableProdMode, NgModule, APP_INITIALIZER } from '@angular/core';
+import { enableProdMode, NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+import { APP_BASE_HREF } from '@angular/common';
 
 import { AboutComponent } from './components/options/about/about.component';
 import { AddAnotherDeviceComponent } from './components/add-another-device/add-another-device.component';
@@ -31,7 +34,9 @@ import { OptionsListComponent } from './components/options/options-list/options-
 import { Strings } from '../../assets/strings/strings';
 import { DeviceComponent } from './components/options/device/device.component';
 import { SquidAuthInterceptor } from './services/squid/squid-auth.interceptor';
-import { APP_BASE_HREF } from '@angular/common';
+import { InstructionsComponent } from './components/options/instructions/instructions.component';
+import { GlobalErrorHandler } from './global-error-handler';
+import { TelemetryService } from './services/telemetry.service';
 
 const strings = new Strings();
 
@@ -40,7 +45,14 @@ enableProdMode();
 @NgModule({
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         HttpClientModule,
+        SimpleNotificationsModule.forRoot({
+            clickToClose: true,
+            position: ['bottom', 'center'],
+            animate: 'fromBottom',
+            timeOut: 3000
+        }),
         RouterModule.forRoot([
             {
                 path: 'popup.html',
@@ -60,6 +72,7 @@ enableProdMode();
                 children: [
                     { path: Route.options.about, component: AboutComponent, data: { title: strings.about.title } },
                     { path: Route.options.developer, component: DeveloperComponent, data: { title: strings.developer.title } },
+                    { path: Route.options.instructions, component: InstructionsComponent, data: { title: strings.instructions.title } },
                     { path: Route.options.list, component: OptionsListComponent, data: { title: strings.options.title } },
                     { path: Route.options.manageDevices, component: ManageDevicesComponent, data: { title: strings.manageDevices.title } },
                     { path: Route.options.manageDevice, component: DeviceComponent },
@@ -95,6 +108,7 @@ enableProdMode();
         AboutComponent,
         DeveloperComponent,
         DeviceComponent,
+        InstructionsComponent,
         ManageDevicesComponent,
         OptionsComponent,
         OptionsListComponent,
@@ -116,26 +130,35 @@ enableProdMode();
         GcmService,
         DeviceService,
         SettingsService,
+        TelemetryService,
         WindowService,
 
+        {
+            provide: ErrorHandler,
+            useClass: GlobalErrorHandler
+        },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: SquidAuthInterceptor,
             multi: true,
             deps: [ChromeService]
         },
-
         {
             provide: APP_INITIALIZER,
             useFactory: (settingsService) => () => settingsService.init(),
             multi: true,
             deps: [SettingsService]
         },
-
+        {
+            provide: APP_INITIALIZER,
+            useFactory: (telemetryService) => () => telemetryService.init(),
+            multi: true,
+            deps: [TelemetryService]
+        },
         {
             provide: APP_BASE_HREF,
             useValue: '/'
-        }
+        },
     ],
     bootstrap: [AppComponent]
 })

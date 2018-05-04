@@ -10,6 +10,7 @@ import { Route } from '../../routing/route';
 import { Strings } from '../../../../assets/strings/strings';
 import { WindowService } from '../../services/window.service';
 import { SettingsService } from '../../services/settings.service';
+import { NotificationsService } from 'angular2-notifications';
 
 /**
  * Shows the user's devices. Selecting a device sends the current tab's URL to that device.
@@ -29,7 +30,8 @@ export class SelectDeviceComponent implements OnInit {
         private readonly deviceService: DeviceService,
         private readonly router: Router,
         private readonly chromeService: ChromeService,
-        private readonly settingsService: SettingsService)
+        private readonly settingsService: SettingsService,
+        private readonly notifications: NotificationsService)
     { }
 
     /**
@@ -43,8 +45,11 @@ export class SelectDeviceComponent implements OnInit {
                     return this.deviceService.sendUrl(device.id, url)
                         .then(() => this.windowService.close());
                 } else {
-                    alert(this.strings.devices.pageCannotBeSent);
+                    this.notifications.warn(null, this.strings.devices.error.pageCannotBeSent);
                 }
+            })
+            .catch(() => {
+                this.notifications.error(null, this.strings.devices.error.pageSendFailed);
             });
     }
 

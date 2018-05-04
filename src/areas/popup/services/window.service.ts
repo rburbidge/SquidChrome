@@ -10,6 +10,20 @@ export class WindowService {
     }
 
     /**
+     * Gets window.location.href.
+     */
+    public getLocationHref(): string {
+        return window.location.href;
+    }
+
+    /**
+     * Gets window.location.origin.
+     */
+    public getOrigin(): string {
+        return window.location.origin;
+    }
+
+    /**
      * Closes the window.
      */
     public close(): void {

@@ -56,6 +56,7 @@ module.exports = function(config) {
       { pattern: 'node_modules/@angular/**/*.js.map', included: false, watched: false },
 
       { pattern: 'node_modules/angular2-uuid/**/*.js', included: false, watched: false },
+      { pattern: 'node_modules/angular2-notifications/**/*.js', included: false, watched: false },
 
       { pattern: 'system.config.js', included: false, watched: false },
       //{ pattern: 'system.config.extras.js', included: false, watched: false },

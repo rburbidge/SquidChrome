@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
+import { NotificationsService } from 'angular2-notifications';
+import { Observable } from 'rxjs/Observable';
 
 import { ChromeService } from '../../services/chrome.service';
 import { DeveloperComponent } from '../developer/developer.component';
@@ -19,7 +21,6 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { DeviceGridComponent } from '../common/device-grid/device-grid.component';
 import { SettingsService } from '../../services/settings.service';
 import { createDevice, createDevices } from '../../../../test/squid-helpers';
-import { Observable } from 'rxjs/Observable';
 import { Strings } from '../../../../assets/strings/strings';
 
 describe('SelectDeviceComponent', () => {
@@ -28,6 +29,7 @@ describe('SelectDeviceComponent', () => {
     let router: Router;
     let windowService: WindowService;
     let settingsService: SettingsService;
+    let notificationService: NotificationsService
 
     let comp: SelectDeviceComponent;
     let fixture: ComponentFixture<SelectDeviceComponent>;
@@ -49,7 +51,8 @@ describe('SelectDeviceComponent', () => {
                 SettingsService,
                 { provide: ChromeService, useValue: new MockChromeService() },
                 { provide: DeviceService, useValue: new MockDeviceService() },
-                { provide: WindowService, useValue: new WindowService() }
+                { provide: WindowService, useValue: new WindowService() },
+                { provide: NotificationsService, useValue: new NotificationsService({})}
             ]
         })
         .compileComponents();
@@ -64,6 +67,7 @@ describe('SelectDeviceComponent', () => {
         router = TestBed.get(Router);
         windowService = TestBed.get(WindowService);
         settingsService = TestBed.get(SettingsService);
+        notificationService = TestBed.get(NotificationsService)
     })
 
     describe('constructor',() => {
@@ -82,23 +86,35 @@ describe('SelectDeviceComponent', () => {
             testSendUrl('https://www.example.com', done);
         });
 
-        it('Shows alert if URL starts with chrome://', (done) => {
-            spyOn(window, 'alert');
+        it('Shows notification if URL starts with chrome://', (done) => {
+            spyOn(notificationService, 'warn');
             spyOn(windowService, 'close');
             spyOn(deviceService, 'sendUrl');
             spyOn(chromeService, 'getCurrentTabUrl').and.returnValue(Promise.resolve('chrome://'));
-            
 
             const device = createDevice();
             comp.sendUrl(device)
                 .then(() => {
-                    expect(window.alert).toHaveBeenCalledWith(strings.devices.pageCannotBeSent);
+                    expect(notificationService.warn).toHaveBeenCalledWith(null, strings.devices.error.pageCannotBeSent);
 
                     // Page is not sent, window is not closed
                     expect(deviceService.sendUrl).not.toHaveBeenCalled();
                     expect(windowService.close).not.toHaveBeenCalled();
                     done();
-                })
+                });
+        });
+
+        it('Shows error on error', (done) => {
+            spyOn(notificationService, 'error');
+            spyOn(deviceService, 'sendUrl').and.returnValue(Promise.reject('You will be returned to your people, I promise.'));
+            spyOn(chromeService, 'getCurrentTabUrl').and.returnValue(Promise.resolve('https://www.example.com'));
+
+            const device = createDevice();
+            comp.sendUrl(device)
+                .then(() => {
+                    expect(notificationService.error).toHaveBeenCalledWith(null, strings.devices.error.pageSendFailed);
+                    done();
+                });
         });
 
         function testSendUrl(url: string, done: Function): void {

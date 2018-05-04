@@ -11,8 +11,12 @@ import { loadCss } from '../../testing/css-loader';
 import { MockDeviceService } from '../../../services/testing/device.service.mock';
 import { Settings, SettingsService } from '../../../services/settings.service';
 import { DeviceComponent } from './device.component';
+import { Config } from '../../../../../config/config';
+import { NotificationsService } from 'angular2-notifications';
+import { Strings } from '../../../../../assets/strings/strings';
 
 describe('DeviceComponent', () => {
+    const strings = new Strings();
     const routeParams = {
         deviceId: 'deviceId1',
         deviceName: 'Chrome Browser',
@@ -21,6 +25,7 @@ describe('DeviceComponent', () => {
 
     let deviceService: DeviceService;
     let location: Location;
+    let notificationsService: NotificationsService;
 
     let comp: DeviceComponent;
     let fixture: ComponentFixture<DeviceComponent>;
@@ -39,7 +44,8 @@ describe('DeviceComponent', () => {
                 { 
                     provide: ActivatedRoute,
                     useValue: { snapshot: { params: routeParams }}
-                }
+                },
+                { provide: NotificationsService, useValue: new NotificationsService({})}
             ]
         })
         .compileComponents();
@@ -51,6 +57,7 @@ describe('DeviceComponent', () => {
 
         deviceService = TestBed.get(DeviceService);
         location = TestBed.get(Location);
+        notificationsService = TestBed.get(NotificationsService);
     });
 
     describe('ngOnInit()', () => {
@@ -64,9 +71,20 @@ describe('DeviceComponent', () => {
 
     describe('sendLink()', () => {
         it('Sends a link', (done) => {
+            spyOn(notificationsService, 'info');
             spyOn(deviceService, 'sendUrl').and.returnValue(Promise.resolve());
             comp.sendLink().then(() => {
-                expect(deviceService.sendUrl).toHaveBeenCalledWith(routeParams.deviceId, 'https://www.google.com');
+                expect(deviceService.sendUrl).toHaveBeenCalledWith(routeParams.deviceId, Config.squidEndpoint + '/squid/test');
+                expect(notificationsService.info).toHaveBeenCalledWith(null, strings.device.linkSent);
+                done();
+            });
+        });
+
+        it('Shows error on error', (done) => {
+            spyOn(notificationsService, 'error');
+            spyOn(deviceService, 'sendUrl').and.returnValue(Promise.reject('Run you fools'));
+            comp.sendLink().then(() => {
+                expect(notificationsService.error).toHaveBeenCalledWith(null, strings.device.error.sendLink);
                 done();
             });
         });
@@ -93,6 +111,17 @@ describe('DeviceComponent', () => {
             comp.remove().then(() => {
                 expect(location.back).toHaveBeenCalledTimes(1);
                 expect(deviceService.removeDevice).toHaveBeenCalledWith(routeParams.deviceId);
+                done();
+            });
+        });
+
+        it('Shows error on error', (done) => {
+            spyOn(deviceService, 'removeDevice').and.returnValue(Promise.reject('Save it for the Holodeck.'));
+            spyOn(window, 'confirm').and.returnValue(true);
+            spyOn(notificationsService, 'error');
+
+            comp.remove().then(() => {
+                expect(notificationsService.error).toHaveBeenCalledWith(null, strings.device.error.remove);
                 done();
             });
         });
