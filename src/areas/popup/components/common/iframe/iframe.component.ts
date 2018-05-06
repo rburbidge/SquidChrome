@@ -25,6 +25,7 @@ export class IFrameComponent implements OnInit {
 
     public contentUrl: SafeUrl;
     public contentHeight: string = "0";
+    public class: string;
 
     constructor(private readonly window: WindowService, private readonly sanitizer: DomSanitizer, private readonly route: ActivatedRoute) { }
 
@@ -33,6 +34,7 @@ export class IFrameComponent implements OnInit {
         const message: SquidMessage = ev.data;
         if(message.type == 'heightChanged') {
             this.contentHeight = message.data;
+            this.class = "fade-in";
         }
     }
 
