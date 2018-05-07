@@ -2,7 +2,6 @@ import { Component, OnInit, Sanitizer, HostListener, Input } from "@angular/core
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Route, ActivatedRoute } from "@angular/router";
 import { NotificationsService } from "angular2-notifications";
-import $ from 'jquery';
 
 import { Strings } from "../../../../../assets/strings/strings";
 import { SettingsService } from "../../../services/settings.service";
@@ -11,6 +10,7 @@ import { SquidMessage } from "../../../../../contracts/squid";
 import { WindowService } from "../../../services/window.service";
 import * as PromiseHelpers from '../../../../common/promise-helpers';
 import { TelemetryService } from "../../../services/telemetry.service";
+import { serializeQueryParams } from "../../../../common/http-helpers";
 
 const iframeTimeoutMillis = 5000;
 
@@ -65,7 +65,7 @@ export class IFrameComponent implements OnInit {
 
     private createSourceUrl(): string {
         const baseInstructionsUrl = Config.squidEndpoint + this.route.snapshot.data['squidPath'];
-        return baseInstructionsUrl + '?' + $.param(
+        return baseInstructionsUrl + '?' + serializeQueryParams(
             {
                 client: 'chrome-ext',
                 origin: this.window.getOrigin()

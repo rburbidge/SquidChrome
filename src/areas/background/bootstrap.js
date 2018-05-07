@@ -1,1 +1,0 @@
-System.import('./src/areas/background/background').then(null, console.error.bind(console));

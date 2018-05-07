@@ -5,13 +5,14 @@ var helpers = require('./helpers');
 
 module.exports = {
   entry: {
-    'bundle': './src/areas/popup/main.ts'
+    'bundle': './src/areas/popup/main.ts',
+    'background': './src/areas/background/background.ts'
   },
   output: {
     path: __dirname + "/dist",
     filename: "[name].js",
   },
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
 
   resolve: {
     extensions: ['.ts', '.js']
@@ -63,12 +64,12 @@ module.exports = {
     //   template: 'src/index.html'
     // })
 
-    // new ExtractTextPlugin("styles.css"),
-    // new webpack.optimize.UglifyJsPlugin({
-    //     sourceMap: true,
-    //     output: {
-    //         ascii_only: true,
-    //     }
-    // })
+    new ExtractTextPlugin("styles.css"),
+    new webpack.optimize.UglifyJsPlugin({
+        sourceMap: true,
+        output: {
+            ascii_only: true,
+        }
+    })
   ]
 };

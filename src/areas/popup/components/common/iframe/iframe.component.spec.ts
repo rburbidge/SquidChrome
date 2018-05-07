@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { IFrameComponent } from './iframe.component';
-import { ChromeExtensionLinkDirective } from '../../../../common/directives/chrome-ext/link/link.directive';
 import { loadCss } from '../../testing/css-loader';
 import { ToolbarComponent } from '../../toolbar/toolbar.component';
 import { WindowService } from '../../../services/window.service';
