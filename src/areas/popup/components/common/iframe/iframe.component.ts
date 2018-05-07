@@ -1,5 +1,6 @@
 import { Component, OnInit, Sanitizer, HostListener, Input } from "@angular/core";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { Route, ActivatedRoute } from "@angular/router";
 import $ from 'jquery';
 
 import { Strings } from "../../../../../assets/strings/strings";
@@ -7,7 +8,6 @@ import { SettingsService } from "../../../services/settings.service";
 import { Config } from "../../../../../config/config";
 import { SquidMessage } from "../../../../../contracts/squid";
 import { WindowService } from "../../../services/window.service";
-import { Route, ActivatedRoute } from "@angular/router";
 
 /**
  * Shows instructions content for the app.
@@ -20,9 +20,6 @@ import { Route, ActivatedRoute } from "@angular/router";
     styleUrls: [ './iframe.css' ]
 })
 export class IFrameComponent implements OnInit {
-    @Input()
-    public squidPath: string;
-
     public contentUrl: SafeUrl;
     public contentHeight: string = "0";
     public class: string;
