@@ -6,6 +6,8 @@ import { ChromeExtensionLinkDirective } from '../../../../common/directives/chro
 import { loadCss } from '../../testing/css-loader';
 import { ToolbarComponent } from '../../toolbar/toolbar.component';
 import { WindowService } from '../../../services/window.service';
+import { TelemetryService } from '../../../services/telemetry.service';
+import { NotificationsService } from 'angular2-notifications';
 
 describe('IFrameComponent', () => {
     let window: WindowService;
@@ -24,7 +26,9 @@ describe('IFrameComponent', () => {
             declarations: [ IFrameComponent, ToolbarComponent ],
             imports: [ RouterTestingModule ],
             providers: [
-                { provide: WindowService, useValue: new WindowService() }
+                { provide: WindowService, useValue: new WindowService() },
+                { provide: TelemetryService, useValue: new TelemetryService() },
+                { provide: NotificationsService, useValue: new NotificationsService({}) }
             ]
         })
         .compileComponents();
@@ -35,6 +39,10 @@ describe('IFrameComponent', () => {
 
         fixture = TestBed.createComponent(IFrameComponent);
         comp = fixture.componentInstance;
+
+        const telemetry = TestBed.get(TelemetryService);
+        spyOn(telemetry, 'trackIFrameDependency');
+
     });
 
     it('iframe height is set on window heightChanged message', () => {
