@@ -6,11 +6,9 @@ import { RouterModule } from '@angular/router';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { APP_BASE_HREF } from '@angular/common';
 
-import { AboutComponent } from './components/options/about/about.component';
 import { AddAnotherDeviceComponent } from './components/add-another-device/add-another-device.component';
 import { AddDeviceComponent } from './components/intro/add-device/add-device.component';
 import { AppComponent } from './components/app/app.component';
-import { AttributionComponent } from './components/options/about/attribution/attribution.component';
 import { ChromeExtensionLinkDirective } from '../common/directives/chrome-ext/link/link.directive';
 import { ChromeExtensionSourceDirective } from '../common/directives/chrome-ext-src.directive';
 import { ChromeService } from './services/chrome.service';
@@ -34,7 +32,7 @@ import { OptionsListComponent } from './components/options/options-list/options-
 import { Strings } from '../../assets/strings/strings';
 import { DeviceComponent } from './components/options/device/device.component';
 import { SquidAuthInterceptor } from './services/squid/squid-auth.interceptor';
-import { InstructionsComponent } from './components/options/instructions/instructions.component';
+import { IFrameComponent } from './components/common/iframe/iframe.component';
 import { GlobalErrorHandler } from './global-error-handler';
 import { TelemetryService } from './services/telemetry.service';
 
@@ -70,9 +68,9 @@ enableProdMode();
                 component: OptionsComponent,
                 data: { title: strings.options.title },
                 children: [
-                    { path: Route.options.about, component: AboutComponent, data: { title: strings.about.title } },
+                    { path: Route.options.about, component: IFrameComponent, data: { title: strings.about.title, squidPath: '/squid/about' } },
                     { path: Route.options.developer, component: DeveloperComponent, data: { title: strings.developer.title } },
-                    { path: Route.options.instructions, component: InstructionsComponent, data: { title: strings.instructions.title } },
+                    { path: Route.options.instructions, component: IFrameComponent, data: { title: strings.instructions.title, squidPath: '/squid/instructions' }, },
                     { path: Route.options.list, component: OptionsListComponent, data: { title: strings.options.title } },
                     { path: Route.options.manageDevices, component: ManageDevicesComponent, data: { title: strings.manageDevices.title } },
                     { path: Route.options.manageDevice, component: DeviceComponent },
@@ -104,11 +102,8 @@ enableProdMode();
         SignedOutComponent,
 
         // Options components
-        AttributionComponent,
-        AboutComponent,
         DeveloperComponent,
         DeviceComponent,
-        InstructionsComponent,
         ManageDevicesComponent,
         OptionsComponent,
         OptionsListComponent,
@@ -120,6 +115,7 @@ enableProdMode();
         // Common components
         DeviceGridComponent,
         ToolbarComponent,
+        IFrameComponent,
     ],
     providers: [
         // Guards

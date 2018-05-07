@@ -42,6 +42,18 @@ export class TelemetryService {
         this.appInsights.trackException(error as Error, location, properties as any);
         this.appInsights.flush();
     }
+
+    /**
+     * Tracks an iframe dependency.
+     * @param id The ID of the partner owning the src URL.
+     * @param url The src URL.
+     * @param totalTime The total time in milliseconds.
+     * @param success Whether the iframe loaded correctly.
+     */
+    public trackIFrameDependency(id: string, url: string, totalTime: number, success: boolean): void {
+        this.appInsights.trackDependency(id, 'GET', url, undefined, totalTime, success, success ? 200 : 500);
+        this.appInsights.flush();
+    }
 }
 
 /**

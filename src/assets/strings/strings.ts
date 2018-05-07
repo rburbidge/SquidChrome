@@ -8,6 +8,10 @@ export class Strings {
     public name = 'Name';
     public next = 'Next';
     public retry = 'Retry';
+
+    public error = {
+        iframeError: `An error occurred. Please try again later.`
+    };
     
     public about = {
         title: 'About',

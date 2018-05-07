@@ -1,17 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { InstructionsComponent } from './instructions.component';
+import { IFrameComponent } from './iframe.component';
 import { ChromeExtensionLinkDirective } from '../../../../common/directives/chrome-ext/link/link.directive';
 import { loadCss } from '../../testing/css-loader';
 import { ToolbarComponent } from '../../toolbar/toolbar.component';
 import { WindowService } from '../../../services/window.service';
+import { TelemetryService } from '../../../services/telemetry.service';
+import { NotificationsService } from 'angular2-notifications';
 
-describe('InstructionsComponent', () => {
+describe('IFrameComponent', () => {
     let window: WindowService;
 
-    let comp: InstructionsComponent;
-    let fixture: ComponentFixture<InstructionsComponent>;
+    let comp: IFrameComponent;
+    let fixture: ComponentFixture<IFrameComponent>;
 
     beforeAll(() => {
         loadCss([
@@ -21,10 +23,12 @@ describe('InstructionsComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ InstructionsComponent, ToolbarComponent ],
+            declarations: [ IFrameComponent, ToolbarComponent ],
             imports: [ RouterTestingModule ],
             providers: [
-                { provide: WindowService, useValue: new WindowService() }
+                { provide: WindowService, useValue: new WindowService() },
+                { provide: TelemetryService, useValue: new TelemetryService() },
+                { provide: NotificationsService, useValue: new NotificationsService({}) }
             ]
         })
         .compileComponents();
@@ -33,12 +37,16 @@ describe('InstructionsComponent', () => {
     beforeEach(() => {
         window = TestBed.get(WindowService);
 
-        fixture = TestBed.createComponent(InstructionsComponent);
+        fixture = TestBed.createComponent(IFrameComponent);
         comp = fixture.componentInstance;
+
+        const telemetry = TestBed.get(TelemetryService);
+        spyOn(telemetry, 'trackIFrameDependency');
+
     });
 
     it('iframe height is set on window heightChanged message', () => {
-        fixture = TestBed.createComponent(InstructionsComponent);
+        fixture = TestBed.createComponent(IFrameComponent);
         fixture.detectChanges();
         
         const message: MessageEvent = {
