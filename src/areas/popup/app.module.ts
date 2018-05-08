@@ -9,7 +9,6 @@ import { APP_BASE_HREF } from '@angular/common';
 import { AddAnotherDeviceComponent } from './components/add-another-device/add-another-device.component';
 import { AddDeviceComponent } from './components/intro/add-device/add-device.component';
 import { AppComponent } from './components/app/app.component';
-import { ChromeExtensionLinkDirective } from '../common/directives/chrome-ext/link/link.directive';
 import { ChromeExtensionSourceDirective } from '../common/directives/chrome-ext-src.directive';
 import { ChromeService } from './services/chrome.service';
 import { DescriptionComponent } from './components/intro/description/description.component';
@@ -109,7 +108,6 @@ enableProdMode();
         OptionsListComponent,
 
         // Directives
-        ChromeExtensionLinkDirective,
         ChromeExtensionSourceDirective,
 
         // Common components
