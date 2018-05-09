@@ -2,17 +2,16 @@ var webpack = require('webpack');
 // var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var helpers = require('./helpers');
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   entry: {
-    'bundle': './src/areas/popup/main.ts',
+    'popup': './src/areas/popup/main.ts',
     'background': './src/areas/background/background.ts'
   },
   output: {
-    path: __dirname + "/dist",
     filename: "[name].js",
   },
-  devtool: 'source-map',
 
   resolve: {
     extensions: ['.ts', '.js']
@@ -64,12 +63,6 @@ module.exports = {
     //   template: 'src/index.html'
     // })
 
-    new ExtractTextPlugin("styles.css"),
-    new webpack.optimize.UglifyJsPlugin({
-        sourceMap: true,
-        output: {
-            ascii_only: true,
-        }
-    })
+    // new ExtractTextPlugin("styles.css"),
   ]
 };

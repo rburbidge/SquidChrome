@@ -40,7 +40,7 @@
 
   "background": {
     "scripts": [
-      "dist/background.js"
+      "scripts/background.js"
     ]
   }
 }

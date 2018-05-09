@@ -69,7 +69,7 @@ gulp.task('copyResources', ['clean'], function() {
 });
 
 // Copies manifest.json and sets a version number
-gulp.task('copyManifest', ['clean'], function() {
+gulp.task('copyManifest', function() {
     return gulp.src('./manifest.json')
         .pipe(jeditor(function(json) {
             json.version = version;
@@ -141,8 +141,50 @@ gulp.task('zip', ['default'], function() {
         .pipe(gulp.dest('.'));
 });
 
+// Copies node modules
+gulp.task('copyNodeModules2', function() {
+    var files = [
+        // 'angular2-notifications/angular2-notifications.umd.js',
+        // 'angular2-uuid/index.js',
+        'applicationinsights-js/dist/ai.js',
+        'bootstrap/dist/css/bootstrap.min.css',
+        'core-js/client/shim.min.js',
+        'jquery/dist/jquery.min.js',
+        'reflect-metadata/Reflect.js',
+        // 'systemjs/dist/system.src.js',
+        // 'tslib/tslib.js',
+        'zone.js/dist/zone.js'
+    ];
+    return gulp.src(files, { cwd: '**/node_modules/'})
+        .pipe(gulp.dest('build'));
+});
+
+// Copies any files that don't need to be built
+gulp.task('copyResources2', function() {
+    var files = [
+        //'*.html',
+        //'system.config.js',
+        //'systemjs-angular-loader.js',
+        //'*/**/bootstrap.js',
+        'src/assets/**/*',
+        'popup.html'
+        //'src/**/*.css',
+        //'src/**/*.html'
+    ];
+    return gulp.src(files, { base: '.' })
+        .pipe(gulp.dest('./build'));
+});
+
 gulp.task('webpack', function() {
     return gulp.src('./src/areas/popup/main.js')
-        .pipe(webpack(require('./webpack.config.js')))
-        .pipe(gulp.dest('dist/'));
+        .pipe(webpack(require('./webpack.prod.js')))
+        .pipe(gulp.dest('build/scripts'));
+});
+
+gulp.task('build2', ['webpack', 'copyManifest', 'copyResources2', 'copyNodeModules2'])
+
+gulp.task('zip2', ['build2'], function() {
+    return gulp.src('./build/**/*')
+        .pipe(zip(`squid-${version}.zip`))
+        .pipe(gulp.dest('.'));
 });
