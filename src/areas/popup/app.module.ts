@@ -51,8 +51,14 @@ enableProdMode();
             timeOut: 3000
         }),
         RouterModule.forRoot([
+            // Redirect the initial popup.html to the SelectDeviceComponent
             {
                 path: 'popup.html',
+                redirectTo: Route.selectDevice,
+                pathMatch: 'full'
+            },
+            {
+                path: Route.selectDevice,
                 component: SelectDeviceComponent,
                 canActivate: [IsAppInitialized]
             },

@@ -10,6 +10,7 @@ module.exports = {
     'background': './src/areas/background/background.ts'
   },
   output: {
+    path: __dirname + "/build/scripts",
     filename: "[name].js",
   },
 
