@@ -4,7 +4,8 @@ var clean = require('gulp-clean'),
     jeditor = require("gulp-json-editor"),
     ts = require("gulp-typescript"),
     tsProject = ts.createProject("tsconfig.json"),
-    webpack = require('webpack-stream'),
+    webpack = require('webpack'),
+    webpackStream = require('webpack-stream'),
     zip = require('gulp-zip');
     
 var exec = require('child_process').exec;
@@ -37,20 +38,6 @@ gulp.task('clean', ['cleanBuild'], function(cb) {
 gulp.task('cleanBuild', function() {
     return gulp.src('./build')
         .pipe(clean());
-});
-
-// Build TypeScript
-gulp.task('transpile', ['clean'], function() {
-    return tsProject.src()
-        .pipe(tsProject())
-        .js.pipe(gulp.dest("./src"));
-});
-
-// Copies the TypeScript build's JS files
-gulp.task('copyCompiledFiles', ['clean', 'transpile'], function() {
-    var folders = ['src/**/*.js'];
-    return gulp.src(folders, { base: '.' })
-        .pipe(gulp.dest('./build'));
 });
 
 // Copies any files that don't need to be built
@@ -89,70 +76,13 @@ gulp.task('copyManifest', function() {
 });
 
 // Copies node modules
-gulp.task('copyNodeModules', ['copyRxjs', 'clean'], function() {
-    var files = [
-        '@angular/core/bundles/core.umd.js',
-        '@angular/common/bundles/common.umd.js',
-        '@angular/common/bundles/common-http.umd.js',
-        '@angular/compiler/bundles/compiler.umd.js',
-        '@angular/platform-browser/bundles/platform-browser.umd.js',
-        '@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
-        '@angular/router/bundles/router.umd.js',
-        '@angular/forms/bundles/forms.umd.js',
-        '@angular/upgrade/bundles/upgrade.umd.js',
-        '@angular/animations/bundles/animations.umd.js',
-        '@angular/animations/bundles/animations-browser.umd.js',
-        '@angular/platform-browser/bundles/platform-browser-animations.umd.js',
-        'angular2-notifications/angular2-notifications.umd.js',
-        'angular2-uuid/index.js',
-        'applicationinsights-js/dist/ai.js',
-        'bootstrap/dist/css/bootstrap.min.css',
-        'core-js/client/shim.min.js',
-        'jquery/dist/jquery.min.js',
-        'reflect-metadata/Reflect.js',
-        'systemjs/dist/system.src.js',
-        'tslib/tslib.js',
-        'zone.js/dist/zone.js'];
-    return gulp.src(files, { cwd: '**/node_modules/'})
-        .pipe(gulp.dest('build'));
-});
-
-// Copies RxJS files.
-// Currently only copies the files that are used by the application at runtime (a subset of all JS files).
-gulp.task('copyRxjs', ['clean'], function() {
-    var files = [
-        '*.js',
-        'observable/*.js',
-        'operator/*.js',
-        'operators/*.js',
-        'add/observable/*.js',
-        'add/operator/*.js',
-        'scheduler/*.js',
-        'symbol/*.js',
-        'util/*.js'
-    ];
-    return gulp.src(files, { cwd: '**/node_modules/rxjs/'})
-        .pipe(gulp.dest('build'));
-});
-
-gulp.task('zip', ['default'], function() {
-    return gulp.src('./build/**/*')
-        .pipe(zip(`squid-${version}.zip`))
-        .pipe(gulp.dest('.'));
-});
-
-// Copies node modules
 gulp.task('copyNodeModules2', function() {
     var files = [
-        // 'angular2-notifications/angular2-notifications.umd.js',
-        // 'angular2-uuid/index.js',
         'applicationinsights-js/dist/ai.js',
         'bootstrap/dist/css/bootstrap.min.css',
         'core-js/client/shim.min.js',
         'jquery/dist/jquery.min.js',
         'reflect-metadata/Reflect.js',
-        // 'systemjs/dist/system.src.js',
-        // 'tslib/tslib.js',
         'zone.js/dist/zone.js'
     ];
     return gulp.src(files, { cwd: '**/node_modules/'})
@@ -162,14 +92,8 @@ gulp.task('copyNodeModules2', function() {
 // Copies any files that don't need to be built
 gulp.task('copyResources2', function() {
     var files = [
-        //'*.html',
-        //'system.config.js',
-        //'systemjs-angular-loader.js',
-        //'*/**/bootstrap.js',
         'src/assets/**/*',
         'popup.html'
-        //'src/**/*.css',
-        //'src/**/*.html'
     ];
     return gulp.src(files, { base: '.' })
         .pipe(gulp.dest('./build'));
@@ -177,7 +101,7 @@ gulp.task('copyResources2', function() {
 
 gulp.task('webpack', function() {
     return gulp.src('./src/areas/popup/main.js')
-        .pipe(webpack(require('./webpack.prod.js')))
+        .pipe(webpackStream(require('./webpack.prod.js'), webpack))
         .pipe(gulp.dest('build/scripts'));
 });
 

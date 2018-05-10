@@ -3,7 +3,7 @@ const webpackCommon = require('./webpack.common.js');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = merge(webpackCommon, {
-  devtool: 'source-map',
+  devtool: 'none',
 
   // Should not need to set development for the prod build, but this error occurs: https://github.com/angular/angular/issues/23046
   // Uglification is still completed via a plugin
