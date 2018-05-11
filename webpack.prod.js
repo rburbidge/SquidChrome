@@ -1,8 +1,7 @@
 const merge = require('webpack-merge');
-const webpackCommon = require('./webpack.common.js');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = merge(webpackCommon, {
+module.exports = merge(require('./webpack.common.js'), {
   devtool: 'none',
 
   // Should not need to set development for the prod build, but this error occurs: https://github.com/angular/angular/issues/23046
