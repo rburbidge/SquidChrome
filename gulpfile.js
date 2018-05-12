@@ -10,6 +10,11 @@ var clean = require('gulp-clean'),
     
 var exec = require('child_process').exec;
 
+const config = {
+    buildDir: 'build',
+    buildScriptsDir: 'build/scripts'
+};
+
 // Set the version to be built. Defaults to 1.0.0.0 if there is no version
 // e.g. --version 1.2.3.4
 function getVersion() {
@@ -36,27 +41,18 @@ gulp.task('clean', ['cleanBuild'], function(cb) {
 
 // Clean the build folder
 gulp.task('cleanBuild', function() {
-    return gulp.src('./build')
+    return gulp.src(config.buildDir)
         .pipe(clean());
 });
 
-// Copies any files that don't need to be built
-gulp.task('copyResources', ['clean'], function() {
-    var files = [
-        '*.html',
-        'system.config.js',
-        'systemjs-angular-loader.js',
-        '*/**/bootstrap.js',
-        'src/**/*.png',
-        'src/**/*.svg',
-        'src/**/*.css',
-        'src/**/*.html'];
-    return gulp.src(files, { base: '.' })
-        .pipe(gulp.dest('./build'));
+// Copies the raw manifest.json
+gulp.task('copyManifest:dev', function() {
+    return gulp.src('./manifest.json')
+        .pipe(gulp.dest(config.buildDir));
 });
 
 // Copies manifest.json and sets a version number
-gulp.task('copyManifest', function() {
+gulp.task('copyManifest:prod', function() {
     return gulp.src('./manifest.json')
         .pipe(jeditor(function(json) {
             json.version = version;
@@ -72,11 +68,11 @@ gulp.task('copyManifest', function() {
 
             return json;
         }))
-        .pipe(gulp.dest('./build'));
+        .pipe(gulp.dest(config.buildDir));
 });
 
 // Copies node modules
-gulp.task('copyNodeModules2', function() {
+gulp.task('copyNodeModules', ['clean'], function() {
     var files = [
         'applicationinsights-js/dist/ai.js',
         'bootstrap/dist/css/bootstrap.min.css',
@@ -86,28 +82,32 @@ gulp.task('copyNodeModules2', function() {
         'zone.js/dist/zone.js'
     ];
     return gulp.src(files, { cwd: '**/node_modules/'})
-        .pipe(gulp.dest('build'));
+        .pipe(gulp.dest(config.buildDir));
 });
 
 // Copies any files that don't need to be built
-gulp.task('copyResources2', function() {
+gulp.task('copyResources', ['clean'], function() {
     var files = [
         'src/assets/**/*',
-        'popup.html'
+        '**/*.html'
     ];
     return gulp.src(files, { base: '.' })
-        .pipe(gulp.dest('./build'));
+        .pipe(gulp.dest(config.buildDir));
 });
 
 gulp.task('webpack', function() {
     return gulp.src('./src/areas/popup/main.js')
         .pipe(webpackStream(require('./webpack.prod.js'), webpack))
-        .pipe(gulp.dest('build/scripts'));
+        .pipe(gulp.dest(config.buildScriptsDir));
 });
 
-gulp.task('build2', ['webpack', 'copyManifest', 'copyResources2', 'copyNodeModules2'])
+gulp.task('build:common', ['copyResources', 'copyNodeModules']);
 
-gulp.task('zip2', ['build2'], function() {
+gulp.task('build:dev', ['webpack', 'copyManifest:dev', 'build:common']);
+
+gulp.task('build:prod', ['webpack', 'copyManifest:prod', 'build:common']);
+
+gulp.task('zip', ['build'], function() {
     return gulp.src('./build/**/*')
         .pipe(zip(`squid-${version}.zip`))
         .pipe(gulp.dest('.'));
