@@ -89,7 +89,7 @@ gulp.task('copyNodeModules', ['clean'], function() {
 gulp.task('copyResources', ['clean'], function() {
     var files = [
         'src/assets/**/*',
-        '**/*.html'
+        'popup.html'
     ];
     return gulp.src(files, { base: '.' })
         .pipe(gulp.dest(config.buildDir));
@@ -107,7 +107,7 @@ gulp.task('build:dev', ['webpack', 'copyManifest:dev', 'build:common']);
 
 gulp.task('build:prod', ['webpack', 'copyManifest:prod', 'build:common']);
 
-gulp.task('zip', ['build'], function() {
+gulp.task('zip', ['build:prod'], function() {
     return gulp.src('./build/**/*')
         .pipe(zip(`squid-${version}.zip`))
         .pipe(gulp.dest('.'));
