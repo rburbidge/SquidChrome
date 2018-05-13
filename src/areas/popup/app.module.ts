@@ -4,11 +4,11 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { enableProdMode, NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SimpleNotificationsModule } from 'angular2-notifications';
+import { APP_BASE_HREF } from '@angular/common';
 
 import { AddAnotherDeviceComponent } from './components/add-another-device/add-another-device.component';
 import { AddDeviceComponent } from './components/intro/add-device/add-device.component';
 import { AppComponent } from './components/app/app.component';
-import { ChromeExtensionLinkDirective } from '../common/directives/chrome-ext/link/link.directive';
 import { ChromeExtensionSourceDirective } from '../common/directives/chrome-ext-src.directive';
 import { ChromeService } from './services/chrome.service';
 import { DescriptionComponent } from './components/intro/description/description.component';
@@ -51,8 +51,14 @@ enableProdMode();
             timeOut: 3000
         }),
         RouterModule.forRoot([
+            // Redirect the initial popup.html to the SelectDeviceComponent
             {
-                path: '',
+                path: 'popup.html',
+                redirectTo: Route.selectDevice,
+                pathMatch: 'full'
+            },
+            {
+                path: Route.selectDevice,
                 component: SelectDeviceComponent,
                 canActivate: [IsAppInitialized]
             },
@@ -108,7 +114,6 @@ enableProdMode();
         OptionsListComponent,
 
         // Directives
-        ChromeExtensionLinkDirective,
         ChromeExtensionSourceDirective,
 
         // Common components
@@ -149,7 +154,11 @@ enableProdMode();
             useFactory: (telemetryService) => () => telemetryService.init(),
             multi: true,
             deps: [TelemetryService]
-        }
+        },
+        {
+            provide: APP_BASE_HREF,
+            useValue: '/'
+        },
     ],
     bootstrap: [AppComponent]
 })

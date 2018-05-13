@@ -1,1 +1,0 @@
-System.import('./src/areas/popup/main').then(null, console.error.bind(console));
