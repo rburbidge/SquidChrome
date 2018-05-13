@@ -5,14 +5,14 @@ import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifi
 
 import { AddDeviceComponent } from './add-device.component';
 import { DeviceService } from '../../../services/device.service';
-import { DeviceType, DeviceModel, ErrorCode } from '../../../../../contracts/squid';
+import { DeviceType, DeviceModel } from '../../../../../contracts/squid';
 import { GcmService } from '../../../services/gcm.service';
 import { IntroBottomComponent } from '../intro-bottom/intro-bottom.component';
 import { loadCss } from '../../testing/css-loader';
 import { MockDeviceService } from '../../../services/testing/device.service.mock';
 import { Route } from '../../../routing/route';
 import { SettingsService } from '../../../services/settings.service';
-import { ChromeDeviceModel, convertDeviceModel } from '../../../services/squid-converter';
+import { ChromeDeviceModel } from '../../../services/squid-converter';
 import { createDevice } from '../../../../../test/squid-helpers';
 import { Strings } from '../../../../../assets/strings/strings';
 
@@ -86,54 +86,52 @@ describe('AddDeviceComponent', () => {
         it("Sends default device name if no name was provided", (done) => {
             setupMocks();
             comp.addDevice(null)
-                .then(device => {
-                    // "Chrome Browser" is the default device name
-                    expect(deviceService.addDevice).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: 'GCM token', deviceType: DeviceType.chrome});
-                    done();
-                })
+                .then(() => {
+                        // "Chrome Browser" is the default device name
+                        expect(deviceService.addDevice).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: 'GCM token', deviceType: DeviceType.chrome });
+                        done();
+                    })
         });
 
         it("Sends user-defined device name", (done) => {
             const deviceName = "Pixel 2";
             setupMocks();
             comp.addDevice(deviceName)
-                .then(device => {
-                    expect(deviceService.addDevice).toHaveBeenCalledWith({ name: deviceName, gcmToken: 'GCM token', deviceType: DeviceType.chrome});
-                    done();
-                })
+                .then(() => {
+                        expect(deviceService.addDevice).toHaveBeenCalledWith({ name: deviceName, gcmToken: 'GCM token', deviceType: DeviceType.chrome });
+                        done();
+                    })
         });
 
         it("Sends gcm token", (done) => {
             const gcmToken = "This is the token";
             setupMocks(gcmToken);
             comp.addDevice(null)
-                .then(device => {
-                    // "Chrome Browser" is the default device name
-                    expect(deviceService.addDevice).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: gcmToken, deviceType: DeviceType.chrome});
-                    done();
-                })
+                .then(() => {
+                        // "Chrome Browser" is the default device name
+                        expect(deviceService.addDevice).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: gcmToken, deviceType: DeviceType.chrome });
+                        done();
+                    })
         });
 
         it("Redirects to SelectDeviceComponent if user has other devices", (done) => {
             setupGetDevicesReturns([null, null]);
             setupMocks();
             comp.addDevice(null)
-                .then(device => {
-                    expect(router.navigateByUrl).toHaveBeenCalledWith(Route.selectDevice);
-                    done();
-                });
+                .then(() => {
+                        expect(router.navigateByUrl).toHaveBeenCalledWith(Route.selectDevice);
+                        done();
+                    });
         });
 
         it("Redirects to AddOtherDeviceComponent if user has no other devices", (done) => {
             setupGetDevicesReturns(undefined);
             setupMocks();
             comp.addDevice(null)
-                .then(device => {
-                    expect(router.navigate).toHaveBeenCalledWith(
-                        [Route.addAnotherDevice],
-                        { queryParams: { returnUrl: Route.selectDevice }});
-                    done();
-                });
+                .then(() => {
+                        expect(router.navigate).toHaveBeenCalledWith([Route.addAnotherDevice], { queryParams: { returnUrl: Route.selectDevice } });
+                        done();
+                    });
         });
 
         it("Shows error on error", (done) => {

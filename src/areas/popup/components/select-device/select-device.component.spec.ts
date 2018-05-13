@@ -1,13 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
 import { Observable } from 'rxjs/Observable';
 
 import { ChromeService } from '../../services/chrome.service';
-import { DeveloperComponent } from '../developer/developer.component';
-import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../../contracts/squid';
+import { ErrorCode, ErrorModel } from '../../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { loadCss } from '../testing/css-loader';
 import { SelectDeviceComponent } from './select-device.component';
@@ -34,7 +32,6 @@ describe('SelectDeviceComponent', () => {
     let comp: SelectDeviceComponent;
     let fixture: ComponentFixture<SelectDeviceComponent>;
 
-    let getSettings: jasmine.Spy;
 
     const strings = new Strings();
 

@@ -1,9 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Strings } from '../../../../../assets/strings/strings';
 import { ChromeDeviceModel } from '../../../services/squid-converter';
-import { Route } from '../../../routing/route';
 
 /**
  * Allows the user to select a device to manage.

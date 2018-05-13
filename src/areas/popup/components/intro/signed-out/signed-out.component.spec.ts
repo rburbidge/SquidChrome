@@ -17,11 +17,6 @@ describe('SignedOutComponent', () => {
     });
 
     beforeEach(async(() => {
-        let mockRouter = {
-            navigate: jasmine.createSpy('navigate'),
-            navigateByUrl: () => {}
-          };
-
         TestBed.configureTestingModule({
             declarations: [ IntroBottomComponent, SignedOutComponent ],
             providers: [

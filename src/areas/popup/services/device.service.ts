@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/observable/fromPromise';
 
 import { Config } from '../../../config/config';
-import { AddDeviceBody, CommandBody, DeviceModel, ErrorCode, ErrorModel, AuthHeader, createAuthHeader } from '../../../contracts/squid';
+import { AddDeviceBody, CommandBody, ErrorCode, ErrorModel } from '../../../contracts/squid';
 import { ChromeDeviceModel, convertDeviceModel, ChromeErrorModel } from './squid-converter';
-import { ChromeService } from './chrome.service';
 import { SettingsService } from './settings.service';
 
 /**

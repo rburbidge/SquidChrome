@@ -9,21 +9,18 @@ import { loadCss } from '../testing/css-loader';
 import { MockChromeService } from '../../services/testing/chrome.service.mock';
 import { MockDeviceService } from '../../services/testing/device.service.mock';
 import { Route } from '../../routing/route';
-import { Settings, SettingsService } from '../../services/settings.service';
+import { SettingsService } from '../../services/settings.service';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { WindowService } from '../../services/window.service';
 
 describe('DeveloperComponent', () => {
     let deviceService: DeviceService;
-    let chromeService: ChromeService;
     let router: Router;
     let settingsService: SettingsService;
     let windowService: WindowService;
 
     let comp: DeveloperComponent;
     let fixture: ComponentFixture<DeveloperComponent>;
-
-    let settings: Settings;
 
     beforeAll(() => {
         loadCss();
@@ -48,7 +45,6 @@ describe('DeveloperComponent', () => {
         comp = fixture.debugElement.componentInstance;
 
         deviceService = TestBed.get(DeviceService);
-        chromeService = TestBed.get(ChromeService);
         router = TestBed.get(Router);
         settingsService = TestBed.get(SettingsService);
         windowService = TestBed.get(WindowService);

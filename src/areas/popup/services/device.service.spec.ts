@@ -5,13 +5,12 @@ import { defer } from "rxjs/observable/defer";
 
 import { DeviceService } from "./device.service";
 import { ChromeService } from "./chrome.service";
-import { SettingsService, Settings } from "./settings.service";
+import { SettingsService } from "./settings.service";
 import { createDevices } from "../../../test/squid-helpers";
 
 describe('DeviceService', () => {
     let service: DeviceService;
     let httpClient: HttpClient;
-    let chrome: ChromeService;
     let settingsService: SettingsService;
     let httpRequestSpy: jasmine.Spy;
 
@@ -29,7 +28,6 @@ describe('DeviceService', () => {
     beforeEach(() => {
         service = TestBed.get(DeviceService);
         httpClient = TestBed.get(HttpClient);
-        chrome = TestBed.get(ChromeService);
         settingsService = TestBed.get(SettingsService);
         httpRequestSpy = spyOn(httpClient, 'request');
 

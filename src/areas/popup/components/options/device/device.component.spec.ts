@@ -1,15 +1,12 @@
 import { async, ComponentFixture, TestBed, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Location } from '@angular/common';
 
-import { ChromeService } from '../../../services/chrome.service';
-import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../../../contracts/squid';
 import { DeviceService } from '../../../services/device.service';
 import { loadCss } from '../../testing/css-loader';
 import { MockDeviceService } from '../../../services/testing/device.service.mock';
-import { Settings, SettingsService } from '../../../services/settings.service';
 import { DeviceComponent } from './device.component';
 import { Config } from '../../../../../config/config';
 import { NotificationsService } from 'angular2-notifications';

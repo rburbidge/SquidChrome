@@ -1,11 +1,9 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
 
 import { Strings } from "../../../../../assets/strings/strings";
 import { DeviceService } from "../../../services/device.service";
-import { DeviceModel } from "../../../../../contracts/squid";
-import { ChromeDeviceModel } from "../../../services/squid-converter";
 import { Config } from "../../../../../config/config";
 import { NotificationsService } from "angular2-notifications";
 

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { DeviceModel } from '../../../contracts/squid';
 import { ChromeDeviceModel, convertDeviceModel } from './squid-converter';
 
 /**

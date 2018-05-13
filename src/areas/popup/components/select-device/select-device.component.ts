@@ -3,8 +3,7 @@ import { Router } from '@angular/router';
 
 import { ChromeService } from '../../services/chrome.service';
 import { ChromeDeviceModel } from '../../services/squid-converter';
-import { Config } from '../../../../config/config';
-import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../../contracts/squid';
+import { ErrorCode, ErrorModel } from '../../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { Route } from '../../routing/route';
 import { Strings } from '../../../../assets/strings/strings';
