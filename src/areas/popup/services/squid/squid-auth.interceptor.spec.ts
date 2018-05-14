@@ -1,4 +1,3 @@
-//import { HttpInterceptor } from "@angular/common/http/src/interceptor";
 import { HttpHandler, HttpRequest, HttpInterceptor } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 

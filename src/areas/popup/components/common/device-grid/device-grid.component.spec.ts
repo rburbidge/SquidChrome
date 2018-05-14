@@ -8,7 +8,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 
 import { DeveloperComponent } from '../../developer/developer.component';
-import { DeviceModel,  } from '../../../../../contracts/squid';
+import { DeviceModel } from '../../../../../contracts/squid';
 import { DeviceService } from '../../../services/device.service';
 import { loadCss } from '../../testing/css-loader';
 import { DeviceGridComponent } from './device-grid.component';
