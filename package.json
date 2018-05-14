@@ -2,11 +2,9 @@
   "name": "squid",
   "version": "1.0.0",
   "scripts": {
-    "start": "tsc && concurrently \"tsc -w\"",
+    "start": "webpack --config webpack.dev.js -w",
     "test": "karma start karma.conf.js",
-    "testSingle": "karma start karma.conf.js --single-run",
-    "tsc": "tsc",
-    "tsc:w": "tsc -w"
+    "testSingle": "karma start karma.conf.js --single-run"
   },
   "dependencies": {
     "@angular/animations": "^5.2.10",

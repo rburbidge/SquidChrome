@@ -1,6 +1,6 @@
 import { convertDeviceModel, ChromeDeviceModel } from "./squid-converter";
-import { DeviceModel, DeviceType } from "../../../contracts/squid";
-import { createDevice, createDeviceModels, createDeviceModel } from "../../../test/squid-helpers";
+import { DeviceType } from "../../../contracts/squid";
+import { createDevice, createDeviceModel } from "../../../test/squid-helpers";
 
 describe('SquidConverter', () => {
     describe('convertDeviceModel()', () => {

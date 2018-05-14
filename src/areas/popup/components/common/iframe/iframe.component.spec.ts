@@ -10,7 +10,6 @@ import { NotificationsService } from 'angular2-notifications';
 
 describe('IFrameComponent', () => {
     let window: WindowService;
-
     let comp: IFrameComponent;
     let fixture: ComponentFixture<IFrameComponent>;
 

@@ -1,13 +1,8 @@
-import { HttpInterceptor } from "@angular/common/http/src/interceptor";
-import { HttpHandler } from "@angular/common/http";
-import { HttpEvent } from "@angular/common/http";
-import { HttpRequest } from "@angular/common/http";
-import { TestBed } from "@angular/core/testing";
+import { HttpHandler, HttpRequest, HttpInterceptor } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 
 import { SquidAuthInterceptor } from "./squid-auth.interceptor";
 import { ChromeService } from "../chrome.service";
-import { MockChromeService } from "../testing/chrome.service.mock";
 import { createAuthHeader, AuthHeader } from "../../../../contracts/squid";
 
 describe('SquidAuthInterceptor', () => {

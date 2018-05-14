@@ -1,4 +1,4 @@
-import { SettingsService, Settings } from "./settings.service";
+import { SettingsService } from "./settings.service";
 import { createDeviceModels } from "../../../test/squid-helpers";
 import { ChromeDeviceModel, convertDeviceModel } from "./squid-converter";
 

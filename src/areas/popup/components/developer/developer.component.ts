@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 
-import { ChromeService } from '../../services/chrome.service';
 import { DeviceType } from '../../../../contracts/squid';
 import { DeviceService } from '../../services/device.service';
 import { Route } from '../../routing/route';

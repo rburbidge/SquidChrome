@@ -1,7 +1,7 @@
-import { Component, Injector } from '@angular/core';
+import { Component } from '@angular/core';
 import { TelemetryService } from '../../services/telemetry.service';
 import { WindowService } from '../../services/window.service';
-import { Router, NavigationStart, NavigationEnd } from '@angular/router';
+import { Router,  NavigationEnd } from '@angular/router';
 
 @Component({
     selector: 'my-app',
@@ -15,7 +15,7 @@ export class AppComponent {
     constructor(
         private readonly telemetry: TelemetryService,
         private readonly window: WindowService,
-        private readonly router: Router)
+        router: Router)
     {
         router.events.forEach((event) => {
             if(event instanceof NavigationEnd) {

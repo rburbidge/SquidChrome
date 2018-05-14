@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
 
@@ -56,8 +56,8 @@ export class AddDeviceComponent {
                     return this.router.navigateByUrl(selectDeviceRoute);
                 }
             })
-            .catch(error => {
-                this.notifications.error(null, this.strings.addDevice.error);
-            });
+            .catch(() => {
+                    this.notifications.error(null, this.strings.addDevice.error);
+                });
     }
 }

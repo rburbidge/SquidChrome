@@ -21,11 +21,6 @@ describe('DescriptionComponent', () => {
     });
 
     beforeEach(async(() => {
-        let mockRouter = {
-            navigate: jasmine.createSpy('navigate'),
-            navigateByUrl: () => {}
-          };
-
         TestBed.configureTestingModule({
             declarations: [ IntroBottomComponent, DescriptionComponent ],
             imports: [ RouterTestingModule ],
@@ -47,7 +42,7 @@ describe('DescriptionComponent', () => {
 
     describe('next()', () => {
         it('Navigates to the sign-in component', (done) => {
-            const isSignedIn = spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.resolve(false));
+            spyOn(chromeService, 'isSignedIntoChrome').and.returnValue(Promise.resolve(false));
             const navigate = spyOn(router, 'navigate');
 
             comp.onNext()

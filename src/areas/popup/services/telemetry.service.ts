@@ -1,5 +1,4 @@
 import { Config } from "../../../config/config";
-import { AppInsights } from "applicationinsights-js";
 
 /**
  * The telemetry logging service using Azure App Insights.

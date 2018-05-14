@@ -1,10 +1,9 @@
-import { Component, OnInit, Sanitizer, HostListener, Input } from "@angular/core";
+import { Component, OnInit, HostListener } from "@angular/core";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
-import { Route, ActivatedRoute } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { NotificationsService } from "angular2-notifications";
 
 import { Strings } from "../../../../../assets/strings/strings";
-import { SettingsService } from "../../../services/settings.service";
 import { Config } from "../../../../../config/config";
 import { SquidMessage } from "../../../../../contracts/squid";
 import { WindowService } from "../../../services/window.service";

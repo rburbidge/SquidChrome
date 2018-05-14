@@ -1,7 +1,5 @@
 import { async, ComponentFixture, TestBed, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NotificationsService } from 'angular2-notifications';
 
@@ -9,18 +7,14 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 
-import { ChromeService } from '../../../services/chrome.service';
 import { DeveloperComponent } from '../../developer/developer.component';
-import { DeviceModel, DeviceType, ErrorCode, ErrorModel } from '../../../../../contracts/squid';
+import { DeviceModel } from '../../../../../contracts/squid';
 import { DeviceService } from '../../../services/device.service';
 import { loadCss } from '../../testing/css-loader';
 import { DeviceGridComponent } from './device-grid.component';
-import { MockChromeService } from '../../../services/testing/chrome.service.mock';
 import { MockDeviceService } from '../../../services/testing/device.service.mock';
-import { Settings, SettingsService } from '../../../services/settings.service';
-import { WindowService } from '../../../services/window.service';
+import { SettingsService } from '../../../services/settings.service';
 import { ChromeDeviceModel } from '../../../services/squid-converter';
-import { Route } from '../../../routing/route';
 import { ToolbarComponent } from '../../toolbar/toolbar.component';
 import { createDevices, createDevice } from '../../../../../test/squid-helpers';
 import { Strings } from '../../../../../assets/strings/strings';
@@ -101,11 +95,11 @@ describe('DeviceGridComponent', () => {
 
             comp.isLoading = false;
             comp.onError.asObservable()
-                .subscribe(actualError => {
-                    expect(comp.isLoading).toBeFalsy(); 
-                    expect(notificationsService.error).toHaveBeenCalledWith(null, strings.devices.error.refreshFailed);
-                    done();
-                });
+                .subscribe(() => {
+                        expect(comp.isLoading).toBeFalsy();
+                        expect(notificationsService.error).toHaveBeenCalledWith(null, strings.devices.error.refreshFailed);
+                        done();
+                    });
             comp.refreshDevices();
         });
     
@@ -247,8 +241,4 @@ describe('DeviceGridComponent', () => {
         return spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.of(devices));
     }
 
-    function testHeaderTextShown(expectedText) {
-        let header = fixture.debugElement.query(By.css('.squid-options-header'));
-        expect(header.nativeElement.textContent).toContain(expectedText);
-    }
 });

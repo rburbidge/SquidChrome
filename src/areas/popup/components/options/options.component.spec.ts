@@ -8,8 +8,6 @@ import { OptionsComponent } from './options.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 describe('OptionsComponent', () => {
-    let chromeService: ChromeService;
-
     let comp: OptionsComponent;
     let fixture: ComponentFixture<OptionsComponent>;
 
@@ -33,7 +31,5 @@ describe('OptionsComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(OptionsComponent);
         comp = fixture.debugElement.componentInstance;
-
-        chromeService = TestBed.get(ChromeService);
     });
 });
