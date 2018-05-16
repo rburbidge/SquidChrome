@@ -8,6 +8,7 @@ const webpack = require('webpack');
 const webpackStream = require('webpack-stream');
 const zip = require('gulp-zip');
 const runSequence = require('run-sequence');
+const run = require('gulp-run');
     
 const exec = require('child_process').exec;
 
@@ -17,6 +18,14 @@ const config = {
     resources: [
         'src/assets/**/*',
         'popup.html'
+    ],
+    npmDir: 'node_modules/',
+    npmFiles: [
+        'applicationinsights-js/dist/ai.js',
+        'bootstrap/dist/css/bootstrap.min.css',
+        'jquery/dist/jquery.min.js',
+        'reflect-metadata/Reflect.js',
+        'zone.js/dist/zone.js'
     ],
     manifest: './manifest.json'
 };
@@ -32,7 +41,6 @@ function getVersion() {
     console.log(`Building version ${version}`);
     return version;
 }
-var version = getVersion();
 
 gulp.task('default', ['copyResources', 'copyCompiledFiles', 'copyManifest', 'copyNodeModules', 'transpile']);
 
@@ -59,6 +67,8 @@ gulp.task('copyManifest:dev', function() {
 
 // Copies manifest.json and sets a version number
 gulp.task('copyManifest:prod', function() {
+    const version = getVersion();
+
     return gulp.src(config.manifest)
         .pipe(jeditor(function(json) {
             json.version = version;
@@ -79,14 +89,7 @@ gulp.task('copyManifest:prod', function() {
 
 // Copies node modules
 gulp.task('copyNodeModules', function() {
-    var files = [
-        'applicationinsights-js/dist/ai.js',
-        'bootstrap/dist/css/bootstrap.min.css',
-        'jquery/dist/jquery.min.js',
-        'reflect-metadata/Reflect.js',
-        'zone.js/dist/zone.js'
-    ];
-    return gulp.src(files, { cwd: '**/node_modules/'})
+    return gulp.src(config.npmFiles, { cwd: '**/' + config.npmDir})
         .pipe(gulp.dest(config.buildDir));
 });
 
@@ -94,10 +97,6 @@ gulp.task('copyNodeModules', function() {
 gulp.task('copyResources', function() {
     return gulp.src(config.resources, { base: '.' })
         .pipe(gulp.dest(config.buildDir));
-});
-
-gulp.task('copyResources:watch', function() {
-    return gulp.watch(config.resources, ['copyResources']);
 });
 
 gulp.task('webpack', function() {
@@ -116,7 +115,26 @@ gulp.task('build:prod', function(callback) {
     return runSequence('cleanBuild', ['webpack', 'copyManifest:prod', 'build:common'], callback);
 });
 
-gulp.task('zip', ['build:prod'], function() {
+/**
+ * Watch all non-TS files to create a continuously upgraded build directory.
+ * DO NOT run this task directly! Use "npm start" instead! "npm start" runs webpack watch concurrently with this.
+ */
+gulp.task('watch', function(callback) {
+    runSequence(['copyNodeModules', 'copyResources', 'copyManifest:dev'],
+        function() {
+            gulp.watch(config.npmFiles.map(file => config.npmDir + file), ['copyNodeModules']);
+            gulp.watch(config.resources, { base: '.' }, ['copyResources']);
+            gulp.watch(config.manifest, ['copyManifest:dev']);
+            callback();
+        });
+});
+
+/**
+ * Creates a PROD release with a given version.
+ * "gulp archive --version=x.x.x.x"
+ */
+gulp.task('archive', ['build:prod'], function() {
+    const version = getVersion();
     return gulp.src('./build/**/*')
         .pipe(zip(`squid-${version}.zip`))
         .pipe(gulp.dest('.'));
