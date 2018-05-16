@@ -1,8 +1,8 @@
-import { DeviceService } from '../device.service';
+import { SquidService } from '../squid.service';
 import { ChromeDeviceModel } from '../squid-converter';
 import { Observable } from 'rxjs/Observable';
 
-export class MockDeviceService extends DeviceService {
+export class MockSquidService extends SquidService {
     constructor() {
         super(null, null);
     }

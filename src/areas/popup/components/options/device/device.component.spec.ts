@@ -4,9 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Location } from '@angular/common';
 
-import { DeviceService } from '../../../services/device.service';
+import { SquidService } from '../../../services/squid.service';
 import { loadCss } from '../../testing/css-loader';
-import { MockDeviceService } from '../../../services/testing/device.service.mock';
+import { MockSquidService } from '../../../services/testing/squid.service.mock';
 import { DeviceComponent } from './device.component';
 import { Config } from '../../../../../config/config';
 import { NotificationsService } from 'angular2-notifications';
@@ -20,7 +20,7 @@ describe('DeviceComponent', () => {
         deviceIcon: 'laptop'
     };
 
-    let deviceService: DeviceService;
+    let deviceService: SquidService;
     let location: Location;
     let notificationsService: NotificationsService;
 
@@ -37,7 +37,7 @@ describe('DeviceComponent', () => {
             imports: [ RouterTestingModule ],
             providers: [
                 { provide: ComponentFixtureAutoDetect, useValue: true },
-                { provide: DeviceService, useValue: new MockDeviceService() },
+                { provide: SquidService, useValue: new MockSquidService() },
                 { 
                     provide: ActivatedRoute,
                     useValue: { snapshot: { params: routeParams }}
@@ -52,7 +52,7 @@ describe('DeviceComponent', () => {
         fixture = TestBed.createComponent(DeviceComponent);
         comp = fixture.debugElement.componentInstance;
 
-        deviceService = TestBed.get(DeviceService);
+        deviceService = TestBed.get(SquidService);
         location = TestBed.get(Location);
         notificationsService = TestBed.get(NotificationsService);
     });

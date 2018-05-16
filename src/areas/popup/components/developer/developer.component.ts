@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 
 import { DeviceType } from '../../../../contracts/squid';
-import { DeviceService } from '../../services/device.service';
+import { SquidService } from '../../services/squid.service';
 import { Route } from '../../routing/route';
 import { SettingsService } from '../../services/settings.service';
 import { WindowService } from '../../services/window.service';
@@ -17,7 +17,7 @@ import { WindowService } from '../../services/window.service';
 })
 export class DeveloperComponent {
     constructor(
-        private readonly deviceService: DeviceService,
+        private readonly deviceService: SquidService,
         private readonly router: Router,
         private readonly settingsService: SettingsService,
         private readonly windowService: WindowService) { }

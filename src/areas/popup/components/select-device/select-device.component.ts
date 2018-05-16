@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ChromeService } from '../../services/chrome.service';
 import { ChromeDeviceModel } from '../../services/squid-converter';
 import { ErrorCode, ErrorModel } from '../../../../contracts/squid';
-import { DeviceService } from '../../services/device.service';
+import { SquidService } from '../../services/squid.service';
 import { Route } from '../../routing/route';
 import { Strings } from '../../../../assets/strings/strings';
 import { WindowService } from '../../services/window.service';
@@ -26,7 +26,7 @@ export class SelectDeviceComponent implements OnInit {
 
     constructor(
         private readonly windowService: WindowService,
-        private readonly deviceService: DeviceService,
+        private readonly deviceService: SquidService,
         private readonly router: Router,
         private readonly chromeService: ChromeService,
         private readonly settingsService: SettingsService,

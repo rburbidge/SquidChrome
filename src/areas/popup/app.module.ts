@@ -16,7 +16,7 @@ import { IntroBottomComponent } from './components/intro/intro-bottom/intro-bott
 import { IntroComponent } from './components/intro/intro.component';
 import { IsAppInitialized } from './routing/is-app-initialized';
 import { DeveloperComponent } from './components/developer/developer.component';
-import { DeviceService } from './services/device.service';
+import { SquidService } from './services/squid.service';
 import { GcmService } from './services/gcm.service';
 import { OptionsComponent } from './components/options/options.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
@@ -128,7 +128,7 @@ enableProdMode();
         // Services
         ChromeService,
         GcmService,
-        DeviceService,
+        SquidService,
         SettingsService,
         TelemetryService,
         WindowService,

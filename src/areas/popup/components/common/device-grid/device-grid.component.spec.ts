@@ -9,10 +9,10 @@ import 'rxjs/add/observable/throw';
 
 import { DeveloperComponent } from '../../developer/developer.component';
 import { DeviceModel } from '../../../../../contracts/squid';
-import { DeviceService } from '../../../services/device.service';
+import { SquidService } from '../../../services/squid.service';
 import { loadCss } from '../../testing/css-loader';
 import { DeviceGridComponent } from './device-grid.component';
-import { MockDeviceService } from '../../../services/testing/device.service.mock';
+import { MockSquidService } from '../../../services/testing/squid.service.mock';
 import { SettingsService } from '../../../services/settings.service';
 import { ChromeDeviceModel } from '../../../services/squid-converter';
 import { ToolbarComponent } from '../../toolbar/toolbar.component';
@@ -21,7 +21,7 @@ import { Strings } from '../../../../../assets/strings/strings';
 
 describe('DeviceGridComponent', () => {
     const strings = new Strings();
-    let deviceService: DeviceService;
+    let deviceService: SquidService;
     let settingsService: SettingsService;
     let notificationsService: NotificationsService;
     
@@ -42,7 +42,7 @@ describe('DeviceGridComponent', () => {
             providers: [
                 SettingsService,
                 { provide: ComponentFixtureAutoDetect, useValue: true },
-                { provide: DeviceService, useValue: new MockDeviceService() },
+                { provide: SquidService, useValue: new MockSquidService() },
                 { provide: NotificationsService, useValue: new NotificationsService({})}
             ]
         })
@@ -53,7 +53,7 @@ describe('DeviceGridComponent', () => {
         fixture = TestBed.createComponent(DeviceGridComponent);
         comp = fixture.debugElement.componentInstance;
 
-        deviceService = TestBed.get(DeviceService);
+        deviceService = TestBed.get(SquidService);
         settingsService = TestBed.get(SettingsService);
         notificationsService = TestBed.get(NotificationsService);
 

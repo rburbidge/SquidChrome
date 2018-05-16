@@ -4,12 +4,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifications';
 
 import { AddDeviceComponent } from './add-device.component';
-import { DeviceService } from '../../../services/device.service';
+import { SquidService } from '../../../services/squid.service';
 import { DeviceType, DeviceModel } from '../../../../../contracts/squid';
 import { GcmService } from '../../../services/gcm.service';
 import { IntroBottomComponent } from '../intro-bottom/intro-bottom.component';
 import { loadCss } from '../../testing/css-loader';
-import { MockDeviceService } from '../../../services/testing/device.service.mock';
+import { MockSquidService } from '../../../services/testing/squid.service.mock';
 import { Route } from '../../../routing/route';
 import { SettingsService } from '../../../services/settings.service';
 import { ChromeDeviceModel } from '../../../services/squid-converter';
@@ -18,7 +18,7 @@ import { Strings } from '../../../../../assets/strings/strings';
 
 describe('AddDeviceComponent', () => {
     const strings = new Strings();
-    let deviceService: DeviceService;
+    let deviceService: SquidService;
     let gcmService: GcmService;
     let router: Router;
     let settingsService: SettingsService;
@@ -39,7 +39,7 @@ describe('AddDeviceComponent', () => {
             imports: [ RouterTestingModule, SimpleNotificationsModule ],
             providers: [
                 SettingsService,
-                { provide: DeviceService, useValue: new MockDeviceService() },
+                { provide: SquidService, useValue: new MockSquidService() },
                 { provide: GcmService, useValue: new GcmService() },
                 { provide: NotificationsService, useValue: new NotificationsService({})}
             ]
@@ -51,7 +51,7 @@ describe('AddDeviceComponent', () => {
         fixture = TestBed.createComponent(AddDeviceComponent);
         comp = fixture.debugElement.componentInstance;
 
-        deviceService = TestBed.get(DeviceService);
+        deviceService = TestBed.get(SquidService);
         gcmService = TestBed.get(GcmService);
         settingsService = TestBed.get(SettingsService);
         router = TestBed.get(Router);

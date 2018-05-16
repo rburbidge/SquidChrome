@@ -3,7 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
 
 import { Strings } from "../../../../../assets/strings/strings";
-import { DeviceService } from "../../../services/device.service";
+import { SquidService } from "../../../services/squid.service";
 import { Config } from "../../../../../config/config";
 import { NotificationsService } from "angular2-notifications";
 
@@ -25,7 +25,7 @@ export class DeviceComponent implements OnInit {
     constructor(
         private readonly route: ActivatedRoute,
         private readonly location: Location,
-        private readonly deviceService: DeviceService,
+        private readonly deviceService: SquidService,
         private readonly notifications: NotificationsService) { }
 
     public sendLink(): Promise<void> {

@@ -6,11 +6,11 @@ import { Observable } from 'rxjs/Observable';
 
 import { ChromeService } from '../../services/chrome.service';
 import { ErrorCode, ErrorModel } from '../../../../contracts/squid';
-import { DeviceService } from '../../services/device.service';
+import { SquidService } from '../../services/squid.service';
 import { loadCss } from '../testing/css-loader';
 import { SelectDeviceComponent } from './select-device.component';
 import { MockChromeService } from '../../services/testing/chrome.service.mock';
-import { MockDeviceService } from '../../services/testing/device.service.mock';
+import { MockSquidService } from '../../services/testing/squid.service.mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { WindowService } from '../../services/window.service';
 import { ChromeDeviceModel, ChromeErrorModel } from '../../services/squid-converter';
@@ -22,7 +22,7 @@ import { createDevice, createDevices } from '../../../../test/squid-helpers';
 import { Strings } from '../../../../assets/strings/strings';
 
 describe('SelectDeviceComponent', () => {
-    let deviceService: DeviceService;
+    let deviceService: SquidService;
     let chromeService: ChromeService;
     let router: Router;
     let windowService: WindowService;
@@ -47,7 +47,7 @@ describe('SelectDeviceComponent', () => {
             providers: [
                 SettingsService,
                 { provide: ChromeService, useValue: new MockChromeService() },
-                { provide: DeviceService, useValue: new MockDeviceService() },
+                { provide: SquidService, useValue: new MockSquidService() },
                 { provide: WindowService, useValue: new WindowService() },
                 { provide: NotificationsService, useValue: new NotificationsService({})}
             ]
@@ -59,7 +59,7 @@ describe('SelectDeviceComponent', () => {
         fixture = TestBed.createComponent(SelectDeviceComponent);
         comp = fixture.debugElement.componentInstance;
 
-        deviceService = TestBed.get(DeviceService);
+        deviceService = TestBed.get(SquidService);
         chromeService = TestBed.get(ChromeService);
         router = TestBed.get(Router);
         windowService = TestBed.get(WindowService);

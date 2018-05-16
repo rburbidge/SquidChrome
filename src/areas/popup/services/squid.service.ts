@@ -11,10 +11,10 @@ import { ChromeDeviceModel, convertDeviceModel, ChromeErrorModel } from './squid
 import { SettingsService } from './settings.service';
 
 /**
- * The device service.
+ * The squid service.
  */
 @Injectable()
-export class DeviceService {
+export class SquidService {
     private baseUrl: string = Config.squidEndpoint;
 
     constructor(private readonly http: HttpClient,

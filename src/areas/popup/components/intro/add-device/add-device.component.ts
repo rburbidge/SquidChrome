@@ -4,7 +4,7 @@ import { NotificationsService } from 'angular2-notifications';
 
 import { DeviceType } from '../../../../../contracts/squid';
 import { Config } from '../../../../../config/config';
-import { DeviceService } from '../../../services/device.service';
+import { SquidService } from '../../../services/squid.service';
 import { GcmService } from '../../../services/gcm.service';
 import { Route } from '../../../routing/route';
 import { SettingsService } from '../../../services/settings.service';
@@ -25,7 +25,7 @@ export class AddDeviceComponent {
 
     constructor(
         private readonly gcmService: GcmService,
-        private readonly deviceService: DeviceService,
+        private readonly deviceService: SquidService,
         private readonly router: Router,
         private readonly settingsService: SettingsService,
         private readonly notifications: NotificationsService ) { }
