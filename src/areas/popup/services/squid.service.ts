@@ -77,7 +77,14 @@ export class SquidService {
             contentType: ContentType.url,
             originDeviceId: originDeviceId
         };
-        await this.sendRequest('POST', `/squid/api/content`, body, 'text');
+        await this.sendRequest('POST', '/squid/api/content', body, 'text');
+    }
+
+    /**
+     * Gets content that the user has sent.
+     */
+    public async getContent(): Promise<Content[]> {
+        return await this.sendRequest<Content[]>('GET', '/squid/api/content');
     }
 
     /**

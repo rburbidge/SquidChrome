@@ -10,6 +10,7 @@ chrome.gcm.onMessage.addListener((message) => {
     // TODO Use a contract for data payload
     const data = message.data as any;
     if(data.type == 'Url') {
-        chrome.tabs.create({ url: data.data });
+        // TODO Show the actual number of unread content
+        chrome.browserAction.setBadgeText({ text: '1' });
     }
 });
