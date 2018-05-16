@@ -1,3 +1,28 @@
+/**
+ * The structure of content.
+ * When posting content, do not include optional fields.
+ */
+export interface Content {
+    /** The sender's device ID. */
+    originDeviceId: string;
+
+    /** The content type. */
+    contentType: ContentType;
+
+    /** The content. e.g. The URL. */
+    content: string;
+
+    /** The content ID. */
+    id?: string;
+
+    /** The time that the content was sent as an ISO Date string. */
+    time?: string;
+}
+
+export enum ContentType {
+    url = "url"
+}
+
 /** High level device type.  */
 export enum DeviceType {
     android = "android",
@@ -13,11 +38,6 @@ export interface AddDeviceBody {
 
     /** The device type. */
     deviceType: DeviceType;
-}
-
-export interface CommandBody {
-    /** The URL to send to the device. */
-    url: string
 }
 
 /** Device returned by SquidService. */
@@ -76,6 +96,8 @@ export enum ErrorCode {
 
     /** The device to be operated upon was not found. */
     DeviceNotFound = 6,
+
+    NotFound = 7,
 }
 
 /**
@@ -101,8 +123,11 @@ export function createAuthHeader(headerType: AuthHeader, authToken: string) {
  * The type of a SquidMessage.
  */
 type MessageType =
-/** An iframe is requesting for its height to be set. */
-'heightChanged';
+    /**
+     * An iframe is requesting for its height to be set.
+     * Data will be a string indicating the height in pixels. e.g. "700px"
+     */
+    'heightChanged';
 
 /**
  * The type of MessageEvent.data that can be published by on a Squid page.
