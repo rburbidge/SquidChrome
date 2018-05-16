@@ -2,7 +2,7 @@
   "name": "squid",
   "version": "1.0.0",
   "scripts": {
-    "start": "concurrently \"webpack --config webpack.dev.js -w\" \"gulp build:dev:watch\"",
+    "start": "concurrently \"webpack --config webpack.dev.js -w\" \"gulp watch\"",
     "test": "karma start karma.conf.js",
     "testSingle": "karma start karma.conf.js --single-run"
   },
@@ -45,6 +45,7 @@
     "gulp": "^3.9.1",
     "gulp-clean": "^0.4.0",
     "gulp-json-editor": "^2.3.0",
+    "gulp-run": "^1.7.1",
     "gulp-typescript": "^3.1.4",
     "gulp-util": "^3.0.8",
     "gulp-zip": "^4.0.0",

@@ -116,13 +116,17 @@ gulp.task('build:prod', function(callback) {
 });
 
 /**
- * Watch all files to create a continuously upgraded build directory.
+ * Watch all non-TS files to create a continuously upgraded build directory.
  * DO NOT run this task directly! Use "npm start" instead! "npm start" runs webpack watch concurrently with this.
  */
-gulp.task('build:dev:watch', function() {
-    gulp.watch(config.npmFiles.map(file => config.npmDir + file), ['copyNodeModules']);
-    gulp.watch(config.resources, { base: '.' }, ['copyResources']);
-    gulp.watch(config.manifest, ['copyManifest:dev']);
+gulp.task('watch', function(callback) {
+    runSequence(['copyNodeModules', 'copyResources', 'copyManifest:dev'],
+        function() {
+            gulp.watch(config.npmFiles.map(file => config.npmDir + file), ['copyNodeModules']);
+            gulp.watch(config.resources, { base: '.' }, ['copyResources']);
+            gulp.watch(config.manifest, ['copyManifest:dev']);
+            callback();
+        });
 });
 
 /**
