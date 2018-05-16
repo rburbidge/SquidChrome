@@ -41,7 +41,6 @@ function getVersion() {
     console.log(`Building version ${version}`);
     return version;
 }
-var version = getVersion();
 
 gulp.task('default', ['copyResources', 'copyCompiledFiles', 'copyManifest', 'copyNodeModules', 'transpile']);
 
@@ -68,6 +67,8 @@ gulp.task('copyManifest:dev', function() {
 
 // Copies manifest.json and sets a version number
 gulp.task('copyManifest:prod', function() {
+    const version = getVersion();
+
     return gulp.src(config.manifest)
         .pipe(jeditor(function(json) {
             json.version = version;
@@ -124,7 +125,12 @@ gulp.task('build:dev:watch', function() {
     gulp.watch(config.manifest, ['copyManifest:dev']);
 });
 
-gulp.task('zip', ['build:prod'], function() {
+/**
+ * Creates a PROD release with a given version.
+ * "gulp archive --version=x.x.x.x"
+ */
+gulp.task('archive', ['build:prod'], function() {
+    const version = getVersion();
     return gulp.src('./build/**/*')
         .pipe(zip(`squid-${version}.zip`))
         .pipe(gulp.dest('.'));

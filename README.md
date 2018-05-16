@@ -17,7 +17,11 @@ Tests run in karma.
 * *npm run testSingle* -- Runs tests 
 
 ### Most-used gulp commands
+Builds end up in the /build directory.
+
 * *gulp* -- Cleans, builds
 * *gulp clean*
-* *gulp zip* -- Cleans, builds, and creates zipped build in */chromeextension/build/archive.zip*
-* *gulp ziponly* -- Only the zip step from above
+* *gulp build:dev* -- Creates a dev build. Suitable for development. This works with localhost or remote server.
+* *gulp build:dev:watch* -- DO NOT run this task directly! Use "npm start" instead! "npm start" runs webpack watch concurrently with this.
+* *gulp build:prod* -- Creates a prod build.
+* *gulp archive --version=x.x.x.x* -- Creates a prod build of the specified version in archive ./squid-x.x.x.x.zip.
