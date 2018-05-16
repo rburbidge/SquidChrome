@@ -8,6 +8,7 @@ const webpack = require('webpack');
 const webpackStream = require('webpack-stream');
 const zip = require('gulp-zip');
 const runSequence = require('run-sequence');
+const run = require('gulp-run');
     
 const exec = require('child_process').exec;
 
@@ -17,6 +18,14 @@ const config = {
     resources: [
         'src/assets/**/*',
         'popup.html'
+    ],
+    npmDir: 'node_modules/',
+    npmFiles: [
+        'applicationinsights-js/dist/ai.js',
+        'bootstrap/dist/css/bootstrap.min.css',
+        'jquery/dist/jquery.min.js',
+        'reflect-metadata/Reflect.js',
+        'zone.js/dist/zone.js'
     ],
     manifest: './manifest.json'
 };
@@ -79,14 +88,7 @@ gulp.task('copyManifest:prod', function() {
 
 // Copies node modules
 gulp.task('copyNodeModules', function() {
-    var files = [
-        'applicationinsights-js/dist/ai.js',
-        'bootstrap/dist/css/bootstrap.min.css',
-        'jquery/dist/jquery.min.js',
-        'reflect-metadata/Reflect.js',
-        'zone.js/dist/zone.js'
-    ];
-    return gulp.src(files, { cwd: '**/node_modules/'})
+    return gulp.src(config.npmFiles, { cwd: '**/' + config.npmDir})
         .pipe(gulp.dest(config.buildDir));
 });
 
@@ -94,10 +96,6 @@ gulp.task('copyNodeModules', function() {
 gulp.task('copyResources', function() {
     return gulp.src(config.resources, { base: '.' })
         .pipe(gulp.dest(config.buildDir));
-});
-
-gulp.task('copyResources:watch', function() {
-    return gulp.watch(config.resources, ['copyResources']);
 });
 
 gulp.task('webpack', function() {
@@ -114,6 +112,16 @@ gulp.task('build:dev', function(callback) {
 
 gulp.task('build:prod', function(callback) {
     return runSequence('cleanBuild', ['webpack', 'copyManifest:prod', 'build:common'], callback);
+});
+
+/**
+ * Watch all files to create a continuously upgraded build directory.
+ * DO NOT run this task directly! Use "npm start" instead! "npm start" runs webpack watch concurrently with this.
+ */
+gulp.task('build:dev:watch', function() {
+    gulp.watch(config.npmFiles.map(file => config.npmDir + file), ['copyNodeModules']);
+    gulp.watch(config.resources, { base: '.' }, ['copyResources']);
+    gulp.watch(config.manifest, ['copyManifest:dev']);
 });
 
 gulp.task('zip', ['build:prod'], function() {
