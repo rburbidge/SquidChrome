@@ -25,11 +25,11 @@ export class DeviceComponent implements OnInit {
     constructor(
         private readonly route: ActivatedRoute,
         private readonly location: Location,
-        private readonly deviceService: SquidService,
+        private readonly squidService: SquidService,
         private readonly notifications: NotificationsService) { }
 
     public sendLink(): Promise<void> {
-        return this.deviceService.sendUrl(this.deviceId, Config.squidEndpoint + '/squid/test')
+        return this.squidService.sendUrl(this.deviceId, Config.squidEndpoint + '/squid/test')
             .then(() => {
                 this.notifications.info(null, this.strings.device.linkSent);
             })
@@ -40,7 +40,7 @@ export class DeviceComponent implements OnInit {
 
     public remove(): Promise<void> {
         if(window.confirm(this.strings.device.removeConfirm(this.deviceName))) {
-            return this.deviceService.removeDevice(this.deviceId)
+            return this.squidService.removeDevice(this.deviceId)
                 .then(() => this.location.back())
                 .catch(() => {
                     this.notifications.error(null, this.strings.device.error.remove);

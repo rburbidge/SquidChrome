@@ -26,7 +26,7 @@ export class SelectDeviceComponent implements OnInit {
 
     constructor(
         private readonly windowService: WindowService,
-        private readonly deviceService: SquidService,
+        private readonly squidService: SquidService,
         private readonly router: Router,
         private readonly chromeService: ChromeService,
         private readonly settingsService: SettingsService,
@@ -41,7 +41,7 @@ export class SelectDeviceComponent implements OnInit {
         return this.chromeService.getCurrentTabUrl()
             .then(url => {
                 if(url && url.startsWith('http://') || url.startsWith('https://')) {
-                    return this.deviceService.sendUrl(device.id, url)
+                    return this.squidService.sendUrl(device.id, url)
                         .then(() => this.windowService.close());
                 } else {
                     this.notifications.warn(null, this.strings.devices.error.pageCannotBeSent);
@@ -82,7 +82,7 @@ export class SelectDeviceComponent implements OnInit {
             return Promise.resolve();
         }
 
-        return this.deviceService.getDevices()
+        return this.squidService.getDevices()
             .then(devices => {
                 // If the current device is not registered, go to intro component
                 if(!devices || !devices.find(device => device.id == thisDevice.id)) {

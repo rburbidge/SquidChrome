@@ -25,7 +25,7 @@ export class AddDeviceComponent {
 
     constructor(
         private readonly gcmService: GcmService,
-        private readonly deviceService: SquidService,
+        private readonly squidService: SquidService,
         private readonly router: Router,
         private readonly settingsService: SettingsService,
         private readonly notifications: NotificationsService ) { }
@@ -42,10 +42,10 @@ export class AddDeviceComponent {
         return this.gcmService.register([Config.gcmSenderId])
             .then(gcmToken => {
                 newGcmToken = gcmToken;
-                return this.deviceService.addDevice({name: name, gcmToken: newGcmToken, deviceType: DeviceType.chrome});
+                return this.squidService.addDevice({name: name, gcmToken: newGcmToken, deviceType: DeviceType.chrome});
             })
             .then(newDevice => this.settingsService.setThisDevice(newDevice.id, newGcmToken))
-            .then(() => this.deviceService.getDevices())
+            .then(() => this.squidService.getDevices())
             .then(devices => {
                 // Send user to SelectDeviceComponent if they had other devices; AddOtherDeviceComponent otherwise
                 const selectDeviceRoute = Route.selectDevice;

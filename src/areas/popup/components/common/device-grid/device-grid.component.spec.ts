@@ -21,7 +21,7 @@ import { Strings } from '../../../../../assets/strings/strings';
 
 describe('DeviceGridComponent', () => {
     const strings = new Strings();
-    let deviceService: SquidService;
+    let squidService: SquidService;
     let settingsService: SettingsService;
     let notificationsService: NotificationsService;
     
@@ -53,7 +53,7 @@ describe('DeviceGridComponent', () => {
         fixture = TestBed.createComponent(DeviceGridComponent);
         comp = fixture.debugElement.componentInstance;
 
-        deviceService = TestBed.get(SquidService);
+        squidService = TestBed.get(SquidService);
         settingsService = TestBed.get(SettingsService);
         notificationsService = TestBed.get(NotificationsService);
 
@@ -90,7 +90,7 @@ describe('DeviceGridComponent', () => {
         });
 
         it('Shows error on error', (done) => {
-            spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.throw("Meesa lika dis"));
+            spyOn(squidService, 'getDevicesCached').and.returnValue(Observable.throw("Meesa lika dis"));
             spyOn(notificationsService, 'error');
 
             comp.isLoading = false;
@@ -116,7 +116,7 @@ describe('DeviceGridComponent', () => {
 
         it('Emits onError if loading fails', (done) => {
             const error = "No, I am your father.";
-            spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.throw(error));
+            spyOn(squidService, 'getDevicesCached').and.returnValue(Observable.throw(error));
 
             comp.onError.asObservable()
                 .subscribe(actualError => {
@@ -201,7 +201,7 @@ describe('DeviceGridComponent', () => {
         });
 
         function testShowThisDevice(showThisDevice: boolean, devices: ChromeDeviceModel[], expectedDevices: ChromeDeviceModel[], done: Function) {
-            spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.of(devices));
+            spyOn(squidService, 'getDevicesCached').and.returnValue(Observable.of(devices));
             comp.showThisDevice = showThisDevice;
             
             comp.onLoad.asObservable()
@@ -238,7 +238,7 @@ describe('DeviceGridComponent', () => {
     });
 
     function mockGetDevicesReturns(devices: DeviceModel[]): jasmine.Spy {
-        return spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.of(devices));
+        return spyOn(squidService, 'getDevicesCached').and.returnValue(Observable.of(devices));
     }
 
 });

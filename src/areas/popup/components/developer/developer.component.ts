@@ -17,7 +17,7 @@ import { WindowService } from '../../services/window.service';
 })
 export class DeveloperComponent {
     constructor(
-        private readonly deviceService: SquidService,
+        private readonly squidService: SquidService,
         private readonly router: Router,
         private readonly settingsService: SettingsService,
         private readonly windowService: WindowService) { }
@@ -28,7 +28,7 @@ export class DeveloperComponent {
     public addDevice(): Promise<any> {
         let gcmToken = UUID.UUID();
         let name = 'Device ' + gcmToken.substring(0, 8); // Use only the first 8 chars of the token, for readability
-        return this.deviceService.addDevice({name: name, gcmToken: gcmToken, deviceType: DeviceType.chrome})
+        return this.squidService.addDevice({name: name, gcmToken: gcmToken, deviceType: DeviceType.chrome})
             .then(() => this.router.navigateByUrl(Route.selectDevice));
     }
 

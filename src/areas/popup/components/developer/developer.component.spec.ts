@@ -14,7 +14,7 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { WindowService } from '../../services/window.service';
 
 describe('DeveloperComponent', () => {
-    let deviceService: SquidService;
+    let squidService: SquidService;
     let router: Router;
     let settingsService: SettingsService;
     let windowService: WindowService;
@@ -44,7 +44,7 @@ describe('DeveloperComponent', () => {
         fixture = TestBed.createComponent(DeveloperComponent);
         comp = fixture.debugElement.componentInstance;
 
-        deviceService = TestBed.get(SquidService);
+        squidService = TestBed.get(SquidService);
         router = TestBed.get(Router);
         settingsService = TestBed.get(SettingsService);
         windowService = TestBed.get(WindowService);
@@ -52,11 +52,11 @@ describe('DeveloperComponent', () => {
 
     describe('addDevice()', () => {
         it('Adds a fake device', (done) => {
-            spyOn(deviceService, "addDevice").and.returnValue(Promise.resolve());
+            spyOn(squidService, "addDevice").and.returnValue(Promise.resolve());
             spyOn(router, 'navigateByUrl');
             comp.addDevice()
                 .then(() => {
-                    expect(deviceService.addDevice).toHaveBeenCalledTimes(1);
+                    expect(squidService.addDevice).toHaveBeenCalledTimes(1);
                     expect(router.navigateByUrl).toHaveBeenCalledWith(Route.selectDevice);
                     done();
                 })
