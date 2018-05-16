@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ChromeService } from '../../services/chrome.service';
 import { ChromeDeviceModel } from '../../services/squid-converter';
 import { ErrorCode, ErrorModel } from '../../../../contracts/squid';
-import { DeviceService } from '../../services/device.service';
+import { SquidService } from '../../services/squid.service';
 import { Route } from '../../routing/route';
 import { Strings } from '../../../../assets/strings/strings';
 import { WindowService } from '../../services/window.service';
@@ -26,7 +26,7 @@ export class SelectDeviceComponent implements OnInit {
 
     constructor(
         private readonly windowService: WindowService,
-        private readonly deviceService: DeviceService,
+        private readonly squidService: SquidService,
         private readonly router: Router,
         private readonly chromeService: ChromeService,
         private readonly settingsService: SettingsService,
@@ -41,7 +41,7 @@ export class SelectDeviceComponent implements OnInit {
         return this.chromeService.getCurrentTabUrl()
             .then(url => {
                 if(url && url.startsWith('http://') || url.startsWith('https://')) {
-                    return this.deviceService.sendUrl(device.id, url)
+                    return this.squidService.sendUrl(device.id, url)
                         .then(() => this.windowService.close());
                 } else {
                     this.notifications.warn(null, this.strings.devices.error.pageCannotBeSent);
@@ -82,7 +82,7 @@ export class SelectDeviceComponent implements OnInit {
             return Promise.resolve();
         }
 
-        return this.deviceService.getDevices()
+        return this.squidService.getDevices()
             .then(devices => {
                 // If the current device is not registered, go to intro component
                 if(!devices || !devices.find(device => device.id == thisDevice.id)) {

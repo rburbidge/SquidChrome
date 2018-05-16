@@ -4,17 +4,17 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ChromeService } from '../../services/chrome.service';
 import { DeveloperComponent } from '../developer/developer.component';
-import { DeviceService } from '../../services/device.service';
+import { SquidService } from '../../services/squid.service';
 import { loadCss } from '../testing/css-loader';
 import { MockChromeService } from '../../services/testing/chrome.service.mock';
-import { MockDeviceService } from '../../services/testing/device.service.mock';
+import { MockSquidService } from '../../services/testing/squid.service.mock';
 import { Route } from '../../routing/route';
 import { SettingsService } from '../../services/settings.service';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { WindowService } from '../../services/window.service';
 
 describe('DeveloperComponent', () => {
-    let deviceService: DeviceService;
+    let squidService: SquidService;
     let router: Router;
     let settingsService: SettingsService;
     let windowService: WindowService;
@@ -32,7 +32,7 @@ describe('DeveloperComponent', () => {
             imports: [ RouterTestingModule ],
             providers: [
                 { provide: ChromeService, useValue: new MockChromeService() },
-                { provide: DeviceService, useValue: new MockDeviceService() },
+                { provide: SquidService, useValue: new MockSquidService() },
                 { provide: SettingsService, useValue: new SettingsService() },
                 { provide: WindowService, useValue: new WindowService() },
             ]
@@ -44,7 +44,7 @@ describe('DeveloperComponent', () => {
         fixture = TestBed.createComponent(DeveloperComponent);
         comp = fixture.debugElement.componentInstance;
 
-        deviceService = TestBed.get(DeviceService);
+        squidService = TestBed.get(SquidService);
         router = TestBed.get(Router);
         settingsService = TestBed.get(SettingsService);
         windowService = TestBed.get(WindowService);
@@ -52,11 +52,11 @@ describe('DeveloperComponent', () => {
 
     describe('addDevice()', () => {
         it('Adds a fake device', (done) => {
-            spyOn(deviceService, "addDevice").and.returnValue(Promise.resolve());
+            spyOn(squidService, "addDevice").and.returnValue(Promise.resolve());
             spyOn(router, 'navigateByUrl');
             comp.addDevice()
                 .then(() => {
-                    expect(deviceService.addDevice).toHaveBeenCalledTimes(1);
+                    expect(squidService.addDevice).toHaveBeenCalledTimes(1);
                     expect(router.navigateByUrl).toHaveBeenCalledWith(Route.selectDevice);
                     done();
                 })

@@ -4,12 +4,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifications';
 
 import { AddDeviceComponent } from './add-device.component';
-import { DeviceService } from '../../../services/device.service';
+import { SquidService } from '../../../services/squid.service';
 import { DeviceType, DeviceModel } from '../../../../../contracts/squid';
 import { GcmService } from '../../../services/gcm.service';
 import { IntroBottomComponent } from '../intro-bottom/intro-bottom.component';
 import { loadCss } from '../../testing/css-loader';
-import { MockDeviceService } from '../../../services/testing/device.service.mock';
+import { MockSquidService } from '../../../services/testing/squid.service.mock';
 import { Route } from '../../../routing/route';
 import { SettingsService } from '../../../services/settings.service';
 import { ChromeDeviceModel } from '../../../services/squid-converter';
@@ -18,7 +18,7 @@ import { Strings } from '../../../../../assets/strings/strings';
 
 describe('AddDeviceComponent', () => {
     const strings = new Strings();
-    let deviceService: DeviceService;
+    let squidService: SquidService;
     let gcmService: GcmService;
     let router: Router;
     let settingsService: SettingsService;
@@ -39,7 +39,7 @@ describe('AddDeviceComponent', () => {
             imports: [ RouterTestingModule, SimpleNotificationsModule ],
             providers: [
                 SettingsService,
-                { provide: DeviceService, useValue: new MockDeviceService() },
+                { provide: SquidService, useValue: new MockSquidService() },
                 { provide: GcmService, useValue: new GcmService() },
                 { provide: NotificationsService, useValue: new NotificationsService({})}
             ]
@@ -51,7 +51,7 @@ describe('AddDeviceComponent', () => {
         fixture = TestBed.createComponent(AddDeviceComponent);
         comp = fixture.debugElement.componentInstance;
 
-        deviceService = TestBed.get(DeviceService);
+        squidService = TestBed.get(SquidService);
         gcmService = TestBed.get(GcmService);
         settingsService = TestBed.get(SettingsService);
         router = TestBed.get(Router);
@@ -72,11 +72,11 @@ describe('AddDeviceComponent', () => {
             comp.addDevice(device.name)
                 .then(() => {
                     expect(gcmService.register).toHaveBeenCalledTimes(1);
-                    expect(deviceService.addDevice).toHaveBeenCalledTimes(1);
-                    expect(deviceService.addDevice).toHaveBeenCalledWith({ name: device.name, gcmToken: 'GCM token', deviceType: DeviceType.chrome});
+                    expect(squidService.addDevice).toHaveBeenCalledTimes(1);
+                    expect(squidService.addDevice).toHaveBeenCalledWith({ name: device.name, gcmToken: 'GCM token', deviceType: DeviceType.chrome});
                     expect(settingsService.setThisDevice).toHaveBeenCalledTimes(1);
                     expect(settingsService.setThisDevice).toHaveBeenCalledWith(device.id, 'GCM token');
-                    expect(deviceService.getDevices).toHaveBeenCalledTimes(1);
+                    expect(squidService.getDevices).toHaveBeenCalledTimes(1);
                     expect(router.navigateByUrl).toHaveBeenCalledTimes(1);
                     expect(router.navigateByUrl).toHaveBeenCalledWith(Route.selectDevice);
                     done();
@@ -88,7 +88,7 @@ describe('AddDeviceComponent', () => {
             comp.addDevice(null)
                 .then(() => {
                         // "Chrome Browser" is the default device name
-                        expect(deviceService.addDevice).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: 'GCM token', deviceType: DeviceType.chrome });
+                        expect(squidService.addDevice).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: 'GCM token', deviceType: DeviceType.chrome });
                         done();
                     })
         });
@@ -98,7 +98,7 @@ describe('AddDeviceComponent', () => {
             setupMocks();
             comp.addDevice(deviceName)
                 .then(() => {
-                        expect(deviceService.addDevice).toHaveBeenCalledWith({ name: deviceName, gcmToken: 'GCM token', deviceType: DeviceType.chrome });
+                        expect(squidService.addDevice).toHaveBeenCalledWith({ name: deviceName, gcmToken: 'GCM token', deviceType: DeviceType.chrome });
                         done();
                     })
         });
@@ -109,7 +109,7 @@ describe('AddDeviceComponent', () => {
             comp.addDevice(null)
                 .then(() => {
                         // "Chrome Browser" is the default device name
-                        expect(deviceService.addDevice).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: gcmToken, deviceType: DeviceType.chrome });
+                        expect(squidService.addDevice).toHaveBeenCalledWith({ name: 'Chrome Browser', gcmToken: gcmToken, deviceType: DeviceType.chrome });
                         done();
                     })
         });
@@ -146,12 +146,12 @@ describe('AddDeviceComponent', () => {
     });
 
     function setupGetDevicesReturns(devices: DeviceModel[]) {
-        spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices));
+        spyOn(squidService, 'getDevices').and.returnValue(Promise.resolve(devices));
     }
 
     function setupMocks(gcmToken: string = "GCM token") {
         spyOn(gcmService, "register").and.returnValue(Promise.resolve(gcmToken));
-        spyOn(deviceService, "addDevice").and.returnValue(Promise.resolve(device));
+        spyOn(squidService, "addDevice").and.returnValue(Promise.resolve(device));
         spyOn(router, "navigateByUrl").and.returnValue(Promise.resolve());
         spyOn(router, 'navigate').and.returnValue(Promise.resolve());
     }

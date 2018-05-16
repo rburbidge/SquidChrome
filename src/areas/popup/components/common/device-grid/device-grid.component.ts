@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, OnInit, Input } from "@angular/core";
 
 import { Strings } from "../../../../../assets/strings/strings";
-import { DeviceService } from "../../../services/device.service";
+import { SquidService } from "../../../services/squid.service";
 import { ChromeDeviceModel } from "../../../services/squid-converter";
 import { ErrorModel } from "../../../../../contracts/squid";
 import { SettingsService } from "../../../services/settings.service";
@@ -32,7 +32,7 @@ export class DeviceGridComponent implements OnInit {
     @Output() readonly onAddDeviceClick = new EventEmitter();
 
     constructor(
-        private readonly deviceService: DeviceService,
+        private readonly squidService: SquidService,
         private readonly settingsService: SettingsService,
         private readonly notifications: NotificationsService) { }
 
@@ -43,7 +43,7 @@ export class DeviceGridComponent implements OnInit {
         this.isLoading = true;
         this.devices = undefined;
 
-        this.deviceService.getDevicesCached()
+        this.squidService.getDevicesCached()
             .subscribe({
                 next: (devices) => {
                     const thisDeviceId = this.settingsService.settings.thisDevice && this.settingsService.settings.thisDevice.id;

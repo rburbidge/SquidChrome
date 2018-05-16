@@ -4,9 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Location } from '@angular/common';
 
-import { DeviceService } from '../../../services/device.service';
+import { SquidService } from '../../../services/squid.service';
 import { loadCss } from '../../testing/css-loader';
-import { MockDeviceService } from '../../../services/testing/device.service.mock';
+import { MockSquidService } from '../../../services/testing/squid.service.mock';
 import { DeviceComponent } from './device.component';
 import { Config } from '../../../../../config/config';
 import { NotificationsService } from 'angular2-notifications';
@@ -20,7 +20,7 @@ describe('DeviceComponent', () => {
         deviceIcon: 'laptop'
     };
 
-    let deviceService: DeviceService;
+    let squidService: SquidService;
     let location: Location;
     let notificationsService: NotificationsService;
 
@@ -37,7 +37,7 @@ describe('DeviceComponent', () => {
             imports: [ RouterTestingModule ],
             providers: [
                 { provide: ComponentFixtureAutoDetect, useValue: true },
-                { provide: DeviceService, useValue: new MockDeviceService() },
+                { provide: SquidService, useValue: new MockSquidService() },
                 { 
                     provide: ActivatedRoute,
                     useValue: { snapshot: { params: routeParams }}
@@ -52,7 +52,7 @@ describe('DeviceComponent', () => {
         fixture = TestBed.createComponent(DeviceComponent);
         comp = fixture.debugElement.componentInstance;
 
-        deviceService = TestBed.get(DeviceService);
+        squidService = TestBed.get(SquidService);
         location = TestBed.get(Location);
         notificationsService = TestBed.get(NotificationsService);
     });
@@ -69,9 +69,9 @@ describe('DeviceComponent', () => {
     describe('sendLink()', () => {
         it('Sends a link', (done) => {
             spyOn(notificationsService, 'info');
-            spyOn(deviceService, 'sendUrl').and.returnValue(Promise.resolve());
+            spyOn(squidService, 'sendUrl').and.returnValue(Promise.resolve());
             comp.sendLink().then(() => {
-                expect(deviceService.sendUrl).toHaveBeenCalledWith(routeParams.deviceId, Config.squidEndpoint + '/squid/test');
+                expect(squidService.sendUrl).toHaveBeenCalledWith(routeParams.deviceId, Config.squidEndpoint + '/squid/test');
                 expect(notificationsService.info).toHaveBeenCalledWith(null, strings.device.linkSent);
                 done();
             });
@@ -79,7 +79,7 @@ describe('DeviceComponent', () => {
 
         it('Shows error on error', (done) => {
             spyOn(notificationsService, 'error');
-            spyOn(deviceService, 'sendUrl').and.returnValue(Promise.reject('Run you fools'));
+            spyOn(squidService, 'sendUrl').and.returnValue(Promise.reject('Run you fools'));
             comp.sendLink().then(() => {
                 expect(notificationsService.error).toHaveBeenCalledWith(null, strings.device.error.sendLink);
                 done();
@@ -90,30 +90,30 @@ describe('DeviceComponent', () => {
     describe('remove()', () => {
         it('Does not remove device if user does not confirm', (done) => {
             spyOn(location, 'back');
-            spyOn(deviceService, 'removeDevice');
+            spyOn(squidService, 'removeDevice');
             spyOn(window, 'confirm').and.returnValue(false);
 
             comp.remove().then(() => {
                 expect(location.back).not.toHaveBeenCalled();
-                expect(deviceService.removeDevice).not.toHaveBeenCalled();
+                expect(squidService.removeDevice).not.toHaveBeenCalled();
                 done();
             });
         });
 
         it('Removes device if user confirms, then navigates back', (done) => {
             spyOn(location, 'back');
-            spyOn(deviceService, 'removeDevice').and.returnValue(Promise.resolve());
+            spyOn(squidService, 'removeDevice').and.returnValue(Promise.resolve());
             spyOn(window, 'confirm').and.returnValue(true);
 
             comp.remove().then(() => {
                 expect(location.back).toHaveBeenCalledTimes(1);
-                expect(deviceService.removeDevice).toHaveBeenCalledWith(routeParams.deviceId);
+                expect(squidService.removeDevice).toHaveBeenCalledWith(routeParams.deviceId);
                 done();
             });
         });
 
         it('Shows error on error', (done) => {
-            spyOn(deviceService, 'removeDevice').and.returnValue(Promise.reject('Save it for the Holodeck.'));
+            spyOn(squidService, 'removeDevice').and.returnValue(Promise.reject('Save it for the Holodeck.'));
             spyOn(window, 'confirm').and.returnValue(true);
             spyOn(notificationsService, 'error');
 

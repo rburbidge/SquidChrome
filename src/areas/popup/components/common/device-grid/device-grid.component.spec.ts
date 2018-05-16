@@ -9,10 +9,10 @@ import 'rxjs/add/observable/throw';
 
 import { DeveloperComponent } from '../../developer/developer.component';
 import { DeviceModel } from '../../../../../contracts/squid';
-import { DeviceService } from '../../../services/device.service';
+import { SquidService } from '../../../services/squid.service';
 import { loadCss } from '../../testing/css-loader';
 import { DeviceGridComponent } from './device-grid.component';
-import { MockDeviceService } from '../../../services/testing/device.service.mock';
+import { MockSquidService } from '../../../services/testing/squid.service.mock';
 import { SettingsService } from '../../../services/settings.service';
 import { ChromeDeviceModel } from '../../../services/squid-converter';
 import { ToolbarComponent } from '../../toolbar/toolbar.component';
@@ -21,7 +21,7 @@ import { Strings } from '../../../../../assets/strings/strings';
 
 describe('DeviceGridComponent', () => {
     const strings = new Strings();
-    let deviceService: DeviceService;
+    let squidService: SquidService;
     let settingsService: SettingsService;
     let notificationsService: NotificationsService;
     
@@ -42,7 +42,7 @@ describe('DeviceGridComponent', () => {
             providers: [
                 SettingsService,
                 { provide: ComponentFixtureAutoDetect, useValue: true },
-                { provide: DeviceService, useValue: new MockDeviceService() },
+                { provide: SquidService, useValue: new MockSquidService() },
                 { provide: NotificationsService, useValue: new NotificationsService({})}
             ]
         })
@@ -53,7 +53,7 @@ describe('DeviceGridComponent', () => {
         fixture = TestBed.createComponent(DeviceGridComponent);
         comp = fixture.debugElement.componentInstance;
 
-        deviceService = TestBed.get(DeviceService);
+        squidService = TestBed.get(SquidService);
         settingsService = TestBed.get(SettingsService);
         notificationsService = TestBed.get(NotificationsService);
 
@@ -90,7 +90,7 @@ describe('DeviceGridComponent', () => {
         });
 
         it('Shows error on error', (done) => {
-            spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.throw("Meesa lika dis"));
+            spyOn(squidService, 'getDevicesCached').and.returnValue(Observable.throw("Meesa lika dis"));
             spyOn(notificationsService, 'error');
 
             comp.isLoading = false;
@@ -116,7 +116,7 @@ describe('DeviceGridComponent', () => {
 
         it('Emits onError if loading fails', (done) => {
             const error = "No, I am your father.";
-            spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.throw(error));
+            spyOn(squidService, 'getDevicesCached').and.returnValue(Observable.throw(error));
 
             comp.onError.asObservable()
                 .subscribe(actualError => {
@@ -201,7 +201,7 @@ describe('DeviceGridComponent', () => {
         });
 
         function testShowThisDevice(showThisDevice: boolean, devices: ChromeDeviceModel[], expectedDevices: ChromeDeviceModel[], done: Function) {
-            spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.of(devices));
+            spyOn(squidService, 'getDevicesCached').and.returnValue(Observable.of(devices));
             comp.showThisDevice = showThisDevice;
             
             comp.onLoad.asObservable()
@@ -238,7 +238,7 @@ describe('DeviceGridComponent', () => {
     });
 
     function mockGetDevicesReturns(devices: DeviceModel[]): jasmine.Spy {
-        return spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.of(devices));
+        return spyOn(squidService, 'getDevicesCached').and.returnValue(Observable.of(devices));
     }
 
 });

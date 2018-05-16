@@ -6,11 +6,11 @@ import { Observable } from 'rxjs/Observable';
 
 import { ChromeService } from '../../services/chrome.service';
 import { ErrorCode, ErrorModel } from '../../../../contracts/squid';
-import { DeviceService } from '../../services/device.service';
+import { SquidService } from '../../services/squid.service';
 import { loadCss } from '../testing/css-loader';
 import { SelectDeviceComponent } from './select-device.component';
 import { MockChromeService } from '../../services/testing/chrome.service.mock';
-import { MockDeviceService } from '../../services/testing/device.service.mock';
+import { MockSquidService } from '../../services/testing/squid.service.mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { WindowService } from '../../services/window.service';
 import { ChromeDeviceModel, ChromeErrorModel } from '../../services/squid-converter';
@@ -22,7 +22,7 @@ import { createDevice, createDevices } from '../../../../test/squid-helpers';
 import { Strings } from '../../../../assets/strings/strings';
 
 describe('SelectDeviceComponent', () => {
-    let deviceService: DeviceService;
+    let squidService: SquidService;
     let chromeService: ChromeService;
     let router: Router;
     let windowService: WindowService;
@@ -47,7 +47,7 @@ describe('SelectDeviceComponent', () => {
             providers: [
                 SettingsService,
                 { provide: ChromeService, useValue: new MockChromeService() },
-                { provide: DeviceService, useValue: new MockDeviceService() },
+                { provide: SquidService, useValue: new MockSquidService() },
                 { provide: WindowService, useValue: new WindowService() },
                 { provide: NotificationsService, useValue: new NotificationsService({})}
             ]
@@ -59,7 +59,7 @@ describe('SelectDeviceComponent', () => {
         fixture = TestBed.createComponent(SelectDeviceComponent);
         comp = fixture.debugElement.componentInstance;
 
-        deviceService = TestBed.get(DeviceService);
+        squidService = TestBed.get(SquidService);
         chromeService = TestBed.get(ChromeService);
         router = TestBed.get(Router);
         windowService = TestBed.get(WindowService);
@@ -86,7 +86,7 @@ describe('SelectDeviceComponent', () => {
         it('Shows notification if URL starts with chrome://', (done) => {
             spyOn(notificationService, 'warn');
             spyOn(windowService, 'close');
-            spyOn(deviceService, 'sendUrl');
+            spyOn(squidService, 'sendUrl');
             spyOn(chromeService, 'getCurrentTabUrl').and.returnValue(Promise.resolve('chrome://'));
 
             const device = createDevice();
@@ -95,7 +95,7 @@ describe('SelectDeviceComponent', () => {
                     expect(notificationService.warn).toHaveBeenCalledWith(null, strings.devices.error.pageCannotBeSent);
 
                     // Page is not sent, window is not closed
-                    expect(deviceService.sendUrl).not.toHaveBeenCalled();
+                    expect(squidService.sendUrl).not.toHaveBeenCalled();
                     expect(windowService.close).not.toHaveBeenCalled();
                     done();
                 });
@@ -103,7 +103,7 @@ describe('SelectDeviceComponent', () => {
 
         it('Shows error on error', (done) => {
             spyOn(notificationService, 'error');
-            spyOn(deviceService, 'sendUrl').and.returnValue(Promise.reject('You will be returned to your people, I promise.'));
+            spyOn(squidService, 'sendUrl').and.returnValue(Promise.reject('You will be returned to your people, I promise.'));
             spyOn(chromeService, 'getCurrentTabUrl').and.returnValue(Promise.resolve('https://www.example.com'));
 
             const device = createDevice();
@@ -115,7 +115,7 @@ describe('SelectDeviceComponent', () => {
         });
 
         function testSendUrl(url: string, done: Function): void {
-            let sendUrl = spyOn(deviceService, 'sendUrl').and.returnValue(Promise.resolve());
+            let sendUrl = spyOn(squidService, 'sendUrl').and.returnValue(Promise.resolve());
             let getCurrentTabUrl = spyOn(chromeService, 'getCurrentTabUrl').and.returnValue(Promise.resolve(url));
             let windowClose = spyOn(windowService, 'close');
 
@@ -150,7 +150,7 @@ describe('SelectDeviceComponent', () => {
         });
 
         it('Template: Shows header text', () => {
-            spyOn(deviceService, 'getDevicesCached').and.returnValue(Observable.of([createDevice()]));
+            spyOn(squidService, 'getDevicesCached').and.returnValue(Observable.of([createDevice()]));
             comp.onLoad([createDevice()]);
             fixture.detectChanges();
             let header = fixture.debugElement.query(By.css('.header'));
@@ -217,7 +217,7 @@ describe('SelectDeviceComponent', () => {
                 };
             }
             spyOn(router, 'navigateByUrl');
-            spyOn(deviceService, 'getDevices').and.returnValue(Promise.resolve(devices));
+            spyOn(squidService, 'getDevices').and.returnValue(Promise.resolve(devices));
 
             return comp.ngOnInit();
         }
