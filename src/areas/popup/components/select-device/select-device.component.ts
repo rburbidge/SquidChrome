@@ -37,19 +37,19 @@ export class SelectDeviceComponent implements OnInit {
      * Sends a URL to a device.
      * @param device The device to send the URL to.
      */
-    public sendUrl(device: ChromeDeviceModel): Promise<void> {
-        return this.chromeService.getCurrentTabUrl()
-            .then(url => {
-                if(url && url.startsWith('http://') || url.startsWith('https://')) {
-                    return this.squidService.sendUrl(device.id, url)
-                        .then(() => this.windowService.close());
-                } else {
-                    this.notifications.warn(null, this.strings.devices.error.pageCannotBeSent);
-                }
-            })
-            .catch(() => {
-                this.notifications.error(null, this.strings.devices.error.pageSendFailed);
-            });
+    public async sendUrl(device: ChromeDeviceModel): Promise<void> {
+        try {
+            const url = await this.chromeService.getCurrentTabUrl();
+            if(url && url.startsWith('http://') || url.startsWith('https://')) {
+                await this.squidService.sendUrl(this.settingsService.settings.thisDevice.id, url)
+                this.windowService.close();
+            } else {
+                this.notifications.warn(null, this.strings.devices.error.pageCannotBeSent);
+            }
+        }
+        catch(error) {
+            this.notifications.error(null, this.strings.devices.error.pageSendFailed);
+        }
     }
 
     public onError(error: ErrorModel): void {

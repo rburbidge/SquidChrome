@@ -6,7 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/observable/fromPromise';
 
 import { Config } from '../../../config/config';
-import { AddDeviceBody, CommandBody, ErrorCode, ErrorModel } from '../../../contracts/squid';
+import { AddDeviceBody, ErrorCode, ErrorModel, Content, ContentType } from '../../../contracts/squid';
 import { ChromeDeviceModel, convertDeviceModel, ChromeErrorModel } from './squid-converter';
 import { SettingsService } from './settings.service';
 
@@ -66,11 +66,18 @@ export class SquidService {
         });
     }
 
-    public sendUrl(id: string, url: string): Promise<any> {
-        const body: CommandBody = {
-            url: url
+    /**
+     * Sends URL content to the service.
+     * @param originDeviceId This device's ID.
+     * @param url The URL content to send.
+     */
+    public async sendUrl(originDeviceId: string, url: string) {
+        const body: Content = {
+            content: url,
+            contentType: ContentType.url,
+            originDeviceId: originDeviceId
         };
-        return this.sendRequest('POST', `/api/devices/${id}/commands`, body, 'text');
+        await this.sendRequest('POST', `/squid/api/content`, body, 'text');
     }
 
     /**
