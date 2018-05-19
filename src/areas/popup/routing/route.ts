@@ -1,9 +1,9 @@
 export const Route = {
     home: {
         base: 'home',
-        devices: 'home/devices',
-        history: 'home/history',
-        share: 'home/share',
+        devices: 'devices',
+        history: 'history',
+        share: 'share',
     },
 
     intro: {

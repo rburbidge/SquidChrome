@@ -63,10 +63,10 @@ enableProdMode();
                 ]
             },
             
-            // Redirect the initial popup.html to the SelectDeviceComponent
+            // Redirect the initial popup.html to the home HistoryComponent
             {
                 path: 'popup.html',
-                redirectTo: Route.home.history,
+                redirectTo: Route.home.base + '/' + Route.home.history,
                 pathMatch: 'full'
             },
             
