@@ -1,0 +1,9 @@
+<div *ngIf="isLoading" class="fade-in loader-center-screen">
+    <div class="loader"></div>
+</div>
+
+<div *ngIf="!isLoading">
+    <ul class="content-list">
+        <li *ngFor="let curContent of content" role="button">{{curContent.content}}</li>
+    </ul>
+</div>

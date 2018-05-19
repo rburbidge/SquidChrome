@@ -1,0 +1,10 @@
+.content-list {
+    padding: 0;
+    list-style-type: none;
+    color: white;
+}
+
+.content-list li {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

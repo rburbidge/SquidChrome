@@ -1,0 +1,10 @@
+<squid-toolbar showLogo="true"
+               showOptions="true"></squid-toolbar>
+
+<ul class="nav nav-pills nav-fill squid">
+    <li *ngFor="let tab of tabs" class="nav-item">
+        <a class="nav-link" [ngClass]="{'active':  tab.routerLink == this.route }" [routerLink]="tab.routerLink">{{tab.title}}</a>
+    </li>
+</ul>
+
+<router-outlet></router-outlet>

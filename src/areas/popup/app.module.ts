@@ -21,7 +21,6 @@ import { GcmService } from './services/gcm.service';
 import { OptionsComponent } from './components/options/options.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { Route } from './routing/route';
-import { SelectDeviceComponent } from './components/select-device/select-device.component';
 import { SettingsService } from './services/settings.service';
 import { SignedOutComponent } from './components/intro/signed-out/signed-out.component';
 import { WindowService } from './services/window.service';
@@ -34,6 +33,9 @@ import { SquidAuthInterceptor } from './services/squid/squid-auth.interceptor';
 import { IFrameComponent } from './components/common/iframe/iframe.component';
 import { GlobalErrorHandler } from './global-error-handler';
 import { TelemetryService } from './services/telemetry.service';
+import { HomeComponent } from './components/home/home.component';
+import { HistoryComponent } from './components/home/history/history.component';
+import { ShareComponent } from './components/home/share/share.component';
 
 const strings = new Strings();
 
@@ -51,16 +53,21 @@ enableProdMode();
             timeOut: 3000
         }),
         RouterModule.forRoot([
+            {
+                path: 'home',
+                component: HomeComponent,
+                children: [
+                    { path: Route.home.share, component: ShareComponent },
+                    { path: Route.home.history, component: HistoryComponent },
+                    { path: Route.home.devices, component: DeviceGridComponent },
+                ]
+            },
+            
             // Redirect the initial popup.html to the SelectDeviceComponent
             {
                 path: 'popup.html',
-                redirectTo: Route.selectDevice,
+                redirectTo: Route.home.history,
                 pathMatch: 'full'
-            },
-            {
-                path: Route.selectDevice,
-                component: SelectDeviceComponent,
-                canActivate: [IsAppInitialized]
             },
             
             {
@@ -96,8 +103,10 @@ enableProdMode();
         AppComponent,
         
         // Components
+        HomeComponent,
+        HistoryComponent,
+        ShareComponent,
         AddAnotherDeviceComponent,
-        SelectDeviceComponent,
 
         // Intro components
         AddDeviceComponent,

@@ -29,7 +29,7 @@ export class DeveloperComponent {
         let gcmToken = UUID.UUID();
         let name = 'Device ' + gcmToken.substring(0, 8); // Use only the first 8 chars of the token, for readability
         return this.squidService.addDevice({name: name, gcmToken: gcmToken, deviceType: DeviceType.chrome})
-            .then(() => this.router.navigateByUrl(Route.selectDevice));
+            .then(() => this.router.navigateByUrl(Route.home.devices));
     }
 
     /**

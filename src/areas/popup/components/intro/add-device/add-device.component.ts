@@ -48,7 +48,7 @@ export class AddDeviceComponent {
             .then(() => this.squidService.getDevices())
             .then(devices => {
                 // Send user to SelectDeviceComponent if they had other devices; AddOtherDeviceComponent otherwise
-                const selectDeviceRoute = Route.selectDevice;
+                const selectDeviceRoute = Route.home.base + '/' + Route.home.share;
                 if(!devices || devices.length <=1) {
                     return this.router.navigate(
                         [Route.addAnotherDevice], { queryParams: { returnUrl: selectDeviceRoute } });

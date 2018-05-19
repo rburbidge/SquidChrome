@@ -78,7 +78,7 @@ describe('AddDeviceComponent', () => {
                     expect(settingsService.setThisDevice).toHaveBeenCalledWith(device.id, 'GCM token');
                     expect(squidService.getDevices).toHaveBeenCalledTimes(1);
                     expect(router.navigateByUrl).toHaveBeenCalledTimes(1);
-                    expect(router.navigateByUrl).toHaveBeenCalledWith(Route.selectDevice);
+                    expect(router.navigateByUrl).toHaveBeenCalledWith(Route.home.devices);
                     done();
                 })
         });
@@ -114,12 +114,12 @@ describe('AddDeviceComponent', () => {
                     })
         });
 
-        it("Redirects to SelectDeviceComponent if user has other devices", (done) => {
+        it("Redirects to ShareComoonent if user has other devices", (done) => {
             setupGetDevicesReturns([null, null]);
             setupMocks();
             comp.addDevice(null)
                 .then(() => {
-                        expect(router.navigateByUrl).toHaveBeenCalledWith(Route.selectDevice);
+                        expect(router.navigateByUrl).toHaveBeenCalledWith(Route.home.share);
                         done();
                     });
         });
@@ -129,7 +129,7 @@ describe('AddDeviceComponent', () => {
             setupMocks();
             comp.addDevice(null)
                 .then(() => {
-                        expect(router.navigate).toHaveBeenCalledWith([Route.addAnotherDevice], { queryParams: { returnUrl: Route.selectDevice } });
+                        expect(router.navigate).toHaveBeenCalledWith([Route.addAnotherDevice], { queryParams: { returnUrl: Route.addAnotherDevice } });
                         done();
                     });
         });

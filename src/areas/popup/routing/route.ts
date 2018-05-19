@@ -1,4 +1,11 @@
 export const Route = {
+    home: {
+        base: 'home',
+        devices: 'home/devices',
+        history: 'home/history',
+        share: 'home/share',
+    },
+
     intro: {
         base: 'intro',
         description: '',
@@ -17,5 +24,4 @@ export const Route = {
     },
     
     addAnotherDevice: 'add-another-device',
-    selectDevice: 'select-device'
 }

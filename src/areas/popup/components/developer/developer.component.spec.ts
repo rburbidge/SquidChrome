@@ -57,7 +57,7 @@ describe('DeveloperComponent', () => {
             comp.addDevice()
                 .then(() => {
                     expect(squidService.addDevice).toHaveBeenCalledTimes(1);
-                    expect(router.navigateByUrl).toHaveBeenCalledWith(Route.selectDevice);
+                    expect(router.navigateByUrl).toHaveBeenCalledWith(Route.home.devices);
                     done();
                 })
         });

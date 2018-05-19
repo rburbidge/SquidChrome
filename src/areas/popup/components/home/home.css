@@ -1,0 +1,16 @@
+a {
+    color: white;
+}
+
+.squid .nav-link.active {
+    background-color: orange;
+}
+
+.squid .nav-link {
+    border-radius: 0;
+    border: 1px solid orange;
+}
+
+.squid .nav-link:hover {
+    background-color: orange;
+}

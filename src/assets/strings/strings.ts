@@ -12,6 +12,10 @@ export class Strings {
     public error = {
         iframeError: `An error occurred. Please try again later.`
     };
+
+    public history = {
+        title: 'History'
+    }
     
     public about = {
         title: 'About',
@@ -56,10 +60,8 @@ export class Strings {
         title: 'Developer settings'
     };
 
-    /**
-     * Strings for the devices flow.
-     */
     public devices = {
+        title: 'Devices',
         addDevice: 'Add a device',
         noDevicesTitle: 'No devices found',        
         selectDevice: 'Select a device',
@@ -101,5 +103,9 @@ export class Strings {
     public options = {
         title: 'Settings',
         manageDevices: 'Manage Devices'
+    };
+
+    public share = {
+        title: 'Share'
     };
 }
